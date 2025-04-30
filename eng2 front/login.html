@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno items-center justify-center">
+
+  <!-- Formulário de Login -->
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <div class="flex items-center justify-center mb-6">
+      <svg data-lucide="paw-print" class="w-12 h-12 text-pastel"></svg>
+    </div>
+    <h1 class="text-3xl font-bold text-noturno text-center mb-6">Login ADAPV</h1>
+    <form action="#" method="POST">
+      <!-- Campo de Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-noturno">E-mail</label>
+        <input type="email" id="email" name="email" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite seu e-mail" required />
+      </div>
+
+      <!-- Campo de Senha -->
+      <div class="mb-6">
+        <label for="senha" class="block text-sm font-medium text-noturno">Senha</label>
+        <input type="password" id="senha" name="senha" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite sua senha" required />
+      </div>
+
+      <!-- Botão de Login -->
+      <div>
+        <button type="submit" class="w-full py-3 bg-carmesim text-neve font-semibold text-lg rounded-xl hover:bg-pastel transition-colors duration-200">
+          Entrar
+        </button>
+      </div>
+    </form>
+    <div class="mt-4 text-center">
+      <a href="#" class="text-sm text-carmesim hover:text-pastel">Esqueceu a senha?</a>
+    </div>
+  </div>
+
+</body>
+</html>

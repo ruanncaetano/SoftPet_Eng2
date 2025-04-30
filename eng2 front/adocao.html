@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adoção - ADAPV</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Ícones -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno overflow-hidden">
+
+ <!-- Sidebar -->
+ <script src="menu.js"></script>
+
+  <!-- Conteúdo principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Registrar Adoção</h1>
+  
+    <form class="bg-white p-6 rounded-2xl shadow-md max-w-4xl mx-auto space-y-8" onsubmit="handleSubmit(event)">
+      <!-- Adotante -->
+      <section>
+        <h2 class="text-2xl font-semibold mb-4 text-noturno">Dados do Adotante</h2>
+  
+        <!-- Nome + busca -->
+        <div class="flex gap-2 items-end">
+          <div class="flex-1">
+            <label for="nomeAdotante" class="block font-semibold mb-1">Nome do Adotante</label>
+            <input id="nomeAdotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite ou busque um nome">
+          </div>
+          <button type="button" onclick="buscarAdotante()" class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
+            <i data-lucide="search" class="w-5 h-5 text-noturno"></i>
+          </button>
+        </div>
+  
+        <!-- Demais campos -->
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label class="block font-semibold mb-1">CPF</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">RG</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-X">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Telefone</label>
+              <input type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(xx) xxxxx-xxxx">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-semibold mb-1">Endereço</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua Exemplo">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Número</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nº">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Bairro</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Centro, Vila...">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Cidade</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Presidente Venceslau">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">UF</label>
+              <select class="w-full p-3 border border-gray-300 rounded-lg">
+                <option value="">Selecione</option>
+                <option value="SP">SP</option>
+                <option value="PR">PR</option>
+                <option value="MG">MG</option>
+                <!-- Adicione os demais estados -->
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">Profissão</label>
+              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Profissão">
+            </div>
+        </div>
+      </section>
+  
+      <!-- Animal -->
+      <section>
+        <h2 class="text-2xl font-semibold mb-4 text-noturno">Dados do Animal</h2>
+  
+        <!-- Nome + busca -->
+        <div class="flex gap-2 items-end">
+          <div class="flex-1">
+            <label for="nomeAnimal" class="block font-semibold mb-1">Nome</label>
+            <input id="nomeAnimal" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite ou busque um nome">
+          </div>
+          <button type="button" onclick="buscarAnimal()" class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
+            <i data-lucide="search" class="w-5 h-5 text-noturno"></i>
+          </button>
+        </div>
+  
+        <!-- Demais campos -->
+        <div class="grid md:grid-cols-3 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold mb-1">Raça</label>
+            <input type="text" class="w-full p-3 border border-gray-300 rounded-lg">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Idade</label>
+            <input type="number" min="0" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Em anos">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Sexo</label>
+            <select class="w-full p-3 border border-gray-300 rounded-lg">
+              <option value="">Selecione</option>
+              <option>Fêmea</option>
+              <option>Macho</option>
+            </select>
+          </div>
+        
+          <!-- Porte do Animal ocupa as 3 colunas -->
+          <div class="col-span-3 mb-4">
+            <label class="block font-semibold mb-2 text-noturno">Porte do Animal</label>
+            <div class="flex gap-6">
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" class="accent-carmesim w-5 h-5">
+                <span class="text-noturno">Pequeno</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" class="accent-carmesim w-5 h-5">
+                <span class="text-noturno">Médio</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" class="accent-carmesim w-5 h-5">
+                <span class="text-noturno">Grande</span>
+              </label>
+            </div>
+          </div>
+        
+          <!-- Castrado ocupa as 3 colunas -->
+          <div class="col-span-3 mb-4">
+            <label class="block font-semibold mb-2 text-noturno">Castrado</label>
+            <div class="flex gap-6">
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" class="accent-carmesim w-5 h-5">
+                <span class="text-noturno">Sim</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="checkbox" class="accent-carmesim w-5 h-5">
+                <span class="text-noturno">Não</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+      </section>
+  
+      <!-- Data e Observações -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-semibold mb-1">Data da Adoção</label>
+          <input type="date" class="w-full p-3 border border-gray-300 rounded-lg" required>
+        </div>
+        <div>
+          <label class="block font-semibold mb-1">Observações</label>
+          <textarea rows="3" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex: Adoção feita após período de adaptação."></textarea>
+        </div>
+      </div>
+  
+      <!-- Botão -->
+      <div class="text-center pt-6">
+        <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+          Confirmar Adoção
+        </button>
+      </div>
+    </form>
+  </main>
+  
+  <script>
+    lucide.createIcons();
+  
+    function buscarAdotante() {
+      alert("Simulação de busca de adotante");
+      // Aqui você pode usar uma modal ou preencher os campos automaticamente depois
+    }
+  
+    function buscarAnimal() {
+      alert("Simulação de busca de animal");
+    }
+  
+    function handleSubmit(e) {
+      e.preventDefault();
+      alert("Adoção registrada com sucesso!");
+    }
+  </script>
+  
+  
+</body>
+</html>
