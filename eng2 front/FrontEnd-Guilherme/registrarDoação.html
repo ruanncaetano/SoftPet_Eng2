@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Cores</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <!-- Sidebar -->
+  <script src="menu.js"></script>
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 bg-neve p-10 overflow-auto">
+
+    <!-- 🔍 Buscar ou cadastrar doador -->
+    <div class="mb-6">
+        <label class="font-semibold block mb-1">Buscar Doador (Nome ou CPF)</label>
+        <div class="flex gap-2">
+          <input type="text" id="buscaDoador" class="flex-1 p-2 border rounded-lg" placeholder="Digite nome ou CPF...">
+          <button onclick="buscarDoador()" class="bg-carmesim text-white px-4 rounded-lg">Buscar</button>
+          <button onclick="abrirPopup()" class="bg-gray-300 px-4 rounded-lg">Novo Doador</button>
+        </div>
+      </div>
+
+                <!-- Janela POPUP -->
+            <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+                <div class="bg-white w-[90%] md:w-[600px] h-[90%] rounded-lg shadow-lg relative overflow-hidden">
+                <button onclick="fecharPopup()" class="absolute top-2 right-2 text-gray-600 text-xl font-bold">×</button>
+                <iframe src="doadorPOPUP.html" class="w-full h-full border-none"></iframe>
+                </div>
+            </div>
+      <!-- Dados do doador (preenchido automaticamente ou via cadastro) -->
+      <div id="dadosDoador" class="hidden mb-6 bg-gray-50 p-4 rounded-lg">
+        <p><strong>Nome:</strong> <span id="nomeDoador"></span></p>
+        <p><strong>CPF:</strong> <span id="cpfDoador"></span></p>
+      </div>
+  
+      <!-- 📦 Registro da doação -->
+      <form onsubmit="return salvarDoacao()">
+        <div class="grid md:grid-cols-2 gap-4">
+  
+          <div>
+            <label class="block font-semibold mb-1">Tipo da Doação</label>
+            <select id="tipoDoacao" class="w-full p-2 border rounded-lg" onchange="carregarItensPorTipo()">
+              <option value="">Selecione</option>
+              <option value="racao">Ração</option>
+              <option value="coberta">Coberta</option>
+              <option value="remedio">Remédio</option>
+            </select>
+          </div>
+  
+          <div>
+            <label class="block font-semibold mb-1">Item</label>
+            <input type="text" id="itemInput" class="w-full p-2 border rounded-lg" placeholder="Digite o item..." oninput="verificarItem()">
+            <div id="sugestoes" class="text-sm text-gray-500 mt-1"></div>
+            <button type="button" id="btnCadastrarItem" onclick="cadastrarItem()" class="mt-2 bg-carmesim text-white px-4 py-1 rounded hidden">
+              Cadastrar novo item
+            </button>
+          </div>
+  
+          <div>
+            <label class="block font-semibold mb-1">Quantidade</label>
+            <input type="number" id="quantidade" class="w-full p-2 border rounded-lg" min="1">
+          </div>
+  
+          <div>
+            <label class="block font-semibold mb-1">Data da Doação</label>
+            <input type="date" id="dataDoacao" class="w-full p-2 border rounded-lg">
+          </div>
+  
+        </div>
+  
+        <div class="text-right mt-6">
+          <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+            Salvar Doação
+          </button>
+        </div>
+      </form>
+  
+    </main>
+  
+    <script>
+      const listaItens = {
+        racao: ["Ração seca", "Ração úmida"],
+        coberta: ["Coberta pequena", "Coberta grande"],
+        remedio: ["Vermífugo", "Antibiótico"]
+      };
+  
+      let itemAtual = "";
+  
+      function carregarItensPorTipo() {
+        document.getElementById("itemInput").value = "";
+        document.getElementById("sugestoes").textContent = "";
+        document.getElementById("btnCadastrarItem").classList.add("hidden");
+        itemAtual = "";
+      }
+  
+      function verificarItem() {
+        const tipo = document.getElementById("tipoDoacao").value;
+        const input = document.getElementById("itemInput").value.trim().toLowerCase();
+        const sugestoes = document.getElementById("sugestoes");
+        const botaoCadastrar = document.getElementById("btnCadastrarItem");
+  
+        if (!tipo) {
+          sugestoes.textContent = "Selecione o tipo da doação primeiro.";
+          botaoCadastrar.classList.add("hidden");
+          return;
+        }
+  
+        const itens = listaItens[tipo] || [];
+        const encontrados = itens.filter(i => i.toLowerCase().includes(input));
+  
+        if (input === "") {
+          sugestoes.textContent = "";
+          botaoCadastrar.classList.add("hidden");
+          return;
+        }
+  
+        if (encontrados.length > 0 && encontrados.includes(capitalize(input))) {
+          sugestoes.textContent = "Item encontrado.";
+          botaoCadastrar.classList.add("hidden");
+          itemAtual = capitalize(input);
+        } else {
+          sugestoes.textContent = "Item não encontrado.";
+          botaoCadastrar.classList.remove("hidden");
+          itemAtual = capitalize(input);
+        }
+      }
+  
+      function cadastrarItem() {
+        const tipo = document.getElementById("tipoDoacao").value;
+        const nome = itemAtual;
+  
+        if (!nome) return;
+  
+        if (!listaItens[tipo].includes(nome)) {
+          listaItens[tipo].push(nome);
+          alert(`Item "${nome}" cadastrado com sucesso.`);
+          document.getElementById("sugestoes").textContent = "Item cadastrado.";
+          document.getElementById("btnCadastrarItem").classList.add("hidden");
+        }
+      }
+  
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+  
+      function salvarDoacao() {
+        const tipo = document.getElementById("tipoDoacao").value;
+        const item = document.getElementById("itemInput").value.trim();
+        const quantidade = document.getElementById("quantidade").value;
+  
+        if (!tipo || !item || quantidade < 1) {
+          alert("Preencha todos os campos corretamente.");
+          return false;
+        }
+  
+        alert("Doação registrada com sucesso!");
+        return true;
+      }
+    </script>
+  </main>
+
+  <script>
+    function abrirPopup() {
+  document.getElementById('modal').classList.remove('hidden');
+}
+
+function fecharPopup() {
+  document.getElementById('modal').classList.add('hidden');
+}
+    // Mantém o createIcons global
+    lucide.createIcons();
+    
+  </script>
+</body>
+</html>
