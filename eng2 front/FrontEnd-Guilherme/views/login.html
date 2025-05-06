@@ -21,6 +21,11 @@
     };
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .erro-input {
+      border-color: red !important;
+    }
+  </style>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno items-center justify-center">
 
@@ -30,30 +35,52 @@
       <svg data-lucide="paw-print" class="w-12 h-12 text-pastel"></svg>
     </div>
     <h1 class="text-3xl font-bold text-noturno text-center mb-6">Login ADAPV</h1>
+
+    <!-- FORMULÁRIO -->
     <form action="#" method="POST">
-      <!-- Campo de Email -->
+
+      <!-- Campo de E-mail -->
       <div class="mb-4">
         <label for="email" class="block text-sm font-medium text-noturno">E-mail</label>
         <input type="email" id="email" name="email" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite seu e-mail" required />
+        <p id="erroEmail" class="text-red-500 text-sm mt-1"></p>
+      </div>      
+
+      <!-- Campo de CPF -->
+      <div class="mb-4">
+        <label for="cpf" class="block text-sm font-medium text-noturno">CPF</label>
+        <input maxlength="14" type="text" id="cpf" name="cpf" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite seu CPF" required />
+        <p id="erroCpf" class="text-red-500 text-sm mt-1"></p>
       </div>
 
+
       <!-- Campo de Senha -->
-      <div class="mb-6">
+      <div class="mb-4">
         <label for="senha" class="block text-sm font-medium text-noturno">Senha</label>
-        <input type="password" id="senha" name="senha" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite sua senha" required />
+        <input maxlength="12" type="password" id="senha" name="senha" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite sua senha" required />
+        <p id="erroSenha" class="text-red-500 text-sm mt-1"></p> <!-- MANTER apenas este -->
       </div>
+
 
       <!-- Botão de Login -->
       <div>
         <button type="submit" class="w-full py-3 bg-carmesim text-neve font-semibold text-lg rounded-xl hover:bg-pastel transition-colors duration-200">
           Entrar
-        </button>
+        </button>        
       </div>
     </form>
+
     <div class="mt-4 text-center">
       <a href="#" class="text-sm text-carmesim hover:text-pastel">Esqueceu a senha?</a>
     </div>
   </div>
 
+  <!-- LUCIDE ICONS -->
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <!-- SEU SCRIPT -->
+  <script src="/FrontEnd-Guilherme/public/js/index.js"></script>
 </body>
 </html>
