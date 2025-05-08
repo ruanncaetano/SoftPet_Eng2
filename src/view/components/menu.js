@@ -25,7 +25,7 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-adocao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
+          <li><a href="../viewRuan/" class="block hover:text-carmesim">Nova Adoção</a></li>
           <li><a href="buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
         </ul>
       </div>
