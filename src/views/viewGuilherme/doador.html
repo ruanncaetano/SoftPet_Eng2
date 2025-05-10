@@ -40,7 +40,7 @@
         <div class="grid md:grid-cols-2 gap-4 mt-4">
             <div class="md:col-span-2">
                 <label class="block font-semibold mb-1">Nome</label>
-                <input id="nome-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva">
+                <input id="nome-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva">
                 <p id="erroNomeDoador" class="text-red-500 text-sm mt-1"></p>
               </div>
             <div>
@@ -50,11 +50,18 @@
             </div>
             <div>
               <label class="block font-semibold mb-1">RG</label>
-              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-X">
+              <input id="rg-doador" maxlength="12" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-0">
+              <p id="erroRgDoador" class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
               <label class="block font-semibold mb-1">Telefone</label>
-              <input type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(xx) xxxxx-xxxx">
+              <input id="fone-doador" maxlength="15" type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(00) 00000-0000">
+              <p id="erroFoneDoador" class="text-red-500 text-sm mt-1"></p>
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">CEP</label>
+              <input id="cep-doador" maxlength="9" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00000-000">
+              <p id="erroCepDoador" class="text-red-500 text-sm mt-1"></p>
             </div>
             <div class="md:col-span-2">
               <label class="block font-semibold mb-1">Endereço</label>
@@ -77,8 +84,10 @@
               <select class="w-full p-3 border border-gray-300 rounded-lg">
                 <option value="">Selecione</option>
                 <option value="SP">SP</option>
-                <option value="PR">PR</option>
                 <option value="MG">MG</option>
+                <option value="RJ">RJ</option>
+                <option value="PR">PR</option>
+                <option value="MS">MS</option>
               </select>
             </div>
         </div>

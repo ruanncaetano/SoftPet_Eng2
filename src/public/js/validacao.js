@@ -41,25 +41,25 @@ function validarCPF(cpf)
 //função que aplica a validação de cpf
 function aplicarValidacaoCPF(idInput, idErro)
 {
-    var input = document.getElementById(idInput);
+    var cpf = document.getElementById(idInput);
     var erro = document.getElementById(idErro);
 
-    if(input)
+    if(cpf)
     {
-        input.addEventListener('input', () => {
-            input.value = formatarCPF(input.value);
+        cpf.addEventListener('input', () => {
+            cpf.value = formatarCPF(cpf.value);
         });
 
-        input.addEventListener('blur', () => {
-            if(!validarCPF(input.value))
+        cpf.addEventListener('blur', () => {
+            if(!validarCPF(cpf.value))
             {
                 erro.textContent = 'CPF inválido.';
-                input.classList.add('erro-input');
+                cpf.classList.add('erro-input');
             }
             else
             {
                 erro.textContent = '';
-                input.classList.remove('erro-input');
+                cpf.classList.remove('erro-input');
             }
         });
     }
@@ -168,7 +168,7 @@ function validarNomeCompleto(nome)
     return false;
 }
 
-//função que valida a nome completo
+//função que aplica a validação do nome completo
 function aplicarValidacaoNomeCompleto(idInput, idErro)
 {
     var nome = document.getElementById(idInput);
@@ -176,6 +176,10 @@ function aplicarValidacaoNomeCompleto(idInput, idErro)
 
     if(nome)
     {
+        nome.addEventListener('input', () => {
+            nome.value = nome.value.replace(/[0-9]/g, '');
+        });
+        
         nome.addEventListener('blur', () => {
             if(!validarNomeCompleto(nome.value)) 
             {
@@ -186,6 +190,145 @@ function aplicarValidacaoNomeCompleto(idInput, idErro)
             {
                 erro.textContent = '';
                 nome.classList.remove('erro-input');
+            }
+        });
+    }
+}
+
+//função de formatação do RG
+function formatarRG(rg)
+{
+    rg = rg.replace(/\D/g, '');
+    if(rg.length > 9)
+        rg = rg.slice(0, 9);
+    rg = rg.replace(/(\d{2})(\d)/, '$1.$2');
+    rg = rg.replace(/(\d{3})(\d)/, '$1.$2');
+    rg = rg.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    return rg;
+}
+
+//função que valida o RG
+function validarRG(rg)
+{
+    rg = rg.replace(/\D/g, '');
+
+    return rg.length === 9;
+}
+
+//função que aplica a validação do RG
+function aplicarValidacaoRG(idInput, idErro)
+{
+    var rg = document.getElementById(idInput);
+    var erro = document.getElementById(idErro);
+
+    if(rg)
+    {
+        rg.addEventListener('input', () => {
+            rg.value = formatarRG(rg.value);
+        });
+
+        rg.addEventListener('blur', () => {
+            if(!validarRG(rg.value))
+            {
+                erro.textContent = 'RG inválido.';
+                rg.classList.add('erro-input');
+            }
+            else
+            {
+                erro.textContent = '';
+                rg.classList.remove('erro-input');
+            }
+        });
+    }
+}
+
+//função de formatação de telefone
+function formatarTelefone(telefone)
+{
+    telefone = telefone.replace(/\D/g, '');
+    if(telefone.length <= 2)
+        return '(' + telefone;
+    if(telefone.length <= 6)
+        return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2);
+
+    return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2, 7) + '-' + telefone.slice(7, 11);
+}
+
+//função que valida o número de telefone
+function validarTelefone(telefone)
+{
+    var regex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
+
+    return regex.test(telefone);
+}
+
+//função que aplica a validação de telefone
+function aplicarValidacaoTelefone(idInput, idErro)
+{
+    var input = document.getElementById(idInput);
+    var erro = document.getElementById(idErro);
+
+    if(input)
+    {
+        input.addEventListener('input', () => {
+            input.value = formatarTelefone(input.value);
+        });
+
+        input.addEventListener('blur', () => {
+            if(!validarTelefone(input.value))
+            {
+                erro.textContent = 'Número de telefone inválido.';
+                input.classList.add('erro-input');
+            }
+            else
+            {
+                erro.textContent = '';
+                input.classList.remove('erro-input');
+            }
+        });
+    }
+}
+
+//função de formatação do cep
+function formatarCEP(cep)
+{
+    cep = cep.replace(/\D/g, '');
+    if(cep.length <= 5)
+        return cep;
+    
+    return cep.slice(0, 5) + '-' + cep.slice(5, 8);
+}
+
+//função que valida o CEP
+function validarCEP(cep)
+{
+    var regex = /^\d{5}-\d{3}$/;
+
+    return regex.test(cep);
+}
+
+//função que aplica a validação de CEP
+function aplicarValidacaoCEP(idInput, idErro)
+{
+    var cep = document.getElementById(idInput);
+    var erro = document.getElementById(idErro);
+
+    if(cep)
+    {
+        cep.addEventListener('input', () => {
+            cep.value = formatarCEP(cep.value);
+        });
+
+        cep.addEventListener('blur', () => {
+            if(!validarCEP(cep.value))
+            {
+                erro.textContent = 'CEP inválido.';
+                cep.classList.add('erro-input');
+            }
+            else
+            {
+                erro.textContent = '';
+                cep.classList.remove('erro-input');
             }
         });
     }
@@ -205,4 +348,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //chamando validação de nome completo
     aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');
+
+    //chamando a validação do RG
+    aplicarValidacaoRG('rg-doador', 'erroRgDoador');
+
+    //chamando a validação do numero de telefone
+    aplicarValidacaoTelefone('fone-doador', 'erroFoneDoador');
+
+    //chamando a validação do CEP
+    aplicarValidacaoCEP('cep-doador', 'erroCepDoador');
 });
