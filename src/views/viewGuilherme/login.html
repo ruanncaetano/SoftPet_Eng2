@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ADAPV - Login</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -31,20 +32,12 @@
 
   <!-- Formulário de Login -->
   <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-    <div class="flex items-center justify-center mb-6">
-      <svg data-lucide="paw-print" class="w-12 h-12 text-pastel"></svg>
-    </div>
-    <h1 class="text-3xl font-bold text-noturno text-center mb-6">Login ADAPV</h1>
-
-    <!-- FORMULÁRIO -->
+    <div class="flex items-center justify-center">
+      <div class="w-[180px] ">
+        <img src="../../public/images/ADAPV.png" alt="logo">
+      </div>
+    </div>  
     <form action="#" method="POST">
-
-      <!-- Campo de E-mail -->
-      <div class="mb-4">
-        <label for="email" class="block text-sm font-medium text-noturno">E-mail</label>
-        <input type="email" id="email" name="email" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite seu e-mail" required />
-        <p id="erroEmail" class="text-red-500 text-sm mt-1"></p>
-      </div>      
 
       <!-- Campo de CPF -->
       <div class="mb-4">
@@ -53,14 +46,12 @@
         <p id="erroCpf" class="text-red-500 text-sm mt-1"></p>
       </div>
 
-
       <!-- Campo de Senha -->
       <div class="mb-4">
         <label for="senha" class="block text-sm font-medium text-noturno">Senha</label>
         <input maxlength="12" type="password" id="senha" name="senha" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite sua senha" required />
-        <p id="erroSenha" class="text-red-500 text-sm mt-1"></p> <!-- MANTER apenas este -->
+        <p id="erroSenha" class="text-red-500 text-sm mt-1"></p>
       </div>
-
 
       <!-- Botão de Login -->
       <div>
@@ -81,6 +72,6 @@
   </script>
 
   <!-- SEU SCRIPT -->
-  <script src="/FrontEnd-Guilherme/public/js/index.js"></script>
+  <script src="../../public/js/validacao.js"></script>
 </body>
 </html>
