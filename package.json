@@ -1,6 +1,7 @@
 {
   "name": "softpet",
   "version": "1.0.0",
+  "type": "module",
   "description": "Software da para a Ong ADAPV",
   "main": "index.js",
   "scripts": {
@@ -11,5 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
   }
 }
