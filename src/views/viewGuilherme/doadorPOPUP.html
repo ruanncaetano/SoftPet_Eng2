@@ -22,6 +22,11 @@
     };
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .erro-input {
+      border-color: red !important;
+    }
+  </style>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
 
@@ -34,19 +39,28 @@
         <div class="grid md:grid-cols-2 gap-4 mt-4">
             <div class="md:col-span-2">
                 <label class="block font-semibold mb-1">Nome</label>
-                <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva">
+                <input id="nome-doadorPOP" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva" required>
+                <p id="erroNomeDoadorPOP" class="text-red-500 text-sm mt-1"></p>
               </div>
             <div>
               <label class="block font-semibold mb-1">CPF</label>
-              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00">
+              <input id="cpf-doadorPOP" maxlength="14" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00" required>
+              <p id="erroCpfDoadorPOP" class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
               <label class="block font-semibold mb-1">RG</label>
-              <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-X">
+              <input id="rg-doadorPOP" maxlength="12" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-0" required>
+              <p id="erroRgDoadorPOP" class="text-red-500 text-sm mt-1"></p>
             </div>
             <div>
               <label class="block font-semibold mb-1">Telefone</label>
-              <input type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(xx) xxxxx-xxxx">
+              <input id="fone-doadorPOP" maxlength="15" type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(00) 00000-0000">
+              <p id="erroFoneDoadorPOP" class="text-red-500 text-sm mt-1"></p>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-semibold mb-1">Cep</label>
+              <input id="cep-doadorPOP" maxlength="9" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00000-000" required>
+              <p id="erroCepDoadorPOP" class="text-red-500 text-sm mt-1"></p>
             </div>
             <div class="md:col-span-2">
               <label class="block font-semibold mb-1">Endereço</label>

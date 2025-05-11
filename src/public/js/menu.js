@@ -48,9 +48,9 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Doar</a></li>
-          <li><a href="../../views/viewGuilherme/consumir.html" class="block hover:text-carmesim">Utilizar</a></li>
-          <li><a href="#" class="block hover:text-carmesim">Consultar</a></li>
+          <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
+          <li><a href="../../views/viewGuilherme/consumir.html" class="block hover:text-carmesim">Utilizar Doação</a></li>
+          <li><a href="#" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
 

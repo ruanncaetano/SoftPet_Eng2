@@ -338,6 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //chamando validação de CPF
     aplicarValidacaoCPF('cpf', 'erroCpf'); // tela de login
     aplicarValidacaoCPF('cpf-doador', 'erroCpfDoador'); // tela de doador
+    aplicarValidacaoCPF('cpf-doadorPOP', 'erroCpfDoadorPOP');
 
     //chamando validação de senha
     aplicarValidacaoSenha('senha', 'erroSenha');
@@ -348,13 +349,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //chamando validação de nome completo
     aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');
+    aplicarValidacaoNomeCompleto('nome-doadorPOP', 'erroNomeDoadorPOP');
 
     //chamando a validação do RG
     aplicarValidacaoRG('rg-doador', 'erroRgDoador');
+    aplicarValidacaoRG('rg-doadorPOP', 'erroRgDoadorPOP');
 
     //chamando a validação do numero de telefone
     aplicarValidacaoTelefone('fone-doador', 'erroFoneDoador');
+    aplicarValidacaoTelefone('fone-doadorPOP', 'erroFoneDoadorPOP');
 
     //chamando a validação do CEP
     aplicarValidacaoCEP('cep-doador', 'erroCepDoador');
+    aplicarValidacaoCEP('cep-doadorPOP', 'erroCepDoadorPOP');
 });
