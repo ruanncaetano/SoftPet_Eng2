@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Animal {
+  id             Int      @id @default(autoincrement()) @map("an_cod")
+  nome           String   @map("an_nome")
+  idade          Int      @map("an_idade")
+  tipo           String   @map("an_tipo")       // Ex: "Cachorro", "Gato", etc.
+  sexo           String   @map("an_sexo")       // Ex: "M", "F"
+  raca           String?  @map("an_raca")       // Opcional (pode ser nulo)
+  pelagem        String?  @map("an_pelagem")    // Opcional
+  bala           Int?  @map("an_bala")       // (ex: número da coleira)
+  dtResgate      String @map("an_dt_resgate") // Data de resgate
+  dispAdocao     Boolean  @default(true) @map("an_disp_adocao") // Disponível para adoção?
+  foto           Bytes?   @map("an_foto")       // Imagem em binário (BYTEA) - opcional
+
+  @@map("animais") // Nome da tabela no banco (se for diferente)
+}

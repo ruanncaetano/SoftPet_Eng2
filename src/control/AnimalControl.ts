@@ -4,8 +4,7 @@ app.use(express.json());
 
 import { Animal } from '../models/Animal';
 
-// import Animal from 
-// const animal= new Animal;
+
 
 const teste: any[] = [];
 app.get('/animal', (req,res) => {
