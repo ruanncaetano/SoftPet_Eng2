@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
 
     form.addEventListener("submit", (event) => {
-        event.preventDefault(); // Evita o envio padrão do formulário
+        event.preventDefault();
 
         const cpf = document.getElementById("cpf").value;
         const senha = document.getElementById("senha").value;
@@ -16,11 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(async (res) => {
             const texto = await res.text();
-
-            //limpando mensagens antigas
-            document.getElementById("erroCpf").textContent = "";
-            document.getElementById("erroSenha").textContent = "";
-
             if(res.ok)
             {
                 try
@@ -36,13 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             else
-            {
-            
-                if(texto.includes("CPF"))
-                    document.getElementById("erroCpf").textContent = texto;
-                else
-                    document.getElementById("erroSenha").textContent = texto;
-            }
+                alert("Credenciais inválidas!");
         })
         .catch((err) => {
                 console.error("Erro ao conectar com o backend:", err);
