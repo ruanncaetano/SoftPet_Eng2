@@ -5,6 +5,8 @@ import SoftPet.backend.model.AnimalModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AnimalService {
     @Autowired
@@ -19,6 +21,7 @@ public class AnimalService {
         novoAnimal.setIdade(animal.getIdade());
         novoAnimal.setTipo(animal.getTipo());
         novoAnimal.setSexo(animal.getSexo());
+        novoAnimal.setPorte(animal.getPorte());
         novoAnimal.setRaca(animal.getRaca());
         novoAnimal.setPelagem(animal.getPelagem());
         novoAnimal.setBaia(animal.getBaia());
@@ -28,7 +31,9 @@ public class AnimalService {
 
         return animalDAL.Adicionar(novoAnimal);
     }
-
+    public List<AnimalModel> buscarAnimais(String nome, String tipo, String porte, String sexo, boolean status) {
+        return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
+    }
     // Buscar animal por ID
 //    public Optional<AnimalModel> buscarPorId(int cod) {
 //        return Optional.ofNullable(animalDAL.findById(cod));

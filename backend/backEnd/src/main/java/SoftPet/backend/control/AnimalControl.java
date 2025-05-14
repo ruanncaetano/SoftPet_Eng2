@@ -1,13 +1,21 @@
 package SoftPet.backend.control;
 
 import SoftPet.backend.model.AnimalModel;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import SoftPet.backend.service.AnimalService;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/animal")
-public class AnimalControl {
+public class AnimalControl
+{
 
     private final AnimalService animalService; // Injeção de dependência
 
@@ -16,7 +24,22 @@ public class AnimalControl {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Object> cadastrarAnimal(@RequestBody AnimalModel animal) {
+    public ResponseEntity<Object> cadastrarAnimal( @RequestParam("nome") String nome,
+                                                   @RequestParam("idade") int idade,
+                                                   @RequestParam("tipo") String tipo,
+                                                   @RequestParam("sexo") String sexo,
+                                                   @RequestParam("porte") String porte,
+                                                   @RequestParam("raca") String raca,
+                                                   @RequestParam("pelagem") String pelagem,
+                                                   @RequestParam("baia") String baia,
+                                                   @RequestParam("resgate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date resgate,
+                                                   @RequestParam("adocao") boolean adocao,
+                                                   @RequestParam(value = "foto", required = false) MultipartFile foto) throws IOException {
+
+        AnimalModel animal = new AnimalModel(nome,idade,tipo,sexo,porte,raca,pelagem,baia,resgate,adocao);
+        if (foto != null && !foto.isEmpty()) {
+            animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]
+        }
         try {
             AnimalModel animalSalvo = animalService.cadastrarAnimal(animal);
             return ResponseEntity.ok(animalSalvo); // Retorna 200 OK com o animal cadastrado
@@ -24,4 +47,18 @@ public class AnimalControl {
             return ResponseEntity.badRequest().body(e.getMessage()); // Retorna 400 em caso de erro
         }
     }
+
+    @GetMapping("/filtro")
+    public ResponseEntity<Object> filtrar(@RequestParam(required = false) String nome,
+                                          @RequestParam(required = false)String porte,
+                                          @RequestParam(required = false) String tipo,
+                                          @RequestParam(required = false) String sexo,
+                                          @RequestParam(required = false) boolean status
+                                          )
+    {
+        //required = false é para deixar opcional
+        List<AnimalModel> animais=animalService.buscarAnimais(nome,porte,tipo,sexo,status);
+        return ResponseEntity.ok(animais);
+    }
+
 }

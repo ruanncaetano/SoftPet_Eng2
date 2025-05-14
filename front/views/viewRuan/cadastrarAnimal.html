@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ADAPV</title>
-  <link rel="website icon" type="png" href="/src/public/images/patinha.png">  
+  <link rel="website icon" type="png" href="/public/images/patinha.png">  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,17 +23,17 @@
     };
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="/public/js/api.js"></script>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
 
   <!-- Sidebar -->
-  <!-- Sidebar -->
-  <script src="/src/public/js/menu.js"></script>
+  <script src="/public/js/menu.js"></script>
   <!-- Conteúdo Principal -->
   <main class="flex-1 bg-neve p-10 overflow-auto">
     <h1 class="text-2xl font-bold mb-6">Cadastro de Animal</h1>
 
-    <form onsubmit="return salvarAnimal()">
+    <form onsubmit="return salvarAnimal(event)" enctype="multipart/form-data">
       <div class="grid md:grid-cols-2 gap-4">
 
         <div>
@@ -55,6 +55,23 @@
           </select>
         </div>
 
+        <div>
+          <label class="block font-semibold mb-1">Sexo</label>
+          <select id="sexo" class="w-full p-2 border rounded-lg" required>
+            <option value="">Selecione</option>
+            <option value="Macho">Macho</option>
+            <option value="Fêmea">Fêmea</option>
+          </select>
+        </div>
+    <div>
+          <label class="block font-semibold mb-1">Porte</label>
+          <select id="porte" class="w-full p-2 border rounded-lg" required>
+            <option value="">Selecione</option>
+            <option value="Pequeno">Pequeno</option>
+            <option value="Medio">Medio</option>
+            <option value="Pequeno">Pequeno</option>
+          </select>
+        </div>
         <div>
           <label class="block font-semibold mb-1">Raça</label>
           <input type="text" id="raca" class="w-full p-2 border rounded-lg" required>
@@ -84,11 +101,11 @@
           <label class="block font-semibold mb-1">Disponível para Adoção?</label>
           <div class="flex gap-4 mt-1">
             <label class="inline-flex items-center">
-              <input type="radio" name="adocao" value="Sim" class="mr-2" checked>
+              <input type="radio" name="adocao" value="1" class="mr-2" checked>
               Sim
             </label>
             <label class="inline-flex items-center">
-              <input type="radio" name="adocao" value="Não" class="mr-2">
+              <input type="radio" name="adocao" value="0" class="mr-2">
               Não
             </label>
           </div>
@@ -100,12 +117,7 @@
         </div>
 
       </div>
-      <button type="button"
-      onclick="gerarPDFAnimal()"
-      class="ml-4 bg-areia text-noturno px-6 py-2 rounded-full hover:bg-[#a89580] transition-all">
-      Gerar PDF
-    </button>
-    
+      
       <div class="text-right mt-6">
         <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
           Cadastrar Animal
@@ -113,88 +125,10 @@
       </div>
     </form>
   </main>
-
-  <script>
-    function salvarAnimal() {
-      const nome = document.getElementById('nome').value;
-      const idade = document.getElementById('idade').value;
-      const tipo = document.getElementById('tipo').value;
-      const raca = document.getElementById('raca').value;
-      const pelagem = document.getElementById('pelagem').value;
-      const peso = document.getElementById('peso').value;
-      const baia = document.getElementById('baia').value;
-      const resgate = document.getElementById('resgate').value;
-      const adocao = document.querySelector('input[name="adocao"]:checked').value;
-      const foto = document.getElementById('foto').files[0];
-
-      // Simulação de salvamento
-      console.log({
-        nome, idade, tipo, raca, pelagem, peso, baia, resgate, adocao, foto
-      });
-
-      alert("Animal cadastrado com sucesso!");
-      return false; // evitar envio real
-    }
-    // para testar 
-    async function gerarPDFAnimal() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  const nome = document.getElementById('nome').value;
-  const idade = document.getElementById('idade').value;
-  const tipo = document.getElementById('tipo').value;
-  const raca = document.getElementById('raca').value;
-  const pelagem = document.getElementById('pelagem').value;
-  const peso = document.getElementById('peso').value;
-  const baia = document.getElementById('baia').value;
-  const resgate = document.getElementById('resgate').value;
-  const adocao = document.querySelector('input[name="adocao"]:checked')?.value || "Não informado";
-
-  let y = 10;
-  doc.setFontSize(14);
-  doc.text("Ficha de Cadastro - Animal", 10, y);
-  y += 10;
-
-  const dados = [
-    `Nome: ${nome}`,
-    `Idade: ${idade} anos`,
-    `Tipo: ${tipo}`,
-    `Raça: ${raca}`,
-    `Pelagem: ${pelagem}`,
-    `Peso: ${peso} kg`,
-    `Baia: ${baia}`,
-    `Data de Resgate: ${resgate}`,
-    `Disponível para Adoção: ${adocao}`
-  ];
-
-  dados.forEach(dado => {
-    doc.text(dado, 10, y);
-    y += 10;
-  });
-
-  // Captura da imagem (se tiver)
-  const file = document.getElementById('foto').files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const imgData = e.target.result;
-      doc.addImage(imgData, 'JPEG', 140, 10, 50, 50); // imagem no canto direito
-      doc.save(`animal_${nome || 'sem_nome'}.pdf`);
-    };
-    reader.readAsDataURL(file);
-  } else {
-    doc.save(`animal_${nome || 'sem_nome'}.pdf`);
-  }
-}
-
-
-  </script>
     
   <script>
-
     // Mantém o createIcons global
     lucide.createIcons();
-    
   </script>
 </body>
 </html>

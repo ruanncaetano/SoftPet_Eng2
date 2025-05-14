@@ -1,6 +1,7 @@
 package SoftPet.backend.model;
 
-import java.sql.ResultSet;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
 
 public class AnimalModel {
@@ -9,6 +10,7 @@ public class AnimalModel {
     private int idade;
     private String tipo;
     private String sexo;
+    private String porte;
     private String raca;
     private String pelagem;
     private String baia;
@@ -16,14 +18,15 @@ public class AnimalModel {
     private boolean disp_adocao;
     private byte[] foto;
 
-    public AnimalModel() {}
-    public AnimalModel(int cod, String nome, int idade, String tipo, String sexo, String raca,
-                       String pelagem, String baia, Date dt_resgate, boolean disp_adocao, byte[] foto) {
-        this.cod = cod;
+    public AnimalModel(){}
+    public AnimalModel( String nome, int idade, String tipo, String sexo,String porte, String raca,
+                       String pelagem, String baia, Date dt_resgate, boolean disp_adocao) {
+
         this.nome = nome;
         this.idade = idade;
         this.tipo = tipo;
         this.sexo = sexo;
+        this.porte = porte;
         this.raca = raca;
         this.pelagem = pelagem;
         this.baia = baia;
@@ -118,5 +121,13 @@ public class AnimalModel {
 
     public void setDt_resgate(Date dt_resgate) {
         this.dt_resgate = dt_resgate;
+    }
+
+    public String getPorte() {
+        return porte;
+    }
+
+    public void setPorte(String porte) {
+        this.porte = porte;
     }
 }

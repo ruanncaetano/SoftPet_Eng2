@@ -24,104 +24,18 @@
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="/public/js/api.js"></script>
 </head>
-<!-- Modal de Edição -->
-<div id="modalEdicao" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 overflow-auto max-h-[90vh]">
-    <button onclick="fecharModal()" class="text-gray-500 float-right">
-      <i data-lucide="x" class="w-5 h-5"></i>
-    </button>
-
-    <main class="bg-neve p-6">
-      <h1 class="text-2xl font-bold mb-6">Cadastro de Animal</h1>
-
-      <form onsubmit="return salvarAnimal()">
-        <div class="grid md:grid-cols-2 gap-4">
-
-          <div>
-            <label class="block font-semibold mb-1">Nome</label>
-            <input type="text" id="nome" class="w-full p-2 border rounded-lg" required>
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Idade (em anos)</label>
-            <input type="number" id="idade" class="w-full p-2 border rounded-lg" min="0" required>
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Tipo</label>
-            <select id="tipo" class="w-full p-2 border rounded-lg" required>
-              <option value="">Selecione</option>
-              <option value="Cachorro">Cachorro</option>
-              <option value="Gato">Gato</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Raça</label>
-            <input type="text" id="raca" class="w-full p-2 border rounded-lg" required>
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Pelagem</label>
-            <input type="text" id="pelagem" class="w-full p-2 border rounded-lg">
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Peso (kg)</label>
-            <input type="number" step="0.01" id="peso" class="w-full p-2 border rounded-lg" min="0">
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Baia</label>
-            <input type="text" id="baia" class="w-full p-2 border rounded-lg">
-          </div>
-
-          <div>
-            <label class="block font-semibold mb-1">Data de Resgate</label>
-            <input type="date" id="resgate" class="w-full p-2 border rounded-lg" required>
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Disponível para Adoção?</label>
-            <div class="flex gap-4 mt-1">
-              <label class="inline-flex items-center">
-                <input type="radio" name="adocao" value="Sim" class="mr-2" checked>
-                Sim
-              </label>
-              <label class="inline-flex items-center">
-                <input type="radio" name="adocao" value="Não" class="mr-2">
-                Não
-              </label>
-            </div>
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Foto do Animal</label>
-            <input type="file" id="foto" class="w-full p-2 border rounded-lg" accept="image/*">
-          </div>
-
-        </div>
-
-        <div class="text-right mt-6">
-          <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
-            Salvar
-          </button>
-        </div>
-      </form>
-    </main>
-  </div>
-</div>
-
 
 <body class="flex h-screen bg-neve font-sans text-noturno">
 
     <!-- Sidebar -->
-    <script src="/src/public/js/menu.js"></script>
+    <script src="/public/js/menu.js"></script>
 
     <!-- Conteúdo principal -->
-    <section class="p-8 ml-0 "> <!-- Ajuste para compensar a sidebar -->
+    <section class="p-8 ml-0">
         <h1 class="text-3xl font-bold text-carmesim mb-6">Consulta de Animais</h1>
+        
         <!-- Filtros -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
             <input type="text" id="filtroNome" placeholder="Nome" class="p-2 rounded border border-gray-300 w-full">
@@ -135,140 +49,247 @@
 
             <select id="filtroTipo" class="p-2 rounded border border-gray-300 w-full">
                 <option value="">Todos os tipos</option>
-                <option value="cão">Cão</option>
-                <option value="gato">Gato</option>
+                <option value="Cachorro">Cachorro</option>
+                <option value="Gato">Gato</option>
             </select>
+            
             <select id="filtroSexo" class="p-2 rounded border border-gray-300 w-full">
                 <option value="">Todos os sexos</option>
-                <option value="femea">Femea</option>
+                <option value="Fêmea">Fêmea</option>
                 <option value="Macho">Macho</option>
             </select>
-            <input type="number" id="filtroIdade" placeholder="Idade (em anos)" min="0"
-                class="p-2 rounded border border-gray-300 w-full">
 
             <select id="filtroStatus" class="p-2 rounded border border-gray-300 w-full">
                 <option value="">Todos os status</option>
-                <option value="disponível">Disponível</option>
-                <option value="adotado">Adotado</option>
+                <option value="Disponível">Disponível</option>
+                <option value="Adotado">Adotado</option>
             </select>
             
-
-           <div class="md:col-span-3 lg:col-span-6 flex justify-end">
-  <button onclick="aplicarFiltros()" class="bg-carmesim text-white rounded px-4 py-2 hover:bg-[#8a0128] transition">
-    Buscar
-  </button>
-</div>
+            <div class="flex justify-end">
+                <button onclick="aplicarFiltros()" class="bg-carmesim text-white rounded px-4 py-2 hover:bg-[#8a0128] transition">
+                    Buscar
+                </button>
+            </div>
         </div>
 
         <!-- Resultados -->
         <div id="listaAnimais" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards de animais vão aqui -->
+            <!-- Cards de animais serão renderizados aqui -->
         </div>
     </section>
 
-    <script>
-        const animais = [
-            { nome: "Rex", porte: "grande", tipo: "cão", idade: 5, status: "disponível", sexo: "Fêmea"},
-            { nome: "Luna", porte: "pequeno", tipo: "gato", idade: 2, status: "adotado", sexo: "Macho" },
-            { nome: "Thor", porte: "médio", tipo: "cão", idade: 3, status: "disponível", sexo: "Fêmea" },
-            { nome: "Mimi", porte: "pequeno", tipo: "gato", idade: 1, status: "disponível", sexo: "Fêmea" },
-            { nome: "Maya", porte: "grande", tipo: "cão", idade: 5, status: "disponível", sexo: "Machos"}
-        ];
+    <!-- Modal de Edição -->
+    <div id="modalEdicao" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-lg w-full max-w-3xl p-6 overflow-auto max-h-[90vh]">
+            <button onclick="fecharModal()" class="text-gray-500 float-right">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
 
-            function criarCard(animal, index) {
-            return `
-        <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200 relative"><button onclick="abrirModalEdicao(${index})" class="absolute top-2 right-2 text-carmesim hover:text-[#8a0128] transition">
-                <svg data-lucide="pencil" ></svg>
-        </button>
-      <h2 class="text-xl font-bold text-carmesim">${animal.nome}</h2>
-      <p><strong>Tipo:</strong> ${animal.tipo}</p>
-      <p><strong>Porte:</strong> ${animal.porte}</p>
-      <p><strong>Idade:</strong> ${animal.idade} ano(s)</p>
-      <p><strong>Idade:</strong> ${animal.sexo}</p>
-      <p><strong>Status:</strong> ${animal.status}</p>
-       
+            <main class="bg-neve p-6">
+                <h1 class="text-2xl font-bold mb-6">Cadastro de Animal</h1>
+
+                <form onsubmit="return salvarAnimal(event)">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Nome</label>
+                            <input type="text" id="nome" class="w-full p-2 border rounded-lg" required>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Idade (em anos)</label>
+                            <input type="number" id="idade" class="w-full p-2 border rounded-lg" min="0" required>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Tipo</label>
+                            <select id="tipo" class="w-full p-2 border rounded-lg" required>
+                                <option value="">Selecione</option>
+                                <option value="Cachorro">Cachorro</option>
+                                <option value="Gato">Gato</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Raça</label>
+                            <input type="text" id="raca" class="w-full p-2 border rounded-lg" required>
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Pelagem</label>
+                            <input type="text" id="pelagem" class="w-full p-2 border rounded-lg">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Peso (kg)</label>
+                            <input type="number" step="0.01" id="peso" class="w-full p-2 border rounded-lg" min="0">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Baia</label>
+                            <input type="text" id="baia" class="w-full p-2 border rounded-lg">
+                        </div>
+
+                        <div>
+                            <label class="block font-semibold mb-1">Data de Resgate</label>
+                            <input type="date" id="resgate" class="w-full p-2 border rounded-lg" required>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block font-semibold mb-1">Disponível para Adoção?</label>
+                            <div class="flex gap-4 mt-1">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adocao" value="Sim" class="mr-2" checked>
+                                    Sim
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adocao" value="Não" class="mr-2">
+                                    Não
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block font-semibold mb-1">Foto do Animal</label>
+                            <input type="file" id="foto" class="w-full p-2 border rounded-lg" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="text-right mt-6">
+                        <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
     </div>
-  `;
+
+    <script>
+        // Variável global para armazenar animais
+        let animais = [];
+        let indiceEditando = null;
+
+        function criarCard(animal, index) {
+            return `
+                <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200 relative">
+                    <button onclick="abrirModalEdicao(${index})" class="absolute top-2 right-2 text-carmesim hover:text-[#8a0128] transition">
+                        <svg data-lucide="pencil"></svg>
+                    </button>
+                    <h2 class="text-xl font-bold text-carmesim">${animal.nome}</h2>
+                    <p><strong>Tipo:</strong> ${animal.tipo}</p>
+                    <p><strong>Porte:</strong> ${animal.porte || 'Não informado'}</p>
+                    <p><strong>Idade:</strong> ${animal.idade} ano(s)</p>
+                    <p><strong>Sexo:</strong> ${animal.sexo || 'Não informado'}</p>
+                    <p><strong>Status:</strong> ${animal.status || 'Não informado'}</p>
+                </div>
+            `;
         }
 
-        function aplicarFiltros() 
-        {
+        async function aplicarFiltros() {
             const nome = document.getElementById("filtroNome").value.toLowerCase();
             const porte = document.getElementById("filtroPorte").value;
             const tipo = document.getElementById("filtroTipo").value;
-            const idade = document.getElementById("filtroIdade").value;
-            const status = document.getElementById("filtroStatus").value;
             const sexo = document.getElementById("filtroSexo").value;
+            const status = document.getElementById("filtroStatus").value;
 
-            const resultados = animais.filter(animal => {
-                return (
-                    (nome === "" || animal.nome.toLowerCase().includes(nome)) &&
-                    (porte === "" || animal.porte === porte) &&
-                    (tipo === "" || animal.tipo === tipo) &&
-                    (idade === "" || animal.idade == idade) &&
-                    (sexo === "" || animal.sexo == sexo) &&
-                    (status === "" || animal.status === status)
-                );
-            });
+            try {
+                // Chama a função de filtrar animais (que faz a requisição à API)
+                const animaisFiltrados = await filtrarAnimais({
+                    nome,
+                    porte,
+                    tipo,
+                    sexo,
+                    status
+                });
 
-            const container = document.getElementById("listaAnimais");
-            container.innerHTML = resultados.length
-                ? resultados.map(criarCard).join("")
-                : `<p class="col-span-full text-center text-gray-500">Nenhum animal encontrado.</p>`;
-          lucide.createIcons();
+                animais = animaisFiltrados; // Atualiza a lista global de animais
+                
+                const container = document.getElementById("listaAnimais");
+                container.innerHTML = animais.length
+                    ? animais.map((animal, index) => criarCard(animal, index)).join("")
+                    : `<p class="col-span-full text-center text-gray-500">Nenhum animal encontrado.</p>`;
+                
+                lucide.createIcons();
+            } catch (error) {
+                console.error("Erro ao aplicar filtros:", error);
+                alert("Ocorreu um erro ao buscar os animais.");
+            }
         }
 
-        let indiceEditando = null;
         function abrirModal() {
-  document.getElementById("modalEdicao").classList.remove("hidden");
-}
+            document.getElementById("modalEdicao").classList.remove("hidden");
+        }
 
-function fecharModal() {
-  document.getElementById("modalEdicao").classList.add("hidden");
-}
-
+        function fecharModal() {
+            document.getElementById("modalEdicao").classList.add("hidden");
+            indiceEditando = null;
+        }
 
         function abrirModalEdicao(index) {
-  const animal = animais[index];
-  indiceEditando = index;
+            const animal = animais[index];
+            indiceEditando = index;
 
-  document.getElementById("nome").value = animal.nome || "";
-  document.getElementById("idade").value = animal.idade || "";
-  document.getElementById("tipo").value = animal.tipo || "";
-  document.getElementById("raca").value = animal.raca || "";
-  document.getElementById("pelagem").value = animal.pelagem || "";
-  document.getElementById("peso").value = animal.peso || "";
-  document.getElementById("baia").value = animal.baia || "";
-  document.getElementById("resgate").value = animal.resgate || "";
+            // Preenche o formulário com os dados do animal
+            document.getElementById("nome").value = animal.nome || "";
+            document.getElementById("idade").value = animal.idade || "";
+            document.getElementById("tipo").value = animal.tipo || "";
+            document.getElementById("raca").value = animal.raca || "";
+            document.getElementById("pelagem").value = animal.pelagem || "";
+            document.getElementById("peso").value = animal.peso || "";
+            document.getElementById("baia").value = animal.baia || "";
+            document.getElementById("resgate").value = animal.resgate || "";
 
-  // Define o radio "Sim" ou "Não"
-  const adocao = animal.adocao === "Não" ? "Não" : "Sim";
-  document.querySelector(`input[name="adocao"][value="${adocao}"]`).checked = true;
+            // Define o radio "Sim" ou "Não"
+            const adocao = animal.adocao === "Não" ? "Não" : "Sim";
+            document.querySelector(`input[name="adocao"][value="${adocao}"]`).checked = true;
 
-  document.getElementById("modalEdicao").classList.remove("hidden");
-  lucide.createIcons();
-}
+            abrirModal();
+        }
 
+        async function salvarAnimal(event) {
+            event.preventDefault();
+            
+            // Coleta os dados do formulário
+            const animal = {
+                nome: document.getElementById("nome").value,
+                idade: document.getElementById("idade").value,
+                tipo: document.getElementById("tipo").value,
+                raca: document.getElementById("raca").value,
+                pelagem: document.getElementById("pelagem").value,
+                peso: document.getElementById("peso").value,
+                baia: document.getElementById("baia").value,
+                resgate: document.getElementById("resgate").value,
+                adocao: document.querySelector('input[name="adocao"]:checked').value
+            };
 
-        document.getElementById("formEdicao").addEventListener("submit", function (e) {
-            e.preventDefault();
+            try {
+                // Aqui você faria a requisição para salvar no backend
+                // Exemplo: await salvarAnimalAPI(animal, indiceEditando);
+                
+                if (indiceEditando !== null) {
+                    // Atualiza o animal existente
+                    animais[indiceEditando] = animal;
+                } else {
+                    // Adiciona um novo animal
+                    animais.push(animal);
+                }
 
-            if (indiceEditando !== null) {
-                animais[indiceEditando] = {
-                    nome: document.getElementById("editNome").value,
-                    tipo: document.getElementById("editTipo").value,
-                    porte: document.getElementById("editPorte").value,
-                    idade: parseInt(document.getElementById("editIdade").value),
-                    status: document.getElementById("editStatus").value,
-                };
-
-                aplicarFiltros();
-                fecharModalEdicao();
+                aplicarFiltros(); // Atualiza a lista
+                fecharModal();
+            } catch (error) {
+                console.error("Erro ao salvar animal:", error);
+                alert("Ocorreu um erro ao salvar o animal.");
             }
-        });
+        }
 
+        // Inicializa os ícones
         lucide.createIcons();
+        
+        // Torna as funções globais
+        window.aplicarFiltros = aplicarFiltros;
+        window.abrirModalEdicao = abrirModalEdicao;
+        window.fecharModal = fecharModal;
+        window.salvarAnimal = salvarAnimal;
     </script>
 </body>
-
 </html>

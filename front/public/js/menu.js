@@ -14,8 +14,8 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-animais" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="/src/views/viewRuan/cadastrarAnimal.html" class="block hover:text-carmesim">Cadastrar</a></li>
-          <li><a href="/src/views/viewRuan/consultaAnimal.html" class="block hover:text-carmesim">Consultar</a></li>
+          <li><a href="/views/viewRuan/cadastrarAnimal.html" class="block hover:text-carmesim">Cadastrar</a></li>
+          <li><a href="/views/viewRuan/consultaAnimal.html" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
     <!-- Dropdown adoção -->
@@ -25,8 +25,8 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-adocao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="/src/views/viewRuan/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
-          <li><a href="/src/views/viewRuan/buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
+          <li><a href="/views/viewRuan/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
+          <li><a href="/views/viewRuan/buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
         </ul>
       </div>
       <!-- Dropdown pessoas -->
@@ -37,7 +37,7 @@ document.write(`
         </button>
         <ul id="menu-pessoa" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="adocao.html" class="block hover:text-carmesim">Melhorar esse nome de menu</a></li>
-          <li><a href="/src/views/viewRuan/adotante.html" class="block hover:text-carmesim">Cadastrar</a></li>
+          <li><a href="/views/viewRuan/adotante.html" class="block hover:text-carmesim">Cadastrar</a></li>
           <li><a href="buscarAdotante.html" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
