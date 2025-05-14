@@ -4,6 +4,7 @@ import SoftPet.backend.config.SingletonDB;
 import SoftPet.backend.dal.UserDAL;
 import SoftPet.backend.model.UserModel;
 import SoftPet.backend.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,20 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import SoftPet.backend.service.AuthService;
 
 import java.util.List;
-//import seu.pacote.dto.LoginRequest;
-//import seu.pacote.dto.RegisterRequest;
-//import seu.pacote.dto.UpdateSenhaRequest;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
 public class AuthControll
 {
 
-    private final AuthService authService;
-
-    public AuthControll() {
-        this.authService = new AuthService();
-    }
+    @Autowired
+    AuthService authService;
 
     @GetMapping("/teste")
     public ResponseEntity<Object> getAll()
@@ -36,47 +32,60 @@ public class AuthControll
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserModel request)
+    public ResponseEntity<?> login(@RequestBody UserModel user)
     {
         try
         {
-            var result = authService.login(request.getCpf(), request.getSenha());
-            if (result.isPresent()) {
+            var result = authService.login(user.getCpf(), user.getSenha());
+            if(result.isPresent())
                 return ResponseEntity.ok(result.get());
-            } else {
+            else
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas.");
-            }
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserModel request) {
-        try {
-            var user = authService.register(request.getCpf(), request.getSenha());
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
-        } catch (Exception e) {
+    public ResponseEntity<?> register(@RequestBody UserModel user)
+    {
+        try
+        {
+            UserModel novoUser = authService.register(user.getCpf(), user.getSenha());
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoUser);
+        }
+        catch(Exception e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("/senha")
-    public ResponseEntity<?> updateSenha(@RequestBody UserModel request) {
-        try {
-            authService.updateSenha(request.getCpf(), request.getSenha());
+    public ResponseEntity<Object> updateSenha(@RequestBody UserModel user)
+    {
+        try
+        {
+            authService.updateSenha(user.getCpf(), user.getSenha());
             return ResponseEntity.ok("Senha atualizada com sucesso.");
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<?> deleteConta(@PathVariable String cpf) {
-        try {
+    public ResponseEntity<Object> deleteConta(@PathVariable String cpf)
+    {
+        try
+        {
             authService.deleteConta(cpf);
             return ResponseEntity.ok("Conta excluída com sucesso.");
-        } catch (Exception e) {
+        }
+        catch(Exception e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
