@@ -30,7 +30,9 @@ public class DoadorService
 
         ContatoModel novoContato = contatoDAL.addContato(new ContatoModel(contato.getTelefone()));
         EnderecoModel novoEndereco = enderecoDAL.addEndereco(new EnderecoModel(endereco.getCep(),endereco.getRua(),endereco.getNumero(),endereco.getBairro(),endereco.getCidade(),endereco.getUf(),endereco.getComplemento()));
-        DoadorModel novoDoador = doadorDAL.addDoador(new DoadorModel(doador.getCpf(),doador.getNome(),doador.getStatus(),doador.getProfissao(),novoContato.getId(),novoEndereco,doador.getRg()));
+        DoadorModel novoDoador = doadorDAL.addDoador(new DoadorModel(doador.getCpf(),doador.getNome(),doador.getStatus(),doador.getProfissao(),novoContato.getId(),novoEndereco.getId(),doador.getRg()));
         return novoDoador;
     }
+
+
 }

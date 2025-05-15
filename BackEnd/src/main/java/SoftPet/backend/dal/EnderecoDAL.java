@@ -108,4 +108,32 @@ public class EnderecoDAL
         }
     }
 
+    public List<EnderecoModel> getAll()
+    {
+        List<EnderecoModel> list = new ArrayList<>();
+        String sql = "SELECT * FROM endereco";
+        try
+        {
+            ResultSet rs = SingletonDB.getConexao().consultar(sql);
+            while(rs.next())
+            {
+                EnderecoModel endereco = new EnderecoModel(
+                        rs.getLong("en_id"),
+                        rs.getString("en_cep"),
+                        rs.getString("en_rua"),
+                        rs.getInt("en_numero"),
+                        rs.getString("en_bairro"),
+                        rs.getString("en_cidade"),
+                        rs.getString("en_uf"),
+                        rs.getString("en_complemento")
+                );
+                list.add(endereco);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
