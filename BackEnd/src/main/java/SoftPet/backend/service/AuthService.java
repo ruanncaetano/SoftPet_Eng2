@@ -84,7 +84,8 @@ public class AuthService
         public final UserModel user;
         public final String token;
 
-        public LoginResult(UserModel user, String token) {
+        public LoginResult(UserModel user, String token)
+        {
             this.user = user;
             this.token = token;
         }

@@ -15,10 +15,10 @@ public class Conexao
     public boolean conectar(String local, String banco, String usuario, String senha) {
         boolean conectado = false;
         try {
-            // Opcional: força carregamento do driver
+            //forçando carregamento do driver
             Class.forName("org.postgresql.Driver");
 
-            String url = local + banco; // Ex: "jdbc:postgresql://localhost:5432/softpet_db"
+            String url = local + banco;
             connect = DriverManager.getConnection(url, usuario, senha);
             conectado = true;
         } catch (SQLException sqlex) {
