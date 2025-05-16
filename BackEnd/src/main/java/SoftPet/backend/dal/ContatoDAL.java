@@ -40,23 +40,25 @@ public class ContatoDAL
     public ContatoModel addContato(ContatoModel contato)
     {
         String sql = "INSERT INTO contato (con_telefone) VALUES (?)";
+
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
             stmt.setString(1, contato.getTelefone());
-            int affectedRows = stmt.executeUpdate();
-            if(affectedRows > 0)
+            int linhasMod = stmt.executeUpdate();
+            if (linhasMod > 0)
             {
                 ResultSet rs = stmt.getGeneratedKeys();
-                if(rs.next())
+                if (rs.next())
                     contato.setId(rs.getLong(1));
             }
         }
-        catch(SQLException e)
+        catch (SQLException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao adicionar contato: " + e.getMessage(), e);
         }
         return contato;
     }
+
 
     public Boolean updateContato(Long id, String novoTelefone)
     {

@@ -72,17 +72,17 @@ public class DoadorModel
         this.profissao = profissao;
     }
 
-    public Long getContato() {
+    public Long getId_contato() {
         return id_contato;
     }
-    public void setContato(Long id_contato) {
+    public void setId_contato(Long id_contato) {
         this.id_contato = id_contato;
     }
 
-    public Long getEndereco() {
+    public Long getId_endereco() {
         return id_endereco;
     }
-    public void setEndereco(Long id_endereco) {
+    public void setId_endereco(Long id_endereco) {
         this.id_endereco = id_endereco;
     }
 

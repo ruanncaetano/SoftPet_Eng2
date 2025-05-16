@@ -1,6 +1,7 @@
 package SoftPet.backend.dal;
 
 import SoftPet.backend.config.SingletonDB;
+import SoftPet.backend.dto.DoadorCompletoDTO;
 import SoftPet.backend.model.ContatoModel;
 import SoftPet.backend.model.DoadorModel;
 import SoftPet.backend.model.EnderecoModel;
@@ -13,9 +14,9 @@ import java.util.List;
 @Repository
 public class DoadorDAL
 {
-    public DoadorModel findByDoador(String cpf)
+    public DoadorCompletoDTO findByDoador(String cpf)
     {
-        DoadorModel doador = null;
+        DoadorCompletoDTO doadorDTO = null;
         String sql = "SELECT p.pe_cod, p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg, " +
                 "c.con_telefone, " +
                 "e.en_cep, e.en_rua, e.en_numero, e.en_bairro, e.en_cidade, e.en_uf, e.en_complemento " +
@@ -30,7 +31,7 @@ public class DoadorDAL
             ResultSet rs = stmt.executeQuery();
             if(rs.next())
             {
-                doador = new DoadorModel(
+                DoadorModel doador = new DoadorModel(
                         rs.getLong("pe_cod"),
                         rs.getString("pe_cpf"),
                         rs.getString("pe_nome"),
@@ -40,18 +41,37 @@ public class DoadorDAL
                         rs.getLong("en_id"),
                         rs.getString("pe_rg")
                 );
+
+                //relacionando os objetos completos
+                ContatoModel contato = new ContatoModel(
+                        rs.getLong("con_cod"),
+                        rs.getString("con_telefone")
+                );
+                EnderecoModel endereco = new EnderecoModel(
+                        rs.getLong("en_id"),
+                        rs.getString("en_cep"),
+                        rs.getString("en_rua"),
+                        rs.getInt("en_numero"),
+                        rs.getString("en_bairro"),
+                        rs.getString("en_cidade"),
+                        rs.getString("en_uf"),
+                        rs.getString("en_complemento")
+                );
+
+                doadorDTO = new DoadorCompletoDTO(doador, contato, endereco);
             }
         }
         catch(SQLException e)
         {
             e.printStackTrace();
         }
-        return doador;
+        return doadorDTO;
     }
 
     public DoadorModel addDoador(DoadorModel doador)
     {
-        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_status, pe_profissao, con_cod, en_id, pe_rg) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_status, pe_profissao, con_cod, en_id, pe_rg) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
@@ -59,52 +79,54 @@ public class DoadorDAL
             stmt.setString(2, doador.getNome());
             stmt.setBoolean(3, doador.getStatus());
             stmt.setString(4, doador.getProfissao());
-            if(doador.getContato() != null)
-                stmt.setLong(5, doador.getContato());
+
+            if (doador.getId_contato() != null)
+                stmt.setLong(5, doador.getId_contato());
             else
                 stmt.setNull(5, java.sql.Types.INTEGER);
-            if(doador.getEndereco() != null)
-                stmt.setLong(6, doador.getEndereco());
+
+            if (doador.getId_endereco() != null)
+                stmt.setLong(6, doador.getId_endereco());
             else
                 stmt.setNull(6, java.sql.Types.INTEGER);
+
             stmt.setString(7, doador.getRg());
 
-            int affectedRows = stmt.executeUpdate();
-            if(affectedRows > 0)
+            int linhasMod = stmt.executeUpdate();
+            if (linhasMod > 0)
             {
-                try(ResultSet rs = stmt.getGeneratedKeys())
-                {
-                    if(rs.next())
-                        doador.setId(rs.getLong(1));
-                }
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next())
+                    doador.setId(rs.getLong(1));
             }
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao adicionar doador: " + e.getMessage(), e);
         }
         return doador;
     }
 
-    public Boolean updateDoador(Long id, DoadorModel doador)
+
+    public Boolean updateDoador(String cpf, DoadorModel doador)
     {
-        String sql = "UPDATE pessoa SET pe_cpf = ?, pe_nome = ?, pe_status = ?, pe_profissao = ?, con_cod = ?, en_id = ?, pe_rg = ? WHERE pe_cod = ?";
+        String sql = "UPDATE pessoa SET pe_cpf = ?, pe_nome = ?, pe_status = ?, pe_profissao = ?, con_cod = ?, en_id = ?, pe_rg = ? WHERE pe_cpf = ?";
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
         {
             stmt.setString(1, doador.getCpf());
             stmt.setString(2, doador.getNome());
             stmt.setBoolean(3, doador.getStatus());
             stmt.setString(4, doador.getProfissao());
-            if(doador.getContato() != null)
-                stmt.setLong(5, doador.getContato());
+            if(doador.getId_contato() != null)
+                stmt.setLong(5, doador.getId_contato());
             else
-                stmt.setNull(5, java.sql.Types.INTEGER);
-            if(doador.getEndereco() != null)
-                stmt.setLong(6, doador.getEndereco());
+                stmt.setNull(5, java.sql.Types.BIGINT);
+            if(doador.getId_endereco() != null)
+                stmt.setLong(6, doador.getId_endereco());
             else
-                stmt.setNull(6, java.sql.Types.INTEGER);
+                stmt.setNull(6, java.sql.Types.BIGINT);
             stmt.setString(7, doador.getRg());
-            stmt.setLong(8, id);
+            stmt.setString(8, cpf);
 
             return stmt.executeUpdate() > 0;
         }
@@ -115,12 +137,12 @@ public class DoadorDAL
         }
     }
 
-    public Boolean deleteByDoador(Long id)
+    public Boolean deleteByDoador(String cpf)
     {
-        String sql = "DELETE FROM pessoa WHERE pe_cod = ?";
+        String sql = "DELETE FROM pessoa WHERE pe_cpf = ?";
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
         {
-            stmt.setLong(1, id);
+            stmt.setString(1, cpf);
             return stmt.executeUpdate() > 0;
         }
         catch(SQLException e)
@@ -130,9 +152,9 @@ public class DoadorDAL
         }
     }
 
-    public List<DoadorModel> listarTodos()
+    public List<DoadorCompletoDTO> getAll()
     {
-        List<DoadorModel> list = new ArrayList<>();
+        List<DoadorCompletoDTO> list = new ArrayList<>();
 
         String sql = "SELECT p.pe_cod, p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg, " +
                 "c.con_cod, c.con_telefone, " +
@@ -156,7 +178,7 @@ public class DoadorDAL
                         rs.getString("pe_rg")
                 );
 
-                //relacionando o objeto completo
+                //relacionando os objetos completo
                 ContatoModel contato = new ContatoModel(
                         rs.getLong("con_cod"),
                         rs.getString("con_telefone")
@@ -171,7 +193,9 @@ public class DoadorDAL
                         rs.getString("en_uf"),
                         rs.getString("en_complemento")
                 );
-                list.add(doador);
+
+                DoadorCompletoDTO doadorDTO = new DoadorCompletoDTO(doador, contato, endereco);
+                list.add(doadorDTO);
             }
         }
         catch(SQLException e)

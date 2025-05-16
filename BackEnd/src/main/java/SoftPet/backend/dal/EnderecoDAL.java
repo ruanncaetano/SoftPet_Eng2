@@ -45,7 +45,9 @@ public class EnderecoDAL
 
     public EnderecoModel addEndereco(EnderecoModel endereco)
     {
-        String sql = "INSERT INTO endereco (en_cep,en_rua,en_numero,en_bairro,en_cidade,en_uf,en_complemento) VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO endereco (en_cep, en_rua, en_numero, en_bairro, en_cidade, en_uf, en_complemento) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
             stmt.setString(1, endereco.getCep());
@@ -56,20 +58,21 @@ public class EnderecoDAL
             stmt.setString(6, endereco.getUf());
             stmt.setString(7, endereco.getComplemento());
 
-            int AffectedRows = stmt.executeUpdate();
-            if(AffectedRows > 0)
+            int linhasMod = stmt.executeUpdate();
+            if(linhasMod > 0)
             {
                 ResultSet rs = stmt.getGeneratedKeys();
-                if(rs.next())
+                if (rs.next())
                     endereco.setId(rs.getLong(1));
             }
         }
-        catch(SQLException e)
+        catch (SQLException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao adicionar endereço: " + e.getMessage(), e);
         }
         return endereco;
     }
+
 
     public Boolean updateEndereco(Long id, EnderecoModel endereco)
     {
