@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Home</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Ícones -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- FullCalendar -->
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css' rel='stylesheet' />
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+  <style>
+
+body {
+  overflow: hidden;  /* Desativa a barra de rolagem */
+  height: 100vh;     /* Define a altura para 100% da tela */
+}
+
+html {
+  scroll-behavior: smooth;  /* Para rolar suavemente */
+}
+
+#conteudo {
+  overflow-y: scroll; /* Permite rolar o conteúdo */
+  height: 100vh;      /* Ajuste conforme necessário */
+}
+
+    /* Ajusta o tamanho das células do calendário (quadradinhos de cada dia) */
+    .fc-daygrid-day {
+      height: 10px !important;  /* Ajuste a altura conforme necessário */
+      width: 10px !important;   /* Ajuste a largura conforme necessário */
+      margin-bottom: 20px !important; /* Adiciona um espaçamento inferior para evitar o corte */
+    }
+
+    /* Ajusta o tamanho da fonte dentro das células */
+    .fc-daygrid-day-number {
+      font-size: 0.75rem !important; /* Ajuste o tamanho da fonte para caber melhor */
+    }
+
+    /* Ajusta o tamanho do calendário */
+    #calendario {
+      max-width: 75% !important; /* Garante que o calendário ocupe toda a largura disponível */
+      margin: 0 auto !important;  /* Centraliza o calendário */
+    }
+    #lista-eventos {
+        width: 100%;  /* Faz com que a lista de eventos ocupe toda a largura disponível */
+        max-width: 75%;  /* Garante que a lista de eventos tenha a mesma largura máxima que o calendário */
+        margin: 10px auto;  /* Centraliza a lista de eventos */
+        padding: 1rem;  /* Adiciona um pouco de preenchimento interno */
+        background-color: white;  /* Mantém o fundo branco */
+        border-radius: 1rem;  /* Adiciona bordas arredondadas */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Adiciona uma leve sombra */
+        }
+
+    /* Ajusta a altura do cabeçalho (ex.: dias da semana) */
+    .fc-col-header-cell {
+      height: 40px !important;
+     
+    }
+
+    /* Ajusta a altura do evento no calendário */
+    .fc-event {
+      height: auto !important;  /* Ajusta automaticamente a altura dos eventos */
+    }
+  </style>
+</head>
+
+<body class="flex h-screen bg-neve font-sans text-noturno overflow-hidden">
+
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
+  <!-- Conteúdo principal -->
+  <main class="flex-1 bg-neve p-10 overflow-hidden flex justify-end items-start">
+    <div class="w-full max-w-[600px] h-full space-y-6 overflow-auto">
+        <!-- Calendário -->
+        <div id='calendario' class="bg-white rounded-xl shadow-lg p-4 h-[450px] overflow-hidden"></div>
+
+        <!-- Lista de Eventos -->
+        <div id="lista-eventos" class="bg-white rounded-xl shadow-md p-4">
+            <h2 class="text-xl font-semibold mb-2 text-noturno">Eventos do mês</h2>
+            <ul id="eventos-mes" class="list-disc pl-6 text-noturno space-y-2">
+            <!-- Lista preenchida dinamicamente -->
+            </ul>
+        </div>
+    </div>
+  </main>
+
+  
+  <script src="../../public/js/validacao.js"></script>
+
+  <!-- Scripts -->
+  <script>
+const eventos = [
+  { title: 'Vacina - Bob', date: '2025-04-24', color: '#A6032F' },
+  { title: 'Vermífugo - Rex', date: '2025-04-27', color: '#BCAF9E' },
+  { title: 'Vacina - Mel', date: '2025-04-24', color: '#A6033F' },
+  { title: 'Vacina - Zeus', date: '2025-04-28', color: '#A6033F' },
+];
+
+document.addEventListener('DOMContentLoaded', function () {
+  const calendarEl = document.getElementById('calendario');
+  const listaEventosEl = document.getElementById('eventos-mes');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'pt-br',
+    height: '70%',
+    contentHeight: 'auto',
+    eventDisplay: 'list-item',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: ''
+    },
+    events: eventos,
+    eventContent: function(arg) {
+      // Cria apenas a bolinha com a cor do evento
+      return {
+        html: `<div style="width: 8px; height: 8px; background-color: ${arg.event.backgroundColor}; border-radius: 50%; margin: 0 auto;"></div>`
+      };
+    },
+    datesSet(info) {
+      const inicio = info.start;
+      const fim = info.end;
+
+      // Filtra eventos do mês
+      const eventosMes = eventos.filter(evt => {
+        const dataEvt = new Date(evt.date);
+        return dataEvt >= inicio && dataEvt < fim;
+      });
+
+      // Organiza os eventos por data
+      const eventosPorDia = eventosMes.reduce((acc, evt) => {
+        const dataFormatada = new Date(evt.date).toLocaleDateString('pt-BR');
+        if (!acc[dataFormatada]) acc[dataFormatada] = [];
+        acc[dataFormatada].push(evt);
+        return acc;
+      }, {});
+
+      // Limpa a lista de eventos
+      listaEventosEl.innerHTML = '';
+
+      // Preenche a lista de eventos
+      if (Object.keys(eventosPorDia).length === 0) {
+        listaEventosEl.innerHTML = '<li>Nenhum evento neste mês.</li>';
+      } else {
+        for (const data in eventosPorDia) {
+          const li = document.createElement('li');
+          const eventosDia = eventosPorDia[data];
+          let listaEventos = eventosDia.map(evt => {
+            return `<li style="color: ${evt.color}; font-weight: bold;">● ${evt.title}</li>`;
+          }).join('');
+          li.innerHTML = `<strong>${data}</strong><ul>${listaEventos}</ul>`;
+          listaEventosEl.appendChild(li);
+        }
+      }
+    }
+  });
+
+  calendar.render();
+});
+
+
+  
+    function toggleMenu(id, btn) {
+      const menu = document.getElementById(id);
+      menu.classList.toggle('hidden');
+      const icon = btn.querySelector('[data-lucide="chevron-down"]');
+      icon.classList.toggle('rotate-180');
+    }
+
+    lucide.createIcons();
+  </script>
+  
+</body>
+</html>
