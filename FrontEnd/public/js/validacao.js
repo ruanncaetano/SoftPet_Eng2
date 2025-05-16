@@ -339,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
     aplicarValidacaoCPF('cpf', 'erroCpf'); // tela de login
     aplicarValidacaoCPF('cpf-doador', 'erroCpfDoador'); // tela de doador
     aplicarValidacaoCPF('cpf-doadorPOP', 'erroCpfDoadorPOP');
+    aplicarValidacaoCPF('cpf-busca', 'erroCpfAtualizar');
 
     //chamando validação de senha
     aplicarValidacaoSenha('senha', 'erroSenha');

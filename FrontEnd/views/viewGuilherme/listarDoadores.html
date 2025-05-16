@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Listar Doadores</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+ <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Lista de Doadores</h1>
+      <a href="/views/viewGuilherme/doador.html"
+        class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+        Novo Doador
+      </a>
+    </div>
+
+    <!-- Tabela de Doadores -->
+    <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead class="bg-pastel">
+          <tr>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Nome</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">CPF</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Profissão</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Telefone</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Cidade</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-doadores" class="bg-white divide-y divide-gray-200">
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+            const tabela = document.getElementById('tabela-doadores');
+
+            fetch('http://localhost:8080/doador/listar')
+                .then(res => res.json())
+                .then(lista => {
+                if(!Array.isArray(lista))
+                    throw new Error('A resposta da API não é uma lista');
+
+                lista.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td class="px-4 py-2">${item.doador?.nome || '-'}</td>
+                    <td class="px-4 py-2">${item.doador?.cpf || '-'}</td>
+                    <td class="px-4 py-2">${item.doador?.profissao || '-'}</td>
+                    <td class="px-4 py-2">${item.contato?.telefone || '-'}</td>
+                    <td class="px-4 py-2">${item.endereco?.cidade || '-'}</td>
+                    <td class="px-4 py-2 space-x-2">
+                        <button class="text-blue-600 hover:underline" onclick="editarDoador('${item.doador?.cpf}')">Editar</button>
+                        <button class="text-red-600 hover:underline" onclick="excluirDoador('${item.doador?.cpf}')">Excluir</button>
+                    </td>
+                    `;
+                    tabela.appendChild(tr);
+                });
+                })
+                .catch(error => {
+                console.error('Erro ao carregar doadores:', error);
+                tabela.innerHTML = `
+                    <tr>
+                    <td colspan="6" class="px-4 py-2 text-center text-red-600">Erro ao carregar dados.</td>
+                    </tr>`;
+                });
+            });
+
+            function editarDoador(cpf) 
+            {
+                window.location.href = `/views/viewGuilherme/atualizarDoador.html?cpf=${cpf}`;
+            }
+
+            // Exclui doador via CPF
+            function excluirDoador(cpf) 
+            {
+                if(confirm('Tem certeza que deseja excluir este doador?')) 
+                {
+                    fetch(`http://localhost:8080/doador/${cpf}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if(response.ok) 
+                        {
+                            alert('Doador excluído com sucesso!');
+                            location.reload();
+                        }
+                        else 
+                        {
+                            alert('Erro ao excluir doador.');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert('Erro ao excluir doador.');
+                    });
+                }
+            }
+        </script>
+
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="../../public/js/api.js"></script>
+</body>
+</html>
