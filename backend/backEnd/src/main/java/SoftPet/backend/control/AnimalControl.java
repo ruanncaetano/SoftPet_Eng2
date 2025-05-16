@@ -60,5 +60,12 @@ public class AnimalControl
         List<AnimalModel> animais=animalService.buscarAnimais(nome,porte,tipo,sexo,status);
         return ResponseEntity.ok(animais);
     }
+    @GetMapping("/animal/{id}/foto")
+    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
+        byte[] foto = animalService.getFoto(id); // busca no banco
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // ou IMAGE_PNG, conforme necessário
+        return new ResponseEntity<>(foto, headers, HttpStatus.OK);
+    }
 
 }

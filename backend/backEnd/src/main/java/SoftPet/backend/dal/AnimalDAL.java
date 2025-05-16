@@ -114,5 +114,9 @@ public class AnimalDAL {
 
         return lista;
     }
-
+    public AnimalModel buscarId(int id)
+    {
+        String sql = "SELECT * FROM animais WHERE an_cod = ?";
+        List<Object> params = new ArrayList<>();
+    }
 }

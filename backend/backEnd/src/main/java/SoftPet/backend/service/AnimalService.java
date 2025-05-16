@@ -34,6 +34,10 @@ public class AnimalService {
     public List<AnimalModel> buscarAnimais(String nome, String tipo, String porte, String sexo, boolean status) {
         return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
     }
+
+    public byte[] getFoto(Long id) {
+        return animalDAL.buscarId(id);
+    }
     // Buscar animal por ID
 //    public Optional<AnimalModel> buscarPorId(int cod) {
 //        return Optional.ofNullable(animalDAL.findById(cod));
