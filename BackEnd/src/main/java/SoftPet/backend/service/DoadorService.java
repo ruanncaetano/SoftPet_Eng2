@@ -24,23 +24,25 @@ public class DoadorService
     @Autowired
     private EnderecoDAL enderecoDAL;
 
-    public DoadorModel addDoador(DoadorModel doador, ContatoModel contato, EnderecoModel endereco) throws Exception
+    public DoadorModel addDoador(DoadorCompletoDTO doador) throws Exception
     {
-        if(!cpfValidator.isCpfValido(doador.getCpf()))
+        if (!cpfValidator.isCpfValido(doador.getDoador().getCpf()))
             throw new Exception("CPF inválido!");
 
-        if(doadorDAL.findByDoador(doador.getCpf()) != null)
+        if (doadorDAL.findByDoador(doador.getDoador().getCpf()) != null)
             throw new Exception("Usuário já cadastrado!");
 
-        ContatoModel novoContato = contatoDAL.addContato(contato);
-        EnderecoModel novoEndereco = enderecoDAL.addEndereco(endereco);
+        ContatoModel novoContato = contatoDAL.addContato(doador.getContato());
+        EnderecoModel novoEndereco = enderecoDAL.addEndereco(doador.getEndereco());
 
-        doador.setId_contato(novoContato.getId());
-        doador.setId_endereco(novoEndereco.getId());
+        DoadorModel novoDoador = doador.getDoador();
+        novoDoador.setId_contato(novoContato.getId());
+        novoDoador.setId_endereco(novoEndereco.getId());
 
-        DoadorModel novoDoador = doadorDAL.addDoador(doador);
-        return novoDoador;
+        DoadorModel doadorFinal = doadorDAL.addDoador(novoDoador);
+        return doadorFinal;
     }
+
 
     public DoadorCompletoDTO getDoadorCpf(String cpf)
     {
@@ -54,8 +56,12 @@ public class DoadorService
         if(!cpfValidator.isCpfValido(cpf))
             throw new Exception("CPF inválido!");
 
-        if(doadorDAL.findByDoador(cpf) == null)
+        DoadorCompletoDTO doadorExistente = doadorDAL.findByDoador(cpf);
+        if(doadorExistente == null)
             throw new Exception("Não existe esse usuário!");
+
+        doador.setId_contato(doadorExistente.getContato().getId());
+        doador.setId_endereco(doadorExistente.getEndereco().getId());
 
         doadorDAL.updateDoador(cpf,doador);
         contatoDAL.updateContato(doador.getId_contato(),contato.getTelefone());

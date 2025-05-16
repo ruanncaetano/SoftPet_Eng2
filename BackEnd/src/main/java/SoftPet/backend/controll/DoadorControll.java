@@ -43,7 +43,7 @@ public class DoadorControll
     {
         try
         {
-            DoadorModel novoDoador = doadorService.addDoador(doador.getDoador(), doador.getContato(), doador.getEndereco());
+            DoadorModel novoDoador = doadorService.addDoador(doador);
             return ResponseEntity.ok(novoDoador);
         }
         catch(Exception e)

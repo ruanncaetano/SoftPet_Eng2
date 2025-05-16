@@ -70,27 +70,26 @@ public class DoadorDAL
 
     public DoadorModel addDoador(DoadorModel doador)
     {
-        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_status, pe_profissao, con_cod, en_id, pe_rg) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_profissao, con_cod, en_id, pe_rg) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
             stmt.setString(1, doador.getCpf());
             stmt.setString(2, doador.getNome());
-            stmt.setBoolean(3, doador.getStatus());
-            stmt.setString(4, doador.getProfissao());
+            stmt.setString(3, doador.getProfissao());
 
             if (doador.getId_contato() != null)
-                stmt.setLong(5, doador.getId_contato());
+                stmt.setLong(4, doador.getId_contato());
+            else
+                stmt.setNull(4, java.sql.Types.INTEGER);
+
+            if (doador.getId_endereco() != null)
+                stmt.setLong(5, doador.getId_endereco());
             else
                 stmt.setNull(5, java.sql.Types.INTEGER);
 
-            if (doador.getId_endereco() != null)
-                stmt.setLong(6, doador.getId_endereco());
-            else
-                stmt.setNull(6, java.sql.Types.INTEGER);
-
-            stmt.setString(7, doador.getRg());
+            stmt.setString(6, doador.getRg());
 
             int linhasMod = stmt.executeUpdate();
             if (linhasMod > 0)
@@ -110,23 +109,25 @@ public class DoadorDAL
 
     public Boolean updateDoador(String cpf, DoadorModel doador)
     {
-        String sql = "UPDATE pessoa SET pe_cpf = ?, pe_nome = ?, pe_status = ?, pe_profissao = ?, con_cod = ?, en_id = ?, pe_rg = ? WHERE pe_cpf = ?";
+        if(!cpf.equals(doador.getCpf()))
+            throw new IllegalArgumentException("O CPF não pode ser alterado.");
+
+        String sql = "UPDATE pessoa SET pe_nome = ?, pe_status = ?, pe_profissao = ?, con_cod = ?, en_id = ?, pe_rg = ? WHERE pe_cpf = ?";
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
         {
-            stmt.setString(1, doador.getCpf());
-            stmt.setString(2, doador.getNome());
-            stmt.setBoolean(3, doador.getStatus());
-            stmt.setString(4, doador.getProfissao());
+            stmt.setString(1, doador.getNome());
+            stmt.setBoolean(2, doador.getStatus());
+            stmt.setString(3, doador.getProfissao());
             if(doador.getId_contato() != null)
-                stmt.setLong(5, doador.getId_contato());
+                stmt.setLong(4, doador.getId_contato());
+            else
+                stmt.setNull(4, java.sql.Types.BIGINT);
+            if(doador.getId_endereco() != null)
+                stmt.setLong(5, doador.getId_endereco());
             else
                 stmt.setNull(5, java.sql.Types.BIGINT);
-            if(doador.getId_endereco() != null)
-                stmt.setLong(6, doador.getId_endereco());
-            else
-                stmt.setNull(6, java.sql.Types.BIGINT);
-            stmt.setString(7, doador.getRg());
-            stmt.setString(8, cpf);
+            stmt.setString(6, doador.getRg());
+            stmt.setString(7, cpf);
 
             return stmt.executeUpdate() > 0;
         }

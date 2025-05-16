@@ -39,3 +39,73 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+//conexao do front com o backend na pagina de doador
+document.getElementById('cadastroForm').addEventListener('submit', async function (event) {
+  event.preventDefault();
+
+    try 
+    {
+        const nome = document.getElementById('nome-doador').value.trim().toUpperCase();
+        const cpf = document.getElementById('cpf-doador').value.trim();
+        const rg = document.getElementById('rg-doador').value.trim();
+        const profissao = document.getElementById('profissao-doador').value.trim();
+
+        const telefone = document.getElementById('fone-doador').value.trim();
+
+        const cep = document.getElementById('cep-doador').value.trim();
+        const rua = document.getElementById('rua-doador').value.trim();
+        const numero = document.getElementById('numero-doador').value.trim();
+        const bairro = document.getElementById('bairro-doador').value.trim();
+        const cidade = document.getElementById('cidade-doador').value.trim();
+        const uf = document.getElementById('uf-doador').value.trim();
+        const complemento = document.getElementById('complemento-doador').value.trim();
+
+        //objeto para requisicao
+        const doadorCompleto = {
+            doador: {
+                cpf: cpf,
+                nome: nome,
+                profissao: profissao,
+                rg: rg
+            },
+            contato: {
+                telefone: telefone
+            },
+            endereco: {
+                cep: cep,
+                rua: rua,
+                numero: numero,
+                bairro: bairro,
+                cidade: cidade,
+                uf: uf,
+                complemento: complemento
+            }
+        };
+
+        const response = await fetch('http://localhost:8080/doador/cadastro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(doadorCompleto)
+        });
+
+        if(!response.ok) 
+        {
+            const errorText = await response.text();
+            throw new Error(`Erro ${response.status}: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Sucesso:', data);
+        alert('Doador cadastrado com sucesso!');
+        document.getElementById('cadastroForm').reset();
+
+    } 
+    catch(error) 
+    {
+        console.error('Erro ao cadastrar doador:',error);
+        alert(`Erro: ${error.message}`);
+    }
+});
