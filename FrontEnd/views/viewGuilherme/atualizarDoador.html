@@ -32,151 +32,183 @@
 <body class="flex h-screen bg-neve font-sans text-noturno">
   <!-- Sidebar -->
   <script src="../../public/js/menu.js"></script>
+
   <!-- Conteúdo Principal -->
   <main class="flex-1 p-8 overflow-y-auto">
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-carmesim">Atualizar Doador</h1>
-      <a href="/views/viewGuilherme/listarDoadores.html"
-        class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
-        Ver Doadores
-      </a>
-    </div>
-    <section>
-      <div class="mb-6">
-        <label class="block font-semibold mb-1">Digite o CPF do doador</label>
-        <div class="flex gap-2">
-          <input id="cpf-busca" maxlength="14" type="text" class="p-3 border border-gray-300 rounded-lg w-full" placeholder="000.000.000-00" required>
-          <button id="btnBuscarCpf" type="button" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">Buscar</button>
-        </div>
-        <p id="erroCpfAtualizar" class="text-red-500 text-sm mt-2"></p>
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+      <h1 class="text-3xl font-bold text-carmesim mb-6">Atualizar Doador</h1>
 
-        <!--forms oculto-->
-        <div id="form-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Nome</label>
-            <input id="nome-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva" required>
-            <p id="erroNomeDoador" class="text-red-500 text-sm mt-1"></p>
-          </div>
-
+      <form id="formAtualizar">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label class="block font-semibold mb-1">RG</label>
-            <input id="rg-doador" maxlength="12" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-0" required>
-            <p id="erroRgDoador" class="text-red-500 text-sm mt-1"></p>
+            <label class="block mb-1 font-semibold">Nome</label>
+            <input type="text" id="nomeAtt" class="w-full px-4 py-2 border rounded-lg" required />
           </div>
-
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Profissão</label>
-            <input id="profissao-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Desenvolvedor, enfermeiro..." required>
-          </div>
-
           <div>
-            <label class="block font-semibold mb-1">Telefone</label>
-            <input id="fone-doador" maxlength="15" type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(00) 00000-0000">
-            <p id="erroFoneDoador" class="text-red-500 text-sm mt-1"></p>
+            <label class="block mb-1 font-semibold">CPF</label>
+            <input type="text" id="cpfAtt" class="w-full px-4 py-2 border rounded-lg bg-gray-100 cursor-not-allowed" readonly />
           </div>
-
           <div>
-            <label class="block font-semibold mb-1">CEP</label>
-            <input id="cep-doador" maxlength="9" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00000-000" required>
-            <p id="erroCepDoador" class="text-red-500 text-sm mt-1"></p>
+            <label class="block mb-1 font-semibold">RG</label>
+            <input type="text" id="rgAtt" class="w-full px-4 py-2 border rounded-lg" />
           </div>
-
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Rua</label>
-            <input id="rua-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua ..." required>
-          </div>
-
           <div>
-            <label class="block font-semibold mb-1">Número</label>
-            <input id="numero-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nº">
+            <label class="block mb-1 font-semibold">Profissão</label>
+            <input type="text" id="profissaoAtt" class="w-full px-4 py-2 border rounded-lg" />
           </div>
-
           <div>
-            <label class="block font-semibold mb-1">Bairro</label>
-            <input id="bairro-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Centro, Vila..." required>
+            <label class="block mb-1 font-semibold">Telefone</label>
+            <input type="text" id="telefoneAtt" class="w-full px-4 py-2 border rounded-lg" />
           </div>
-
           <div>
-            <label class="block font-semibold mb-1">Cidade</label>
-            <input id="cidade-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Presidente Venceslau" required>
+            <label class="block mb-1 font-semibold">CEP</label>
+            <input type="text" id="cepAtt" class="w-full px-4 py-2 border rounded-lg" />
           </div>
-
           <div>
-            <label class="block font-semibold mb-1">UF</label>
-            <select id="uf-doador" class="w-full p-3 border border-gray-300 rounded-lg" required>
-              <option value="">Selecione</option>
-              <option value="SP">SP</option>
-              <option value="MG">MG</option>
-              <option value="RJ">RJ</option>
-              <option value="PR">PR</option>
-              <option value="MS">MS</option>
+            <label class="block mb-1 font-semibold">Rua</label>
+            <input type="text" id="ruaAtt" class="w-full px-4 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Número</label>
+            <input type="text" id="numeroAtt" class="w-full px-4 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Bairro</label>
+            <input type="text" id="bairroAtt" class="w-full px-4 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Cidade</label>
+            <input type="text" id="cidadeAtt" class="w-full px-4 py-2 border rounded-lg" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">UF</label>
+            <select id="uf-doadorAtt" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                  <option value="">Selecione</option>
+                  <option value="SP">SP</option>
+                  <option value="MG">MG</option>
+                  <option value="RJ">RJ</option>
+                  <option value="PR">PR</option>
+                  <option value="MS">MS</option>
             </select>
           </div>
-
-          <div class="md:col-span-2">
-            <label class="block font-semibold mb-1">Complemento</label>
-            <input id="complemento-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex. Casa...">
-            <p id="erroComplementoDoador" class="text-red-500 text-sm mt-1"></p>
-          </div>
-            <div class="md:col-span-2 flex justify-end mt-4">
-              <button id="btnAtualizarDoador" type="button" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
-                Salvar
-              </button>
-            </div>
+          <div>
+            <label class="block mb-1 font-semibold">Complemento</label>
+            <input type="text" id="complementoAtt" class="w-full px-4 py-2 border rounded-lg" />
           </div>
         </div>
-      </div>
-      
-    </section>
+
+        <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full hover:bg-[#8a0128] transition-all">
+          Atualizar
+        </button>
+      </form>
+    </div>
   </main>
 
   <script>
-      document.getElementById('btnBuscarCpf').addEventListener('click', () => {
-        const cpf = document.getElementById('cpf-busca').value.trim();
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cpf = urlParams.get('cpf');
 
-        document.getElementById('erroCpfAtualizar').textContent = '';
+      if(!cpf) 
+      {
+        alert('CPF não fornecido!');
+        return;
+      }
 
-        if(!cpf)
+      fetch(`http://localhost:8080/doador/${cpf}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('nomeAtt').value = (data.doador?.nome || '').toLocaleUpperCase();
+          document.getElementById('cpfAtt').value = data.doador?.cpf || '';
+          document.getElementById('profissaoAtt').value = data.doador?.profissao || '';
+          document.getElementById('telefoneAtt').value = data.contato?.telefone || '';
+          document.getElementById('cidadeAtt').value = data.endereco?.cidade || '';
+          document.getElementById('rgAtt').value = data.doador?.rg || '';
+          document.getElementById('cepAtt').value = data.endereco?.cep || '';
+          document.getElementById('ruaAtt').value = data.endereco?.rua || '';
+          document.getElementById('numeroAtt').value = data.endereco?.numero || '';
+          document.getElementById('bairroAtt').value = data.endereco?.bairro || '';
+          document.getElementById('complementoAtt').value = data.endereco?.complemento || '';
+          document.getElementById('uf-doadorAtt').value = data.endereco?.uf || '';
+        })
+        .catch(err => {
+          console.error(err);
+          alert('Erro ao carregar dados do doador.');
+        });
+
+      document.getElementById('formAtualizar').addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        try
         {
-          document.getElementById('erroCpfAtualizar').textContent = 'Digite um CPF válido.';
-          return;
-        }
+          const nome = document.getElementById('nomeAtt').value.trim().toUpperCase();
+          const cpf = document.getElementById('cpfAtt').value.trim(); // cpf NÃO pode mudar
+          const rg = document.getElementById('rgAtt').value.trim();
+          const profissao = document.getElementById('profissaoAtt').value.trim();
+          const telefone = document.getElementById('telefoneAtt').value.trim();
+          const cep = document.getElementById('cepAtt').value.trim();
+          const rua = document.getElementById('ruaAtt').value.trim();
+          const numero = document.getElementById('numeroAtt').value.trim();
+          const bairro = document.getElementById('bairroAtt').value.trim();
+          const cidade = document.getElementById('cidadeAtt').value.trim();
+          const uf = document.getElementById('uf-doadorAtt').value.trim();
+          const complemento = document.getElementById('complementoAtt').value.trim();
 
-        fetch(`http://localhost:8080/doador/${encodeURIComponent(cpf)}`)
-          .then(res => {
-            if(!res.ok) 
-            {
-              throw new Error('Doador não encontrado');
+          const doadorCompleto = {
+            doador: {
+              cpf,
+              nome,
+              profissao,
+              rg
+            },
+            contato: {
+              telefone
+            },
+            endereco: {
+              cep,
+              rua,
+              numero,
+              bairro,
+              cidade,
+              uf,
+              complemento
             }
-            return res.json();
-          })
-          .then(data => {
-            document.getElementById('form-container').classList.remove('hidden'); //forms oculto
+          };
 
-            const { doador, contato, endereco } = data;
-
-            document.getElementById('nome-doador').value = doador.nome || '';
-            document.getElementById('rg-doador').value = doador.rg || '';
-            document.getElementById('profissao-doador').value = doador.profissao || '';
-            document.getElementById('fone-doador').value = contato.telefone || '';
-            document.getElementById('cep-doador').value = endereco.cep || '';
-            document.getElementById('rua-doador').value = endereco.rua || '';
-            document.getElementById('numero-doador').value = endereco.numero || '';
-            document.getElementById('bairro-doador').value = endereco.bairro || '';
-            document.getElementById('cidade-doador').value = endereco.cidade || '';
-            document.getElementById('uf-doador').value = endereco.uf || '';
-            document.getElementById('complemento-doador').value = endereco.complemento || '';
-          })
-          .catch(err => {
-            document.getElementById('erroCpfAtualizar').textContent = err.message;
-            document.getElementById('form-container').classList.add('hidden');
+          const response = await fetch('http://localhost:8080/doador/alterar', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(doadorCompleto)
           });
+
+          if(response.ok) 
+          {
+            alert('Doador atualizado com sucesso!');
+            window.location.href = '/views/viewGuilherme/listarDoadores.html';
+          } 
+          else 
+          {
+            const errorText = await response.text();
+            alert('Erro ao atualizar doador: ' + errorText);
+            console.error('Erro do servidor:', errorText);
+          }
+
+        } 
+        catch(error) 
+        {
+          console.error('Erro geral:', error);
+          alert(`Erro ao atualizar doador: ${error.message}`);
+        }
       });
+
+    });
   </script>
-  
+  <!-- LUCIDE ICONS -->
+  <script>
+    lucide.createIcons();
+  </script>
   <script src="../../public/js/validacao.js"></script>
-  <script src="../../public/js/api.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>

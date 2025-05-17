@@ -113,31 +113,3 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
 
 
 
-
-export async function atualizarDoador(doadorCompleto) 
-{
-    try
-    {
-        const cpf = doadorCompleto.doador.cpf;
-
-        const response = await fetch(`http://localhost:8080/doador/${encodeURIComponent(cpf)}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(doadorCompleto)
-        });
-
-        if(!response.ok) 
-        {
-            const errorText = await response.text();
-            throw new Error(`Erro ${response.status}: ${errorText}`);
-        }
-        const data = await response.json();
-        return data;
-    }
-    catch(error)
-    {
-        throw error;
-    }
-    }

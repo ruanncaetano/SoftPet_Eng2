@@ -91,7 +91,6 @@
                 window.location.href = `/views/viewGuilherme/atualizarDoador.html?cpf=${cpf}`;
             }
 
-            // Exclui doador via CPF
             function excluirDoador(cpf) 
             {
                 if(confirm('Tem certeza que deseja excluir este doador?')) 
@@ -123,6 +122,9 @@
     </div>
   </main>
 
+  <script>
+    lucide.createIcons();
+  </script>
   <script src="../../public/js/api.js"></script>
 </body>
 </html>
