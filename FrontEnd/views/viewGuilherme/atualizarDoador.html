@@ -195,7 +195,7 @@
           else 
           {
             const errorText = await response.text();
-            alert('Erro ao atualizar doador: ' + errorText);
+            alert(errorText);
             console.error('Erro do servidor:', errorText);
           }
 

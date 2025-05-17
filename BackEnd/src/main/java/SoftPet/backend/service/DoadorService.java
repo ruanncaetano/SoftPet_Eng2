@@ -10,6 +10,7 @@ import SoftPet.backend.model.EnderecoModel;
 import SoftPet.backend.util.cpfValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import SoftPet.backend.util.Validation;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +27,23 @@ public class DoadorService
 
     public DoadorModel addDoador(DoadorCompletoDTO doador) throws Exception
     {
-        if (!cpfValidator.isCpfValido(doador.getDoador().getCpf()))
+        if(!cpfValidator.isCpfValido(doador.getDoador().getCpf()))
             throw new Exception("CPF inválido!");
 
-        if (doadorDAL.findByDoador(doador.getDoador().getCpf()) != null)
+        if(doadorDAL.findByDoador(doador.getDoador().getCpf()) != null)
             throw new Exception("Usuário já cadastrado!");
+
+        if(!Validation.validarNomeCompleto(doador.getDoador().getNome()))
+            throw new Exception("Digite o nome completo corretamente!");
+
+        if(!Validation.validarTelefone(doador.getContato().getTelefone()))
+            throw new Exception("Telefone inválido! Ex: (11) 91234-5678");
+
+        if(!Validation.validarRG(doador.getDoador().getRg()))
+            throw new Exception("RG inválido!");
+
+        if(!Validation.validarCEP(doador.getEndereco().getCep()))
+            throw new Exception("CEP inválido! Ex: 12345-678");
 
         ContatoModel novoContato = contatoDAL.addContato(doador.getContato());
         EnderecoModel novoEndereco = enderecoDAL.addEndereco(doador.getEndereco());
@@ -55,6 +68,18 @@ public class DoadorService
     {
         if(!cpfValidator.isCpfValido(cpf))
             throw new Exception("CPF inválido!");
+
+        if(!Validation.validarNomeCompleto(doador.getNome()))
+            throw new Exception("Digite o nome completo corretamente!");
+
+        if(!Validation.validarTelefone(contato.getTelefone()))
+            throw new Exception("Telefone inválido! Ex: (11) 91234-5678");
+
+        if(!Validation.validarRG(doador.getRg()))
+            throw new Exception("RG inválido!");
+
+        if(!Validation.validarCEP(endereco.getCep()))
+            throw new Exception("CEP inválido! Ex: 12345-678");
 
         DoadorCompletoDTO doadorExistente = doadorDAL.findByDoador(cpf);
         if(doadorExistente == null)

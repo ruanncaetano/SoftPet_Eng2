@@ -45,10 +45,7 @@ function excluirDoador(cpf)
         })
         .then(response => {
             if(response.ok) 
-            {
-                alert('Doador excluído com sucesso!');
-                location.reload();
-            } 
+                location.reload(); 
             else 
                 alert('Erro ao excluir doador.');
         })
