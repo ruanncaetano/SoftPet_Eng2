@@ -43,4 +43,18 @@ public class Validation
         }
         return true;
     }
+
+    public static boolean numNegativo(int num)
+    {
+        return num >= 0;
+    }
+
+    public static boolean validarStringDocao(String str)
+    {
+        if(str == null || str.trim().isEmpty())
+            return false;
+        return true;
+    }
+
+
 }

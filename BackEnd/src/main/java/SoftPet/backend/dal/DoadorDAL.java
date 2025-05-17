@@ -68,6 +68,61 @@ public class DoadorDAL
         return doadorDTO;
     }
 
+    public DoadorCompletoDTO findById(long id)
+    {
+        DoadorCompletoDTO doadorDTO = null;
+        String sql = "SELECT p.pe_cod, p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg, " +
+                "c.con_telefone, " +
+                "e.en_cep, e.en_rua, e.en_numero, e.en_bairro, e.en_cidade, e.en_uf, e.en_complemento " +
+                "FROM pessoa p " +
+                "JOIN contato c ON p.con_cod = c.con_cod " +
+                "JOIN endereco e ON p.en_id = e.en_id " +
+                "WHERE p.pe_cod = ?";
+
+        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
+        {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next())
+            {
+                DoadorModel doador = new DoadorModel(
+                        rs.getLong("pe_cod"),
+                        rs.getString("pe_cpf"),
+                        rs.getString("pe_nome"),
+                        rs.getBoolean("pe_status"),
+                        rs.getString("pe_profissao"),
+                        rs.getLong("con_cod"),
+                        rs.getLong("en_id"),
+                        rs.getString("pe_rg")
+                );
+
+                ContatoModel contato = new ContatoModel(
+                        rs.getLong("con_cod"),
+                        rs.getString("con_telefone")
+                );
+
+                EnderecoModel endereco = new EnderecoModel(
+                        rs.getLong("en_id"),
+                        rs.getString("en_cep"),
+                        rs.getString("en_rua"),
+                        rs.getInt("en_numero"),
+                        rs.getString("en_bairro"),
+                        rs.getString("en_cidade"),
+                        rs.getString("en_uf"),
+                        rs.getString("en_complemento")
+                );
+
+                doadorDTO = new DoadorCompletoDTO(doador, contato, endereco);
+            }
+        }
+        catch(SQLException e)
+        {
+            throw new RuntimeException("Erro ao buscar doador por ID: " + e.getMessage(), e);
+        }
+        return doadorDTO;
+    }
+
+
     public DoadorModel addDoador(DoadorModel doador)
     {
         String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_profissao, con_cod, en_id, pe_rg) " +
