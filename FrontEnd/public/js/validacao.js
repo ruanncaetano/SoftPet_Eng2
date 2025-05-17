@@ -351,16 +351,20 @@ document.addEventListener('DOMContentLoaded', () => {
     //chamando validação de nome completo
     aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');
     aplicarValidacaoNomeCompleto('nome-doadorPOP', 'erroNomeDoadorPOP');
+    aplicarValidacaoNomeCompleto('nomeAtt', 'erroNomeDoador');
 
     //chamando a validação do RG
     aplicarValidacaoRG('rg-doador', 'erroRgDoador');
     aplicarValidacaoRG('rg-doadorPOP', 'erroRgDoadorPOP');
+    aplicarValidacaoRG('rgAtt', 'erroRgDoador');
 
     //chamando a validação do numero de telefone
     aplicarValidacaoTelefone('fone-doador', 'erroFoneDoador');
     aplicarValidacaoTelefone('fone-doadorPOP', 'erroFoneDoadorPOP');
+    aplicarValidacaoTelefone('telefoneAtt', 'erroFoneDoador');
 
     //chamando a validação do CEP
     aplicarValidacaoCEP('cep-doador', 'erroCepDoador');
     aplicarValidacaoCEP('cep-doadorPOP', 'erroCepDoadorPOP');
+    aplicarValidacaoCEP('cepAtt', 'erroCepDoador');
 });
