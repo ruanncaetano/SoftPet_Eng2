@@ -14,7 +14,7 @@ async function salvarAnimal(event) {
     const resgate = document.getElementById('resgate').value;
     const adocao = document.querySelector('input[name="adocao"]:checked').value;
     const foto = document.getElementById('foto').files[0];
-
+alert(peso)
     const formData = new FormData();
     formData.append('nome', nome);
     formData.append('idade', idade);

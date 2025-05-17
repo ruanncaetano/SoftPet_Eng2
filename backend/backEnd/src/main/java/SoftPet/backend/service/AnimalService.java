@@ -24,6 +24,7 @@ public class AnimalService {
         novoAnimal.setPorte(animal.getPorte());
         novoAnimal.setRaca(animal.getRaca());
         novoAnimal.setPelagem(animal.getPelagem());
+        novoAnimal.setPeso(animal.getPeso());
         novoAnimal.setBaia(animal.getBaia());
         novoAnimal.setDt_resgate(animal.getDt_resgate());
         novoAnimal.setDisp_adocao(animal.isDisp_adocao());
@@ -31,13 +32,14 @@ public class AnimalService {
 
         return animalDAL.Adicionar(novoAnimal);
     }
+
     public List<AnimalModel> buscarAnimais(String nome, String tipo, String porte, String sexo, boolean status) {
         return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
     }
 
-    public byte[] getFoto(Long id) {
-        return animalDAL.buscarId(id);
-    }
+//    public byte[] getFoto(Long id) {
+//        return animalDAL.buscarId(id);
+//    }
     // Buscar animal por ID
 //    public Optional<AnimalModel> buscarPorId(int cod) {
 //        return Optional.ofNullable(animalDAL.findById(cod));

@@ -13,6 +13,16 @@ public class AnimalModel {
     private String porte;
     private String raca;
     private String pelagem;
+    private int peso;
+
+    public int getPeso() {
+        return peso;
+    }
+
+    public void setPeso(int peso) {
+        this.peso = peso;
+    }
+
     private String baia;
     private Date dt_resgate;
     private boolean disp_adocao;
@@ -20,7 +30,7 @@ public class AnimalModel {
 
     public AnimalModel(){}
     public AnimalModel( String nome, int idade, String tipo, String sexo,String porte, String raca,
-                       String pelagem, String baia, Date dt_resgate, boolean disp_adocao) {
+                       String pelagem, int peso,String baia, Date dt_resgate, boolean disp_adocao) {
 
         this.nome = nome;
         this.idade = idade;
@@ -33,6 +43,7 @@ public class AnimalModel {
         this.dt_resgate = dt_resgate;
         this.disp_adocao = disp_adocao;
         this.foto = foto;
+        this.peso=peso;
     }
 
     public String getNome() {

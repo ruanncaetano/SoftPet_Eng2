@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ADAPV</title>
-  <link rel="website icon" type="image/png" href="/src/public/images/patinha.png" />
+  <link rel="website icon" type="image/png" href="/public/images/patinha.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -25,6 +25,7 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script  type="module"  src="/public/js/api.js"></script> 
+  
 </head>
 
 <body class="flex h-screen bg-neve font-sans text-noturno">
@@ -41,19 +42,19 @@
       <input type="text" id="filtroNome" placeholder="Nome" class="p-2 rounded border border-gray-300 w-full" />
       <select id="filtroPorte" class="p-2 rounded border border-gray-300 w-full">
         <option value="null">Todos os portes</option>
-        <option value="pequeno">Pequeno</option>
-        <option value="médio">Médio</option>
-        <option value="grande">Grande</option>
+        <option value="PEQUENO">Pequeno</option>
+        <option value="MEDIO">Médio</option>
+        <option value="GRANDE">Grande</option>
       </select>
       <select id="filtroTipo" class="p-2 rounded border border-gray-300 w-full">
         <option value="null">Todos os tipos</option>
-        <option value="Cachorro">Cachorro</option>
-        <option value="Gato">Gato</option>
+        <option value="CACHORRO">Cachorro</option>
+        <option value="GATO">Gato</option>
       </select>
       <select id="filtroSexo" class="p-2 rounded border border-gray-300 w-full">
         <option value="null">Todos os sexos</option>
-        <option value="Fêmea">Fêmea</option>
-        <option value="Macho">Macho</option>
+        <option value="FEMEA">Fêmea</option>
+        <option value="MACHO">Macho</option>
       </select>
       <select id="filtroStatus" class="p-2 rounded border border-gray-300 w-full">
         <option value="null">Todos os status</option>
@@ -91,13 +92,9 @@
               <label class="block font-semibold mb-1">Idade (em anos)</label>
               <input type="number" id="idade" class="w-full p-2 border rounded-lg" min="0" required />
             </div>
-            <div>
+             <div>
               <label class="block font-semibold mb-1">Tipo</label>
-              <select id="tipo" class="w-full p-2 border rounded-lg" required>
-                <option value="">Selecione</option>
-                <option value="Cachorro">Cachorro</option>
-                <option value="Gato">Gato</option>
-              </select>
+              <input type="text" id="tipo" class="w-full p-2 border rounded-lg" required />
             </div>
             <div>
               <label class="block font-semibold mb-1">Raça</label>
@@ -109,7 +106,7 @@
             </div>
             <div>
               <label class="block font-semibold mb-1">Peso (kg)</label>
-              <input type="number" step="0.01" id="peso" class="w-full p-2 border rounded-lg" min="0" />
+              <input type="number" step="0.01" id="peso" class="w-full p-2 border rounded-lg" min="0" required/>
             </div>
             <div>   
               <label class="block font-semibold mb-1">Baia</label>
@@ -152,7 +149,7 @@
   </div>
   
   <script>
-
+    lucide.createIcons();
   function byteArrayToImage(byteArray, mimeType = 'image/jpeg') {
     if (!byteArray || !byteArray.length) return null;
     const uint8Array = new Uint8Array(byteArray);
@@ -284,7 +281,7 @@ function formatarTextoExibicao(texto) {
 function abrirModalEdicao(index) {
   const animal = animais[index];
   if (!animal) return;
-
+console.log("Animal selecionado:", animal);
   indiceEditando = index;
 
   // Formata os dados para exibição

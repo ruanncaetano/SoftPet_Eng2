@@ -3,7 +3,7 @@ document.write(`
     <aside class="w-72 bg-noturno text-neve flex flex-col shadow-xl">
       <div class="p-6 border-b border-areia flex items-center gap-3">
         <svg data-lucide="paw-print" class="w-6 h-6 text-pastel"></svg>
-        <a href="/scr/views/home.html" class="text-2xl font-bold tracking-wide text-pastel">ADAPV</a>
+        <a href="/views/home.html" class="text-2xl font-bold tracking-wide text-pastel">ADAPV</a>
       </div>
   
       <nav class="p-6 flex-1 overflow-y-auto space-y-4">

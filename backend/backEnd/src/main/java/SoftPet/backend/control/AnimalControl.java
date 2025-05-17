@@ -31,12 +31,13 @@ public class AnimalControl
                                                    @RequestParam("porte") String porte,
                                                    @RequestParam("raca") String raca,
                                                    @RequestParam("pelagem") String pelagem,
+                                                   @RequestParam("peso") int peso,
                                                    @RequestParam("baia") String baia,
                                                    @RequestParam("resgate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date resgate,
                                                    @RequestParam("adocao") boolean adocao,
                                                    @RequestParam(value = "foto", required = false) MultipartFile foto) throws IOException {
 
-        AnimalModel animal = new AnimalModel(nome,idade,tipo,sexo,porte,raca,pelagem,baia,resgate,adocao);
+        AnimalModel animal = new AnimalModel(nome,idade,tipo,sexo,porte,raca,pelagem,peso,baia,resgate,adocao);
         if (foto != null && !foto.isEmpty()) {
             animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]
         }
@@ -53,19 +54,18 @@ public class AnimalControl
                                           @RequestParam(required = false)String porte,
                                           @RequestParam(required = false) String tipo,
                                           @RequestParam(required = false) String sexo,
-                                          @RequestParam(required = false) boolean status
-                                          )
+                                          @RequestParam(required = false) boolean status)
     {
         //required = false é para deixar opcional
         List<AnimalModel> animais=animalService.buscarAnimais(nome,porte,tipo,sexo,status);
         return ResponseEntity.ok(animais);
     }
-    @GetMapping("/animal/{id}/foto")
-    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
-        byte[] foto = animalService.getFoto(id); // busca no banco
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG); // ou IMAGE_PNG, conforme necessário
-        return new ResponseEntity<>(foto, headers, HttpStatus.OK);
-    }
+//    @GetMapping("/animal/{id}/foto")
+//    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
+//        byte[] foto = animalService.getFoto(id); // busca no banco
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_JPEG); // ou IMAGE_PNG, conforme necessário
+//        return new ResponseEntity<>(foto, headers, HttpStatus.OK);
+//    }
 
 }
