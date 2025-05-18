@@ -81,9 +81,13 @@
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
       <main class="bg-neve p-6">
-        <h1 class="text-2xl font-bold mb-6">Cadastro de Animal</h1>
+        <h1 class="text-2xl font-bold mb-6">Edição de Animal</h1>
         <form onsubmit="return salvarAnimal(event)">
           <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-semibold mb-1">Codigo</label>
+              <input type="text" id="code"  class="bg-gray-200 text-gray-700 border border-gray-300 rounded px-3 py-2 w-full cursor-default" readonly/>
+            </div>
             <div>
               <label class="block font-semibold mb-1">Nome</label>
               <input type="text" id="nome" class="w-full p-2 border rounded-lg" required />
@@ -94,15 +98,19 @@
             </div>
              <div>
               <label class="block font-semibold mb-1">Tipo</label>
-              <input type="text" id="tipo" class="w-full p-2 border rounded-lg" required />
+              <input type="text" id="tipo" class="bg-gray-200 text-gray-700 border border-gray-300 rounded px-3 py-2 w-full cursor-default" readonly />
+            </div>
+             <div>
+              <label class="block font-semibold mb-1">Porte</label>
+              <input type="text" id="porte" class="bg-gray-200 text-gray-700 border border-gray-300 rounded px-3 py-2 w-full cursor-default" readonly />
             </div>
             <div>
               <label class="block font-semibold mb-1">Raça</label>
-              <input type="text" id="raca" class="w-full p-2 border rounded-lg" required />
+              <input type="text" id="raca" class="bg-gray-200 text-gray-700 border border-gray-300 rounded px-3 py-2 w-full cursor-default" readonly/>
             </div>
             <div>
               <label class="block font-semibold mb-1">Pelagem</label>
-              <input type="text" id="pelagem" class="w-full p-2 border rounded-lg" />
+              <input type="text" id="pelagem" class="bg-gray-200 text-gray-700 border border-gray-300 rounded px-3 py-2 w-full cursor-default" readonly />
             </div>
             <div>
               <label class="block font-semibold mb-1">Peso (kg)</label>
@@ -149,16 +157,11 @@
   </div>
   
   <script>
-    lucide.createIcons();
-  function byteArrayToImage(byteArray, mimeType = 'image/jpeg') {
-    if (!byteArray || !byteArray.length) return null;
-    const uint8Array = new Uint8Array(byteArray);
-    const blob = new Blob([uint8Array], { type: mimeType });
-    return URL.createObjectURL(blob);
-  }
+  lucide.createIcons();
+
 
   async function filtrarAnimal(nome, porte, tipo, sexo, status) {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(); // sem isso tudo para
 
     console.log({ nome, porte, tipo, sexo, status });
 
@@ -204,10 +207,7 @@
   let indiceEditando = null;
 
   function criarCard(animal, index) {
-    // Converte foto de byte[] para URL
-    const fotoUrl = animal.foto && Array.isArray(animal.foto)
-      ? byteArrayToImage(animal.foto, 'image/jpeg')  // ou 'image/png', ajuste conforme necessário
-      : null;
+   const fotoUrl = `http://localhost:8080/animal/${animal.cod}/foto`;
 
     return `
       <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200 relative flex gap-4 items-center">
@@ -225,7 +225,7 @@
           <p><strong>Porte:</strong> ${animal.porte || 'Não informado'}</p>
           <p><strong>Idade:</strong> ${animal.idade} ANO(S)</p>
           <p><strong>Sexo:</strong> ${animal.sexo || 'Não informado'}</p>
-          <p><strong>Status:</strong> ${animal.status === true ? 'Disponível' : animal.status === false ? 'Adotado' : 'Não informado'}</p>
+          <p><strong>Status:</strong> ${animal.status == 'true' ? 'Disponível' : animal.status == false ? 'Adotado' : 'Não informado'}</p>
         </div>
       </div>
     `;
@@ -285,6 +285,7 @@ console.log("Animal selecionado:", animal);
   indiceEditando = index;
 
   // Formata os dados para exibição
+  document.getElementById("code").value = animal.cod || "";
   document.getElementById("nome").value = formatarTextoExibicao(animal.nome);
   document.getElementById("idade").value = animal.idade || "";
   document.getElementById("tipo").value = animal.tipo || "";
@@ -292,24 +293,14 @@ console.log("Animal selecionado:", animal);
   document.getElementById("pelagem").value = animal.pelagem || "";
   document.getElementById("peso").value = animal.peso || "";
   document.getElementById("baia").value = animal.baia || "";
+  document.getElementById("porte").value = animal.porte || "";
   document.getElementById("resgate").value = animal.resgate ? animal.resgate.split('T')[0] : ""; // Formata data
-  
+  document.getElementById('fotoAtual').src = `http://localhost:8080/animal/${animais[index].cod}/foto`;
   // Status de adoção (tratamento seguro)
-  const statusValue = animal.status && animal.status.toString().toLowerCase().includes('disponível') ? "1" : "0";
+  const statusValue = animal.status && animal.status.toString().toLowerCase().includes('disponível') ? "true" : "false";
   const radioAdocao = document.querySelector(`input[name="adocao"][value="${statusValue}"]`);
   if (radioAdocao) radioAdocao.checked = true;
 
-  // Exibição da foto
-  const fotoElement = document.getElementById("fotoAtual");
-  if (fotoElement) {
-    if (animal.foto) {
-      fotoElement.src = animal.foto;
-      fotoElement.style.display = "block";
-    } else {
-      fotoElement.src = "";
-      fotoElement.style.display = "none";
-    }
-  }
 
   abrirModal();
 }

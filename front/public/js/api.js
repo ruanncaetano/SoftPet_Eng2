@@ -2,6 +2,7 @@ async function salvarAnimal(event) {
   event.preventDefault();
 
   try {
+    
     const nome = document.getElementById('nome').value.toUpperCase();
     const idade = document.getElementById('idade').value;
     const tipo = document.getElementById('tipo').value;
@@ -13,9 +14,12 @@ async function salvarAnimal(event) {
     const baia = document.getElementById('baia').value;
     const resgate = document.getElementById('resgate').value;
     const adocao = document.querySelector('input[name="adocao"]:checked').value;
+    const castrado = document.querySelector('input[name="castrado"]:checked').value;
+    const obs = document.getElementById('obs').value;
     const foto = document.getElementById('foto').files[0];
-alert(peso)
+    const ativo = true;
     const formData = new FormData();
+    formData.append('ativo', ativo);
     formData.append('nome', nome);
     formData.append('idade', idade);
     formData.append('tipo', tipo);
@@ -27,7 +31,8 @@ alert(peso)
     formData.append('baia', baia);
     formData.append('resgate', resgate);
     formData.append('adocao', adocao);
-
+    formData.append('obs',obs);
+    formData.append('castrado',castrado)
     if (foto) {
       formData.append('foto', foto); // Apenas o arquivo, sem base64
     }
