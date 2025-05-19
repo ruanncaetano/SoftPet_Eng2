@@ -2,6 +2,9 @@ package SoftPet.backend.control;
 
 import SoftPet.backend.model.AnimalModel;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import SoftPet.backend.service.AnimalService;
@@ -35,11 +38,14 @@ public class AnimalControl
                                                    @RequestParam("baia") String baia,
                                                    @RequestParam("resgate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date resgate,
                                                    @RequestParam("adocao") boolean adocao,
-                                                   @RequestParam(value = "foto", required = false) MultipartFile foto) throws IOException {
+                                                   @RequestParam("castrado") boolean castrado,
+                                                   @RequestParam("ativo") boolean ativo,
+                                                   @RequestParam(value = "foto", required = false) MultipartFile foto,
+                                                   @RequestParam(value = "obs", required = false) String obs) throws IOException {
 
-        AnimalModel animal = new AnimalModel(nome,idade,tipo,sexo,porte,raca,pelagem,peso,baia,resgate,adocao);
+        AnimalModel animal = new AnimalModel(nome,idade,tipo,sexo,porte,raca,pelagem,peso,baia,resgate,adocao,castrado,obs,ativo);
         if (foto != null && !foto.isEmpty()) {
-            animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]
+            animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]   -> passando por fora do contrutor
         }
         try {
             AnimalModel animalSalvo = animalService.cadastrarAnimal(animal);
@@ -60,12 +66,17 @@ public class AnimalControl
         List<AnimalModel> animais=animalService.buscarAnimais(nome,porte,tipo,sexo,status);
         return ResponseEntity.ok(animais);
     }
-//    @GetMapping("/animal/{id}/foto")
-//    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
-//        byte[] foto = animalService.getFoto(id); // busca no banco
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.IMAGE_JPEG); // ou IMAGE_PNG, conforme necessário
-//        return new ResponseEntity<>(foto, headers, HttpStatus.OK);
-//    }
+    @GetMapping("/{id}/foto")
+    public ResponseEntity<byte[]> getFoto(@PathVariable Long id) {
+        byte[] foto = animalService.getFoto(id); // busca no banco
 
+        if (foto == null || foto.length == 0) {
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG); // ou IMAGE_PNG conforme o tipo real
+
+        return new ResponseEntity<>(foto, headers, HttpStatus.OK);
+    }
 }

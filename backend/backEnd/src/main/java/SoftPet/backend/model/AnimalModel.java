@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class AnimalModel {
     private int cod;
+    private boolean ativo;
     private String nome;
     private int idade;
     private String tipo;
@@ -14,23 +15,23 @@ public class AnimalModel {
     private String raca;
     private String pelagem;
     private int peso;
-
-    public int getPeso() {
-        return peso;
-    }
-
-    public void setPeso(int peso) {
-        this.peso = peso;
-    }
-
     private String baia;
     private Date dt_resgate;
     private boolean disp_adocao;
+    private boolean castrado;
     private byte[] foto;
+    private String observacao;
+
+
+
+
+
+
 
     public AnimalModel(){}
     public AnimalModel( String nome, int idade, String tipo, String sexo,String porte, String raca,
-                       String pelagem, int peso,String baia, Date dt_resgate, boolean disp_adocao) {
+                       String pelagem, int peso,String baia, Date dt_resgate,
+                        boolean disp_adocao,boolean castrado, String observacao, boolean ativo) {
 
         this.nome = nome;
         this.idade = idade;
@@ -44,6 +45,10 @@ public class AnimalModel {
         this.disp_adocao = disp_adocao;
         this.foto = foto;
         this.peso=peso;
+        this.castrado=castrado;
+        this.observacao=observacao;
+        this.ativo=ativo;
+
     }
 
     public String getNome() {
@@ -85,7 +90,13 @@ public class AnimalModel {
     public void setRaca(String raca) {
         this.raca = raca;
     }
+    public int getPeso() {
+        return peso;
+    }
 
+    public void setPeso(int peso) {
+        this.peso = peso;
+    }
     public String getPelagem() {
         return pelagem;
     }
@@ -140,5 +151,29 @@ public class AnimalModel {
 
     public void setPorte(String porte) {
         this.porte = porte;
+    }
+
+    public boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public String getObservacao() {
+        return observacao;
+    }
+
+    public void setObservacao(String observacao) {
+        this.observacao = observacao;
+    }
+
+    public boolean getCastrado() {
+        return castrado;
+    }
+
+    public void setCastrado(boolean castrado) {
+        this.castrado = castrado;
     }
 }

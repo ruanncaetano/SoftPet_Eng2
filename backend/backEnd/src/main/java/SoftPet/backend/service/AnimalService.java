@@ -28,8 +28,11 @@ public class AnimalService {
         novoAnimal.setBaia(animal.getBaia());
         novoAnimal.setDt_resgate(animal.getDt_resgate());
         novoAnimal.setDisp_adocao(animal.isDisp_adocao());
+        novoAnimal.setAtivo(animal.getAtivo());
+        novoAnimal.setCastrado(animal.getCastrado());
+        novoAnimal.setObservacao(animal.getObservacao());
         novoAnimal.setFoto(animal.getFoto());
-
+// poderia ter utilizado o construtor
         return animalDAL.Adicionar(novoAnimal);
     }
 
@@ -37,9 +40,13 @@ public class AnimalService {
         return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
     }
 
-//    public byte[] getFoto(Long id) {
-//        return animalDAL.buscarId(id);
-//    }
+    public byte[] getFoto(Long id) {
+        AnimalModel animal = animalDAL.buscarIdComFoto(id);
+        if (animal != null && animal.getFoto() != null) {
+            return animal.getFoto();
+        }
+        return null;
+    }
     // Buscar animal por ID
 //    public Optional<AnimalModel> buscarPorId(int cod) {
 //        return Optional.ofNullable(animalDAL.findById(cod));

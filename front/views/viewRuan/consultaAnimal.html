@@ -124,28 +124,52 @@
               <label class="block font-semibold mb-1">Data de Resgate</label>
               <input type="date" id="resgate" class="w-full p-2 border rounded-lg" required />
             </div>
-            <div class="md:col-span-2">
-              <label class="block font-semibold mb-1">Disponível para Adoção?</label>
-              <div class="flex gap-4 mt-1">
-                <label class="inline-flex items-center">
-                  <input type="radio" name="adocao" value="1" class="mr-2" checked />
-                  Sim
-                </label>
-                <label class="inline-flex items-center">
-                  <input type="radio" name="adocao" value="0" class="mr-2" />
-                  Não
-                </label>
-              </div>
+            <div class="md:col-span-1">
+                <label class="block font-semibold mb-1">Castrado</label>
+                <div class="flex gap-4 mt-1">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="castrado" value="1" class="mr-2" checked />
+                        Sim
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="castrado" value="0" class="mr-2" />
+                        Não
+                    </label>
+                </div>
             </div>
-            <div class="md:col-span-2">
-              <label class="block font-semibold mb-1">Foto Atual</label>
-              <img id="fotoAtual" src="" alt="Foto do Animal" class="w-48 h-48 object-cover rounded-lg mb-4 border" />
+
+            <div class="md:col-span-1">
+                <label class="block font-semibold mb-1">Disponível para Adoção?</label>
+                <div class="flex gap-4 mt-1">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="adocao" value="1" class="mr-2" checked />
+                        Sim
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="adocao" value="0" class="mr-2" />
+                        Não
+                    </label>
+                </div>
             </div>
+
+            <!-- Linha para Foto Atual -->
             <div class="md:col-span-2">
-              <label class="block font-semibold mb-1">Alterar Foto</label>
-              <input type="file" id="foto" class="w-full p-2 border rounded-lg" accept="image/*" onchange="previewNovaFoto(event)" />
+                <label class="block font-semibold mb-1">Foto Atual</label>
+                <img id="fotoAtual" src="" alt="Foto do Animal" class="w-48 h-48 object-cover rounded-lg mb-4 border" />
             </div>
-          </div>
+
+            <!-- Linha para Nova Foto -->
+            <div class="md:col-span-2">
+                <label class="block font-semibold mb-1">Alterar Foto</label>
+                <input type="file" id="foto" class="w-full p-2 border rounded-lg" accept="image/*" onchange="previewNovaFoto(event)" />
+            </div>
+
+            <!-- Linha para Observações -->
+            <div class="md:col-span-2">
+                <label class="block font-semibold mb-1">Observações</label>
+                <textarea id="obs" class="w-full p-2 border rounded-lg h-32"></textarea>
+            </div>
+        </div>
           <div class="text-right mt-6">
             <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
               Salvar
@@ -206,8 +230,14 @@
   let animais = [];
   let indiceEditando = null;
 
-  function criarCard(animal, index) {
-   const fotoUrl = `http://localhost:8080/animal/${animal.cod}/foto`;
+function criarCard(animal, index) {
+    // Só cria a URL se existir foto
+    const fotoContent = animal.foto 
+        ? `<img src="http://localhost:8080/animal/${animal.cod}/foto" 
+              alt="${animal.nome}" 
+              class="w-24 h-24 object-cover rounded"
+              onerror="this.onerror=null; this.replaceWith(createFallback())">`
+        : `<div class="w-24 h-24 bg-gray-200 flex items-center justify-center rounded text-gray-400">Sem foto</div>`;
 
     return `
       <div class="bg-white rounded-lg shadow-md p-4 border border-gray-200 relative flex gap-4 items-center">
@@ -215,9 +245,7 @@
           <svg data-lucide="pencil"></svg>
         </button>
 
-        ${fotoUrl
-          ? `<img src="${fotoUrl}" alt="${animal.nome}" class="w-24 h-24 object-cover rounded" />`
-          : `<div class="w-24 h-24 bg-gray-200 flex items-center justify-center rounded text-gray-400">Sem foto</div>`}
+        ${fotoContent}
 
         <div>
           <h2 class="text-xl font-bold text-carmesim">${animal.nome}</h2>
@@ -225,11 +253,11 @@
           <p><strong>Porte:</strong> ${animal.porte || 'Não informado'}</p>
           <p><strong>Idade:</strong> ${animal.idade} ANO(S)</p>
           <p><strong>Sexo:</strong> ${animal.sexo || 'Não informado'}</p>
-          <p><strong>Status:</strong> ${animal.status == 'true' ? 'Disponível' : animal.status == false ? 'Adotado' : 'Não informado'}</p>
+          <p><strong>Status:</strong> ${animal.disp_adocao == true ? 'Disponível' : animal.disp_adocao == false ? 'Indisponivel' : 'Não informado'}</p>
         </div>
       </div>
     `;
-  }
+}
 
   async function aplicarFiltros() {
     const nome = document.getElementById("filtroNome").value;
@@ -294,13 +322,17 @@ console.log("Animal selecionado:", animal);
   document.getElementById("peso").value = animal.peso || "";
   document.getElementById("baia").value = animal.baia || "";
   document.getElementById("porte").value = animal.porte || "";
-  document.getElementById("resgate").value = animal.resgate ? animal.resgate.split('T')[0] : ""; // Formata data
-  document.getElementById('fotoAtual').src = `http://localhost:8080/animal/${animais[index].cod}/foto`;
+  document.getElementById("obs").value = animal.observacao || "";
+  document.getElementById("resgate").value = animal.dt_resgate ? animal.dt_resgate.split('T')[0] : ""; // Formata data
+  // para buscar somente animais com foto enão dar erro no console
+  if(animal.foto != null)
+    document.getElementById('fotoAtual').src = `http://localhost:8080/animal/${animais[index].cod}/foto`;
   // Status de adoção (tratamento seguro)
-  const statusValue = animal.status && animal.status.toString().toLowerCase().includes('disponível') ? "true" : "false";
-  const radioAdocao = document.querySelector(`input[name="adocao"][value="${statusValue}"]`);
-  if (radioAdocao) radioAdocao.checked = true;
+  // Para disponível para adoção (campo boolean)
+document.querySelector(`input[name="adocao"][value="${animal.disp_adocao ? '1' : '0'}"]`).checked = true;
 
+// Para castrado (campo boolean)
+document.querySelector(`input[name="castrado"][value="${animal.castrado ? '1' : '0'}"]`).checked = true;
 
   abrirModal();
 }

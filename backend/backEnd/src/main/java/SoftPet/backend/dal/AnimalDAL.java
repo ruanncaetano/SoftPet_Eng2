@@ -17,8 +17,9 @@ public class AnimalDAL {
     public AnimalModel Adicionar(AnimalModel animal)
     {
         String sql = "INSERT INTO animais(" +
-                " an_nome, an_idade, an_tipo, an_sexo,an_porte, an_raca, an_pelagem,an_peso, an_baia, an_dt_resgate, an_disp_adocao, an_foto)" +
-                "VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?);";
+                " an_nome, an_idade, an_tipo, an_sexo,an_porte, an_raca, an_pelagem,an_peso, an_baia," +
+                " an_dt_resgate, an_disp_adocao, an_foto,an_castrado,an_obs,an_ativo)" +
+                "VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?,?);";
 
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql,
                 Statement.RETURN_GENERATED_KEYS))
@@ -37,6 +38,9 @@ public class AnimalDAL {
             stmt.setDate(10, new java.sql.Date(animal.getDt_resgate().getTime())); // data
             stmt.setBoolean(11, animal.isDisp_adocao());  // disponível para adoção
             stmt.setBytes(12, animal.getFoto());         // foto em bytes
+            stmt.setBoolean(13,animal.getCastrado());
+            stmt.setString(14,animal.getObservacao());
+            stmt.setBoolean(15, animal.getAtivo());
             // esse campo de cima esta preenchendo a string SQL
 
             int linhasMod = stmt.executeUpdate(); // informa quantas linhas foram modificadas
@@ -105,7 +109,9 @@ public class AnimalDAL {
                 animal.setBaia(rs.getString("an_baia"));
                 animal.setDt_resgate(rs.getDate("an_dt_resgate"));
                 animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
-                animal.setFoto(rs.getBytes("an_foto"));
+                animal.setAtivo(rs.getBoolean("an_ativo"));
+                animal.setCastrado(rs.getBoolean("an_castrado"));
+                animal.setObservacao(rs.getString("an_obs"));                animal.setFoto(rs.getBytes("an_foto"));
 
                 lista.add(animal);
             }
@@ -116,9 +122,72 @@ public class AnimalDAL {
 
         return lista;
     }
-//    public AnimalModel buscarId(int id)
-//    {
-//        String sql = "SELECT * FROM animais WHERE an_cod = ?";
-//        List<Object> params = new ArrayList<>();
-//    }
+    public AnimalModel buscarId(Long id) {
+        String sql = "SELECT * FROM animais WHERE an_cod = ?";
+        AnimalModel animal = null;
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                animal = new AnimalModel();
+                animal.setCod(rs.getInt("an_cod"));
+                animal.setNome(rs.getString("an_nome"));
+                animal.setIdade(rs.getInt("an_idade"));
+                animal.setTipo(rs.getString("an_tipo"));
+                animal.setSexo(rs.getString("an_sexo"));
+                animal.setRaca(rs.getString("an_raca"));
+                animal.setPelagem(rs.getString("an_pelagem"));
+                animal.setPeso(rs.getInt("an_peso"));
+                animal.setPorte(rs.getString("an_porte"));
+                animal.setBaia(rs.getString("an_baia"));
+                animal.setDt_resgate(rs.getDate("an_dt_resgate"));
+                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
+                animal.setAtivo(rs.getBoolean("an_ativo"));
+                animal.setCastrado(rs.getBoolean("an_castrado"));
+                animal.setObservacao(rs.getString("an_obs"));
+                animal.setFoto(rs.getBytes("an_foto")); // campo bytea (foto)
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar animal por ID: " + e.getMessage(), e);
+        }
+
+        return animal;
+    }
+    public AnimalModel buscarIdComFoto(Long id) {
+        String sql = "SELECT * FROM animais WHERE an_cod = ? AND an_foto IS NOT NULL";
+        AnimalModel animal = null;
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                animal = new AnimalModel();
+                animal.setCod(rs.getInt("an_cod"));
+                animal.setNome(rs.getString("an_nome"));
+                animal.setIdade(rs.getInt("an_idade"));
+                animal.setTipo(rs.getString("an_tipo"));
+                animal.setSexo(rs.getString("an_sexo"));
+                animal.setRaca(rs.getString("an_raca"));
+                animal.setPelagem(rs.getString("an_pelagem"));
+                animal.setPeso(rs.getInt("an_peso"));
+                animal.setPorte(rs.getString("an_porte"));
+                animal.setBaia(rs.getString("an_baia"));
+                animal.setDt_resgate(rs.getDate("an_dt_resgate"));
+                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
+                animal.setAtivo(rs.getBoolean("an_ativo"));
+                animal.setCastrado(rs.getBoolean("an_castrado"));
+                animal.setObservacao(rs.getString("an_obs"));
+                animal.setFoto(rs.getBytes("an_foto")); // campo bytea (foto)
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar animal por ID com foto: " + e.getMessage(), e);
+        }
+
+        return animal;
+    }
 }

@@ -17,7 +17,11 @@ async function salvarAnimal(event) {
     const castrado = document.querySelector('input[name="castrado"]:checked').value;
     const obs = document.getElementById('obs').value;
     const foto = document.getElementById('foto').files[0];
-    const ativo = true;
+    const ativo = 1;
+
+    alert(obs)
+    alert(castrado)
+    alert(ativo)
     const formData = new FormData();
     formData.append('ativo', ativo);
     formData.append('nome', nome);
