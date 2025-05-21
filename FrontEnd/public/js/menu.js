@@ -3,7 +3,7 @@ document.write(`
     <aside class="w-72 bg-noturno text-neve flex flex-col shadow-xl">
       <div class="p-6 border-b border-areia flex items-center gap-3">
         <svg data-lucide="paw-print" class="w-6 h-6 text-pastel"></svg>
-        <a href="home.html" class="text-2xl font-bold tracking-wide text-pastel">ADAPV</a>
+        <a href="../../views/viewGeral/home.html" class="text-2xl font-bold tracking-wide text-pastel">ADAPV</a>
       </div>
   
       <nav class="p-6 flex-1 overflow-y-auto space-y-4">
@@ -25,20 +25,20 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-adocao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
-          <li><a href="buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
+          <li><a href="../../views/viewGeral/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
+          <li><a href="../../views/viewGeral/buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
         </ul>
       </div>
-      <!-- Dropdown adotante -->
+      <!-- Dropdown Pessoas -->
       <div>
         <button onclick="toggleMenu('menu-pessoa', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">
           <span class="flex gap-2 items-center"><svg data-lucide="heart-handshake" class="w-5 h-5"></svg>Pessoas</span>
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-pessoa" class="ml-6 mt-2 space-y-2 hidden">
-        <li><a href="adocao.html" class="block hover:text-carmesim">Melhorar esse nome de menu</a></li>
-          <li><a href="adotante.html" class="block hover:text-carmesim">Cadastrar</a></li>
-          <li><a href="buscarAdocao.html" class="block hover:text-carmesim">Consultar</a></li>
+        <li><a href="../../views/viewGeral/adotante.html" class="block hover:text-carmesim">Cadastrar Adotante</a></li>
+          <li><a href="../../views/viewGuilherme/doador.html" class="block hover:text-carmesim">Cadastrar Doador</a></li>
+          <li><a href="#" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
       <!-- Dropdown Doação -->
@@ -48,15 +48,15 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="#" class="block hover:text-carmesim">Doar</a></li>
-          <li><a href="#" class="block hover:text-carmesim">Consultar</a></li>
-          <li><a href="#" class="block hover:text-carmesim">Utilizar</a></li>
+          <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
+          <li><a href="../../views/viewGuilherme/consumir.html" class="block hover:text-carmesim">Utilizar Doação</a></li>
+          <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
 
       <!-- Acesso à página de cores -->
       <div>
-        <a href="cores.html" class="block text-left hover:text-carmesim transition flex items-center gap-2">
+        <a href="../../views/viewGeral/cores.html" class="block text-left hover:text-carmesim transition flex items-center gap-2">
           <svg data-lucide="palette" class="w-5 h-5"></svg>Cores
         </a>
       </div>
@@ -107,9 +107,16 @@ document.write(`
 
         </ul>
       </div>
+      <!-- Botão de Logout -->
+        <div class="mt-4 border-t border-areia pt-4">
+          <button onclick="logout()" class="w-full text-left flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition">
+            <svg data-lucide="log-out" class="w-5 h-5"></svg>
+            Sair
+          </button>
+        </div>
       </nav>
     </aside>
-  
+    <script src="/public/js/api.js"></script>
     <script>
       function toggleMenu(id, btn) {
         const menu = document.getElementById(id);
