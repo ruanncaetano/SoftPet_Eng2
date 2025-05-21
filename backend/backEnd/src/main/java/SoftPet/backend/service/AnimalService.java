@@ -27,7 +27,7 @@ public class AnimalService {
         novoAnimal.setPeso(animal.getPeso());
         novoAnimal.setBaia(animal.getBaia());
         novoAnimal.setDt_resgate(animal.getDt_resgate());
-        novoAnimal.setDisp_adocao(animal.isDisp_adocao());
+        novoAnimal.setDisp_adocao(animal.getDisp_adocao());
         novoAnimal.setAtivo(animal.getAtivo());
         novoAnimal.setCastrado(animal.getCastrado());
         novoAnimal.setObservacao(animal.getObservacao());
@@ -47,6 +47,16 @@ public class AnimalService {
         }
         return null;
     }
+
+    public AnimalModel buscarPorCod(int cod) {
+        return animalDAL.buscarPorCod(cod);
+    }
+
+    public AnimalModel atualizarAnimal(AnimalModel animal) {
+        animalDAL.atualizar(animal);
+        return animalDAL.buscarPorCod(animal.getCod());
+    }
+
     // Buscar animal por ID
 //    public Optional<AnimalModel> buscarPorId(int cod) {
 //        return Optional.ofNullable(animalDAL.findById(cod));
@@ -55,11 +65,6 @@ public class AnimalService {
 //    // Listar todos os animais
 //    public List<AnimalModel> listarTodos() {
 //        return animalDAL.getAll();
-//    }
-//
-//    // Atualizar informações do animal
-//    public AnimalModel atualizarAnimal(AnimalModel animal) {
-//        return animalDAL.update(animal);
 //    }
 //
 //    // Atualizar status de adoção

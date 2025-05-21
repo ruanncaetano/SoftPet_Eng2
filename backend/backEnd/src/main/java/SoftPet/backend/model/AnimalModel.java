@@ -43,12 +43,25 @@ public class AnimalModel {
         this.baia = baia;
         this.dt_resgate = dt_resgate;
         this.disp_adocao = disp_adocao;
-        this.foto = foto;
+        this.foto = foto; // esta sendo definida separedamente
         this.peso=peso;
         this.castrado=castrado;
         this.observacao=observacao;
         this.ativo=ativo;
 
+    }
+
+    public AnimalModel(int cod,String nome,int idade, int peso, String baia, boolean adocao, boolean castrado, String obs, boolean ativo) {
+        this.cod=cod;
+        this.idade=idade;
+        this.nome=nome;
+    this.peso=peso;
+    this.baia=baia;
+    this.ativo=ativo;
+    this.disp_adocao=adocao;
+    this.foto=new byte[0];
+    this.castrado=castrado;
+    this.observacao=obs;
     }
 
     public String getNome() {
@@ -113,7 +126,7 @@ public class AnimalModel {
         this.baia = baia;
     }
 
-    public boolean isDisp_adocao() {
+    public boolean getDisp_adocao() {
         return disp_adocao;
     }
 

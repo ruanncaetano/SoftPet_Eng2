@@ -79,4 +79,26 @@ public class AnimalControl
 
         return new ResponseEntity<>(foto, headers, HttpStatus.OK);
     }
+    @PutMapping("/atualizar")
+    public ResponseEntity<Object> atualizarAnimal(@RequestParam("cod") int cod,
+                                                 @RequestParam("nome") String nome,
+                                                 @RequestParam("idade") int idade,
+                                                 @RequestParam("peso") int peso,
+                                                 @RequestParam("baia") String baia,
+                                                 @RequestParam("adocao") boolean adocao,
+                                                 @RequestParam("castrado") boolean castrado,
+                                                 @RequestParam("ativo") boolean ativo,
+                                                 @RequestParam(value = "foto", required = false) MultipartFile foto,
+                                                 @RequestParam(value = "obs", required = false) String obs) throws IOException {
+        AnimalModel animal = new AnimalModel(cod,nome,idade, peso, baia, adocao, castrado, obs, ativo);
+        if (foto != null && !foto.isEmpty()) {
+            animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]   -> passando por fora do contrutor
+        }
+        try {
+            AnimalModel animalAtulizado = animalService.atualizarAnimal(animal);
+            return ResponseEntity.ok(animalAtulizado); // Retorna 200 OK com o animal cadastrado
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // Retorna 400 em caso de erro
+        }
+    }
 }

@@ -82,7 +82,7 @@
       </button>
       <main class="bg-neve p-6">
         <h1 class="text-2xl font-bold mb-6">Edição de Animal</h1>
-        <form onsubmit="return salvarAnimal(event)">
+        <form onsubmit="return atualizarAnimal(event)">
           <div class="grid md:grid-cols-2 gap-4">
             <div>
               <label class="block font-semibold mb-1">Codigo</label>
@@ -169,6 +169,17 @@
                 <label class="block font-semibold mb-1">Observações</label>
                 <textarea id="obs" class="w-full p-2 border rounded-lg h-32"></textarea>
             </div>
+            <div class="md:col-span-2">
+               <label class="block font-semibold mb-1">Casdastro ativo ( Desativar cadastro exclui seu animal )</label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="ativo" value="1" class="mr-2" checked />
+                        Sim
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="ativo" value="0" class="mr-2" />
+                        Não
+                    </label>
+                </div>
         </div>
           <div class="text-right mt-6">
             <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
@@ -364,49 +375,57 @@ document.querySelector(`input[name="castrado"][value="${animal.castrado ? '1' : 
 //   reader.readAsDataURL(file);
 // }
 
-async function salvarAnimal(event) {
+async function atualizarAnimal(event) {
   event.preventDefault();
   
-  // Coleta os valores do formulário
-  const formData = new FormData();
-  formData.append('nome', formatarTextoExibicao(document.getElementById("nome").value));
-  formData.append('idade', document.getElementById("idade").value);
-  formData.append('tipo', document.getElementById("tipo").value);
-  formData.append('raca', formatarTextoExibicao(document.getElementById("raca").value));
-  formData.append('pelagem', document.getElementById("pelagem").value);
-  formData.append('peso', document.getElementById("peso").value || null);
-  formData.append('baia', document.getElementById("baia").value);
-  formData.append('resgate', document.getElementById("resgate").value);
-  formData.append('status', document.querySelector('input[name="adocao"]:checked').value === "1" ? "Disponível" : "Adotado");
-  
-  // Adiciona a foto se foi selecionada uma nova
-  const fotoInput = document.getElementById("foto");
-  if (fotoInput.files[0]) {
-    formData.append('foto', fotoInput.files[0]);
-  }
-
   try {
-    const metodo = indiceEditando !== null ? 'PUT' : 'POST';
-    const url = indiceEditando !== null 
-      ? `http://localhost:8080/animal/${animais[indiceEditando].id}`
-      : 'http://localhost:8080/animal';
+    const code = document.getElementById('code').value;
+  
+    const nome = document.getElementById('nome').value.toUpperCase();
+    const idade = document.getElementById('idade').value;
+    const peso = document.getElementById('peso').value;
+    const baia = document.getElementById('baia').value;
+    const adocao = document.querySelector('input[name="adocao"]:checked').value;
+    const castrado = document.querySelector('input[name="castrado"]:checked').value;
+    const obs = document.getElementById('obs').value;
+    const foto = document.getElementById('foto').files[0];
+    const ativo = document.querySelector('input[name="ativo"]:checked').value;
 
-    const response = await fetch(url, {
-      method: metodo,
+    const formData = new FormData();
+    formData.append('cod',code);
+    formData.append('ativo', ativo);
+    formData.append('nome', nome);
+    formData.append('idade', idade);
+    formData.append('peso', peso);
+    formData.append('baia', baia);
+    formData.append('adocao', adocao);
+    formData.append('obs',obs);
+    formData.append('castrado',castrado)
+    if (foto) {
+      formData.append('foto', foto); // Apenas o arquivo, sem base64
+    }
+
+    const response = await fetch('http://localhost:8080/animal/atualizar', {
+      method: 'PUT',
       body: formData
     });
 
     if (!response.ok) {
-      throw new Error('Erro ao salvar animal');
+      const errorText = await response.text();
+      throw new Error(`Erro ${response.status}: ${errorText}`);
     }
 
-    // Recarrega os dados após salvar
-    await aplicarFiltros();
-    fecharModal();
+    const data = await response.json();
+    console.log('Sucesso:', data);
+    alert('Animal atualizado com sucesso!');
+    document.querySelector('form').reset();
+  
+
   } catch (error) {
-    console.error('Erro ao salvar animal:', error);
-    alert('Ocorreu um erro ao salvar o animal. Por favor, tente novamente.');
+    console.error('Erro completo:', error);
+    alert(`Erro: ${error.message}`);
   }
+  fecharModal();
 }
   </script>
   

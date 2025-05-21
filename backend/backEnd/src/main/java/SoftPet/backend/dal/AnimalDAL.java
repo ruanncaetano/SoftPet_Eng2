@@ -36,7 +36,7 @@ public class AnimalDAL {
             stmt.setInt(8, animal.getPeso());
             stmt.setString(9, animal.getBaia());         // baia
             stmt.setDate(10, new java.sql.Date(animal.getDt_resgate().getTime())); // data
-            stmt.setBoolean(11, animal.isDisp_adocao());  // disponível para adoção
+            stmt.setBoolean(11, animal.getDisp_adocao());  // disponível para adoção
             stmt.setBytes(12, animal.getFoto());         // foto em bytes
             stmt.setBoolean(13,animal.getCastrado());
             stmt.setString(14,animal.getObservacao());
@@ -60,14 +60,63 @@ public class AnimalDAL {
         return animal;
     }
 
+    public AnimalModel buscarPorCod(int cod) {
+        String sql = "SELECT * FROM animais WHERE an_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setInt(1, cod);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                AnimalModel animal = new AnimalModel();
+                animal.setCod(rs.getInt("an_cod"));
+                animal.setNome(rs.getString("an_nome"));
+                animal.setIdade(rs.getInt("an_idade"));
+                animal.setPeso(rs.getInt("an_peso"));
+                animal.setBaia(rs.getString("an_baia"));
+                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
+                animal.setFoto(rs.getBytes("an_foto"));
+                animal.setCastrado(rs.getBoolean("an_castrado"));
+                animal.setObservacao(rs.getString("an_obs"));
+                animal.setAtivo(rs.getBoolean("an_ativo"));
+                return animal;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar animal por código: " + e.getMessage(), e);
+        }
+    }
+
+    public void atualizar(AnimalModel animal) {
+        String sql = "UPDATE animais SET an_nome = ?, an_idade = ?, an_peso = ?, an_baia = ?, "
+                + "an_disp_adocao = ?, an_foto = ?, an_castrado = ?, an_obs = ?, an_ativo = ? "
+                + "WHERE an_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setString(1, animal.getNome());
+            stmt.setInt(2, animal.getIdade());
+            stmt.setInt(3, animal.getPeso());
+            stmt.setString(4, animal.getBaia());
+            stmt.setBoolean(5, animal.getDisp_adocao());
+            stmt.setBytes(6, animal.getFoto());
+            stmt.setBoolean(7, animal.getCastrado());
+            stmt.setString(8, animal.getObservacao());
+            stmt.setBoolean(9, animal.getAtivo());
+            stmt.setInt(10, animal.getCod());
+            System.out.println("Atualizando animal com COD: " + animal.getCod());
+
+            int rows = stmt.executeUpdate();
+            System.out.println("Linhas afetadas: " + rows);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar animal: " + e.getMessage(), e);
+        }
+    }
+
     // vai buscar os animais de acordo com os filtro, com os if e else, vai montar o comando de SELECT e trazer as inormações para mim
 
     public List<AnimalModel> consultarComFiltros(String nome, String porte, String tipo, String sexo, boolean dispAdocao) {
         List<AnimalModel> lista = new ArrayList<>();
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM animais WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM animais WHERE an_ativo = true");
         List<Object> params = new ArrayList<>();
-
         if (nome != null && !nome.isEmpty()) {
             sql.append(" AND an_nome ILIKE ?");
             params.add("%" + nome + "%");
@@ -88,7 +137,7 @@ public class AnimalDAL {
             sql.append(" AND an_disp_adocao = ?");
             params.add(dispAdocao);
         }
-
+        sql.append(" ORDER BY an_cod");
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
@@ -112,8 +161,8 @@ public class AnimalDAL {
                 animal.setAtivo(rs.getBoolean("an_ativo"));
                 animal.setCastrado(rs.getBoolean("an_castrado"));
                 animal.setObservacao(rs.getString("an_obs"));                animal.setFoto(rs.getBytes("an_foto"));
-
                 lista.add(animal);
+
             }
 
         } catch (SQLException e) {
