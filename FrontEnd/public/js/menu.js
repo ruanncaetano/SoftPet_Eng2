@@ -50,7 +50,7 @@ document.write(`
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
           <li><a href="../../views/viewGuilherme/consumir.html" class="block hover:text-carmesim">Utilizar Doação</a></li>
-          <li><a href="#" class="block hover:text-carmesim">Consultar Doação</a></li>
+          <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
 
@@ -107,9 +107,16 @@ document.write(`
 
         </ul>
       </div>
+      <!-- Botão de Logout -->
+        <div class="mt-4 border-t border-areia pt-4">
+          <button onclick="logout()" class="w-full text-left flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition">
+            <svg data-lucide="log-out" class="w-5 h-5"></svg>
+            Sair
+          </button>
+        </div>
       </nav>
     </aside>
-  
+    <script src="/public/js/api.js"></script>
     <script>
       function toggleMenu(id, btn) {
         const menu = document.getElementById(id);

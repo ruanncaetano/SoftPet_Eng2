@@ -40,13 +40,14 @@ public class DoacaoService
         if(!Validation.validarStringDocao(doacaoDTO.getDoacao().getNome()))
             throw new IllegalArgumentException("Nome do produto inválido!");
 
+        if(!Validation.isDataValidade(doacaoDTO.getDoacao().getDataValidade()))
+            throw new IllegalArgumentException("Data de validade invalida!");
+
         DoacaoModel novaDoacao = doacaoDTO.getDoacao();
         novaDoacao.setId_doador(doador.getDoador().getId());
 
         return doacaoDAL.addDoacao(novaDoacao);
     }
-
-
 
     public DoacaoDTO getDoacao(Long id)
     {
@@ -69,11 +70,14 @@ public class DoacaoService
         if(!Validation.numNegativo(doacao.getQtde()))
             throw new IllegalArgumentException("Quantidade da doação inválida!");
 
+        if(!Validation.isDataValidade(doacao.getDataValidade()))
+            throw new IllegalArgumentException("Data de validade invalida!");
+
         DoacaoDTO doacaoExistente = doacaoDAL.findByDoacao(id);
         if(doacaoExistente == null)
             throw new Exception("Não existe uma doação com esse ID!");
 
-        // Garante que o ID e o ID do doador serão mantidos na atualização
+
         doacao.setId(id);
         doacao.setId_doador(doacaoExistente.getDoador().getId());
 

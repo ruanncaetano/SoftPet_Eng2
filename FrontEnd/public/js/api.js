@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     const json = JSON.parse(texto);
                     localStorage.setItem("token", json.token);
-                    alert("Login realizado com sucesso!");
+                    //alert("Login realizado com sucesso!");
                     window.location.href = "../../views/viewGeral/home.html";
                 }
                 catch
@@ -39,6 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+function logout() 
+{
+  localStorage.removeItem("token");
+  localStorage.removeItem("usuario");
+  
+  window.location.href = "../../views/viewGuilherme/login.html";
+}
+
 
 //conexao do front com o backend na pagina de doador
 document.getElementById('cadastroForm').addEventListener('submit', async function (event) {
@@ -110,6 +119,107 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
     }
 });
 
+//fazer a função para quando a pessoa clicar no botão procurar o doador com aquele cpf
+async function buscarDoador() 
+{
+    const cpf = document.getElementById('buscaDoadorCpf').value.trim();
+    const erroEl = document.getElementById('erroCpfBusca');
+    const dadosEl = document.getElementById('dadosDoador');
+    const nomeInput = document.getElementById('nomeBuscaDoacao');
+    const cpfInput = document.getElementById('cpfBuscaDoacao');
+    const idInput = document.getElementById('idDoadorBusca');
 
+    erroEl.textContent = '';
+    dadosEl.classList.add('hidden');
+    nomeInput.value = '';
+    cpfInput.value = '';
+    idInput.value = '';
 
+    if(!cpf) 
+    {
+        erroEl.textContent = 'Por favor, informe o CPF do doador.';
+        return;
+    }
+
+    try 
+    {
+        const response = await fetch(`http://localhost:8080/doador/${cpf}`);
+
+        if(!response.ok)
+            throw new Error('Doador não encontrado.');
+
+        const data = await response.json();
+        nomeInput.value = data.doador?.nome || '-';
+        cpfInput.value = data.doador?.cpf || '-';
+        idInput.value = data.doador?.id || '';
+
+        dadosEl.classList.remove('hidden');
+
+    }
+    catch(error) 
+    {
+        erroEl.textContent = error.message;
+    }
+}
+
+//função que salva uma doação
+async function registrarDoacao() 
+{
+    const idDoador = document.getElementById('idDoadorBusca').value;
+    if(!idDoador) 
+    {
+        alert('Por favor, busque e selecione um doador antes de registrar a doação.');
+        return;
+    }
+
+    const tipo = document.getElementById('tipoDoacao').value.toUpperCase();
+    const nome = document.getElementById('itemDoacao').value.toUpperCase();
+    const qtde = parseInt(document.getElementById('qtdeDoacao').value);
+    const dataDoacao = document.getElementById('dataDoacao').value;
+    const dataValidade = document.getElementById('dataValidade').value;
+    const uniMedida = document.getElementById('uniMedida').value.toUpperCase();
+
+    if(!tipo || !nome || isNaN(qtde) || !dataDoacao || !dataValidade || !uniMedida) 
+    {
+        alert('Preencha todos os campos obrigatórios corretamente.');
+        return;
+    }
+
+    const doacao = {
+        tipo,
+        qtde,
+        nome,
+        data: dataDoacao,
+        dataValidade,
+        uniMedida
+    };
+    const payload = {
+        doacao,
+        doador: {
+            id: parseInt(idDoador)
+        }
+    };
+
+    try 
+    {
+        const response = await fetch('http://localhost:8080/doacao/cadastro', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+            body: JSON.stringify(payload)
+        });
+
+        if(!response.ok)
+            throw new Error('Erro ao salvar a doação.');
+
+        alert('Doação registrada com sucesso!');
+        document.getElementById('cadastroDoacao').reset();
+
+    }
+    catch(error) 
+    {
+        alert(error.message);
+    }
+}
 

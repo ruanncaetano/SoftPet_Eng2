@@ -30,10 +30,10 @@
   </style>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
-  <!-- Sidebar -->
+  <!-- sidebar -->
   <script src="../../public/js/menu.js"></script>
 
-  <!-- Conteúdo Principal -->
+  <!--conteudo principal -->
   <main class="flex-1 p-8 overflow-y-auto">
     <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
       <h1 class="text-3xl font-bold text-carmesim mb-6">Atualizar Doador</h1>
@@ -86,14 +86,14 @@
           </div>
           <div>
             <label class="block mb-1 font-semibold">* UF</label>
-            <select id="uf-doadorAtt" class="w-full p-3 border border-gray-300 rounded-lg" required>
-                  <option value="">Selecione</option>
-                  <option value="SP">SP</option>
-                  <option value="MG">MG</option>
-                  <option value="RJ">RJ</option>
-                  <option value="PR">PR</option>
-                  <option value="MS">MS</option>
-            </select>
+              <select id="uf-doadorAtt" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                <option value="">Selecione</option>
+                <option value="SP">SP</option>
+                <option value="MG">MG</option>
+                <option value="RJ">RJ</option>
+                <option value="PR">PR</option>
+                <option value="MS">MS</option>
+              </select>
           </div>
           <div>
             <label class="block mb-1 font-semibold">Complemento</label>
@@ -198,7 +198,6 @@
             alert(errorText);
             console.error('Erro do servidor:', errorText);
           }
-
         } 
         catch(error) 
         {
@@ -206,7 +205,6 @@
           alert(`Erro ao atualizar doador: ${error.message}`);
         }
       });
-
     });
   </script>
   <!-- LUCIDE ICONS -->

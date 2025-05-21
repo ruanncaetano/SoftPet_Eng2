@@ -6,10 +6,7 @@ import SoftPet.backend.model.DoacaoModel;
 import SoftPet.backend.model.DoadorModel;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,7 @@ public class DoacaoDAL
     public DoacaoDTO findByDoacao(Long id)
     {
         DoacaoDTO doacaoDTO = null;
-        String sql = "SELECT d.doa_cod, d.doa_tipo, d.doa_qtde, d.doa_nome, d.pe_cod, " +
+        String sql = "SELECT d.doa_cod, d.doa_tipo, d.doa_qtde, d.doa_nome, d.doa_data, d.doa_validade, d.doa_unidade, d.pe_cod, " +
                 "p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg " +
                 "FROM doacoes d " +
                 "INNER JOIN pessoa p ON d.pe_cod = p.pe_cod " +
@@ -36,6 +33,9 @@ public class DoacaoDAL
                         rs.getString("doa_tipo"),
                         rs.getInt("doa_qtde"),
                         rs.getString("doa_nome"),
+                        rs.getDate("doa_data").toLocalDate(),
+                        rs.getDate("doa_validade").toLocalDate(),
+                        rs.getString("doa_unidade"),
                         rs.getLong("pe_cod")
                 );
                 DoadorModel doador = new DoadorModel(
@@ -61,15 +61,17 @@ public class DoacaoDAL
 
     public DoacaoModel addDoacao(DoacaoModel doacao)
     {
-        String sql = "INSERT INTO doacoes (doa_tipo, doa_qtde, doa_nome, pe_cod) " +
-                "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO doacoes (doa_tipo, doa_qtde, doa_nome, doa_data, doa_validade, doa_unidade, pe_cod) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
         {
             stmt.setString(1, doacao.getTipo());
             stmt.setInt(2, doacao.getQtde());
             stmt.setString(3, doacao.getNome());
-            stmt.setLong(4, doacao.getId_doador());
+            stmt.setDate(4, Date.valueOf(doacao.getData()));
+            stmt.setDate(5, Date.valueOf(doacao.getDataValidade()));
+            stmt.setString(6, doacao.getUniMedida());
+            stmt.setLong(7, doacao.getId_doador());
 
             int linhasMod = stmt.executeUpdate();
             if(linhasMod > 0)
@@ -88,15 +90,18 @@ public class DoacaoDAL
 
     public Boolean updateDoacao(DoacaoModel doacao)
     {
-        String sql = "UPDATE doacoes SET doa_tipo = ?, doa_qtde = ?, doa_nome = ?, pe_cod = ? WHERE doa_cod = ?";
+        String sql = "UPDATE doacoes SET doa_tipo = ?, doa_qtde = ?, doa_nome = ?, doa_data = ?, doa_validade = ?, doa_unidade = ?, pe_cod = ? WHERE doa_cod = ?";
 
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
         {
             stmt.setString(1, doacao.getTipo());
             stmt.setInt(2, doacao.getQtde());
             stmt.setString(3, doacao.getNome());
-            stmt.setLong(4, doacao.getId_doador());
-            stmt.setLong(5, doacao.getId());
+            stmt.setDate(4, Date.valueOf(doacao.getData()));
+            stmt.setDate(5, Date.valueOf(doacao.getDataValidade()));
+            stmt.setString(6, doacao.getUniMedida());
+            stmt.setLong(7, doacao.getId_doador());
+            stmt.setLong(8, doacao.getId());
 
             return stmt.executeUpdate() > 0;
         }
@@ -126,7 +131,7 @@ public class DoacaoDAL
     {
         List<DoacaoDTO> list = new ArrayList<>();
 
-        String sql = "SELECT d.doa_cod, d.doa_tipo, d.doa_qtde, d.doa_nome, d.pe_cod, " +
+        String sql = "SELECT d.doa_cod, d.doa_tipo, d.doa_qtde, d.doa_nome, d.doa_data, d.doa_validade, d.doa_unidade, d.pe_cod, " +
                 "p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg " +
                 "FROM doacoes d " +
                 "JOIN pessoa p ON d.pe_cod = p.pe_cod";
@@ -140,6 +145,9 @@ public class DoacaoDAL
                         rs.getString("doa_tipo"),
                         rs.getInt("doa_qtde"),
                         rs.getString("doa_nome"),
+                        rs.getDate("doa_data").toLocalDate(),
+                        rs.getDate("doa_validade").toLocalDate(),
+                        rs.getString("doa_unidade"),
                         rs.getLong("pe_cod")
                 );
 

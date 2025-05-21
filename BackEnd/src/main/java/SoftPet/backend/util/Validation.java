@@ -1,5 +1,6 @@
 package SoftPet.backend.util;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 public class Validation
@@ -56,5 +57,11 @@ public class Validation
         return true;
     }
 
-
+    public static boolean isDataValidade(LocalDate dataValidade)
+    {
+        if (dataValidade == null)
+            return false;
+        LocalDate hoje = LocalDate.now();
+        return dataValidade.isAfter(hoje);
+    }
 }
