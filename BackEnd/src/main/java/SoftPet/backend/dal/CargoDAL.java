@@ -107,12 +107,55 @@ public class CargoDAL {
     }
 
     public int buscarOuCriar(CargoModel cargo) {
-        CargoModel existente = buscarPorNome(cargo.getNome());
-        if (existente != null) {
-            return existente.getId();
-        } else {
-            return criar(cargo);
+        String buscarSql = "SELECT car_cod FROM cargo WHERE LOWER(car_nome) = LOWER(?)";
+        String inserirSql = "INSERT INTO cargo (car_nome) VALUES (?)";
+
+        try (
+                PreparedStatement buscarStmt = SingletonDB.getConexao().getPreparedStatement(buscarSql);
+                PreparedStatement inserirStmt = SingletonDB.getConexao().getPreparedStatement(inserirSql, Statement.RETURN_GENERATED_KEYS)
+        ) {
+            // Primeiro tenta encontrar o cargo existente
+            buscarStmt.setString(1, cargo.getNome());
+            ResultSet rs = buscarStmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("car_cod"); // Cargo já existe
+            }
+
+            // Se não encontrar, insere o novo
+            inserirStmt.setString(1, cargo.getNome());
+            int linhasAfetadas = inserirStmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+                ResultSet generatedKeys = inserirStmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Retorna o ID gerado
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return -1; // Falha ao inserir ou buscar
+    }
+
+
+    public CargoModel buscarPorId(int id) {
+        String sql = "SELECT * FROM cargo WHERE car_cod = ?";
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new CargoModel(
+                        rs.getInt("car_cod"),
+                        rs.getString("car_nome")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Se não encontrar ou ocorrer erro
     }
 
 }

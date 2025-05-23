@@ -35,6 +35,11 @@ public class VoluntarioService {
     }
 
     public boolean atualizarVoluntario(VoluntarioModel voluntario) {
-        return voluntarioDAL.update(voluntario);
+        return voluntarioDAL.atualizar(voluntario);
     }
+
+    public VoluntarioModel buscarPorId(int id) {
+        return voluntarioDAL.buscarPorId(id);
+    }
+
 }

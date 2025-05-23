@@ -34,6 +34,19 @@ public class ContatoDAL {
 
         return idGerado;
     }
+    public boolean atualizar(ContatoModel contato, int contatoId) {
+        String sql = "UPDATE contato SET con_telefone = ?, con_email = ? WHERE con_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setLong(1, contato.getTelefone());
+            stmt.setString(2, contato.getEmail());
+            stmt.setInt(3, contatoId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public ContatoModel findById(int id) {
         ContatoModel contato = null;

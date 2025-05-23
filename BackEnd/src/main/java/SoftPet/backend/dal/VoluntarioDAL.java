@@ -30,8 +30,16 @@ public class VoluntarioDAL {
         voluntario.setCredenciaisCod(credId);
         voluntario.setContatoCod(contId);
 
-        // Buscar ou criar o cargo, e pegar o id
-        int cargoId = cargoDAL.buscarOuCriar(new CargoModel(voluntario.getCargoCod(), voluntario.getCargoNome()));
+        // Buscar ou criar o cargo somente se o ID não estiver presente
+        int cargoId;
+        if (voluntario.getCargoCod() > 0) {
+            cargoId = voluntario.getCargoCod(); // Já veio com cargo existente
+        } else {
+            if (voluntario.getCargoNome() == null || voluntario.getCargoNome().isBlank()) {
+                throw new IllegalArgumentException("Nome do cargo é obrigatório se o ID não for fornecido.");
+            }
+            cargoId = cargoDAL.buscarOuCriar(new CargoModel(0, voluntario.getCargoNome()));
+        }
         voluntario.setCargoCod(cargoId);
 
         String sql = "INSERT INTO voluntario (vol_cpf, vol_nome, car_cod, con_cod, cre_cod) VALUES (?, ?, ?, ?, ?)";
@@ -56,6 +64,54 @@ public class VoluntarioDAL {
 
         return voluntario;
     }
+    public static VoluntarioModel buscarPorId(int id) {
+        String sql = "SELECT * FROM voluntario WHERE vol_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                VoluntarioModel voluntario = new VoluntarioModel();
+                voluntario.setId(rs.getInt("vol_cod"));
+                voluntario.setNome(rs.getString("vol_nome"));
+                voluntario.setCpf(rs.getString("vol_cpf"));
+                voluntario.setCargoCod(rs.getInt("car_cod"));
+                voluntario.setContatoCod(rs.getInt("con_cod"));
+                voluntario.setCredenciaisCod(rs.getInt("cre_cod"));
+                return voluntario;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+    public boolean atualizar(VoluntarioModel voluntario) {
+        try {
+            // Atualizar cargo (reaproveitar se já existir)
+            int cargoId = cargoDAL.buscarOuCriar(new CargoModel(0, voluntario.getCargoNome()));
+            voluntario.setCargoCod(cargoId);
+
+            // Atualizar contato e credenciais
+            contatoDAL.atualizar(voluntario.getContato(), voluntario.getContatoCod());
+            credenciaisDAL.atualizar(voluntario.getCredenciais(), voluntario.getCredenciaisCod());
+
+            // Atualizar voluntário
+            String sql = "UPDATE voluntario SET vol_nome = ?, vol_cpf = ?, car_cod = ? WHERE vol_cod = ?";
+            try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+                stmt.setString(1, voluntario.getNome());
+                stmt.setString(2, voluntario.getCpf());
+                stmt.setInt(3, voluntario.getCargoCod());
+                stmt.setInt(4, voluntario.getId());
+                return stmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public VoluntarioModel findById(int id) {
         VoluntarioModel voluntario = null;
         String sql = "SELECT * FROM voluntario WHERE vol_cod = ?";
@@ -76,6 +132,12 @@ public class VoluntarioDAL {
 
                 voluntario.setCredenciais(credenciaisDAL.findById(voluntario.getCredenciaisCod()));
                 voluntario.setContato(contatoDAL.findById(voluntario.getContatoCod()));
+
+                // Buscar e setar o nome do cargo
+                CargoModel cargo = cargoDAL.buscarPorId(voluntario.getCargoCod());
+                if (cargo != null) {
+                    voluntario.setCargoNome(cargo.getNome());
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,6 +145,9 @@ public class VoluntarioDAL {
 
         return voluntario;
     }
+
+
+
 
     public VoluntarioModel findByCPF(String cpf) {
         VoluntarioModel voluntario = null;

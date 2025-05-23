@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Deletar Produto</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src ="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <script src="../../public/js/menu.js"></script>
+
+  <main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Deletar Produto</h1>
+
+    <form id="formDeletar" class="space-y-6 max-w-md">
+      <div>
+        <label for="produtoId" class="block font-semibold mb-1">ID do Produto</label>
+        <input type="number" id="produtoId" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div class="text-right">
+        <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+          Deletar Produto
+        </button>
+      </div>
+
+      <p id="msg" class="mt-2 font-semibold"></p>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formDeletar");
+      const msg = document.getElementById("msg");
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        msg.textContent = "";
+        msg.classList.remove("text-green-700", "text-red-600");
+
+        const id = document.getElementById("produtoId").value;
+
+        try {
+          const resposta = await fetch(`http://localhost:8080/produtos/${id}`, {
+            method: "DELETE"
+          });
+
+          if (resposta.ok) {
+            msg.textContent = "Produto deletado com sucesso!";
+            msg.classList.add("text-green-700");
+            form.reset();
+          } else {
+            const erro = await resposta.text();
+            msg.textContent = "Erro ao deletar produto: " + erro;
+            msg.classList.add("text-red-600");
+          }
+        } catch (e) {
+          msg.textContent = "Erro de conexão: " + e.message;
+          msg.classList.add("text-red-600");
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+  <script>
+    lucide.createIcons();
+    document.getElementById("formDeletar").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const id = document.getElementById("produtoId").value;
+
+      const resposta = await fetch(`http://localhost:8080/produtos/deletar/${id}`, {
+        method: "DELETE"
+      });
+
+      const msg = document.getElementById("msg");
+      if (resposta.ok) {
+        msg.textContent = "Produto deletado com sucesso!";
+        msg.className = "text-green-600";
+        e.target.reset();
+      } else {
+        msg.textContent = "Erro ao deletar produto.";
+        msg.className = "text-red-600";
+      }
+    });
+  </script>
+</body>
+</html>

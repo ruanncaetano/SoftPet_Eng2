@@ -74,5 +74,18 @@ public class CredenciaisDAL {
 
         return credenciais;
     }
+    public boolean atualizar(CredenciaisModel credenciais, int credenciaisId) {
+        String sql = "UPDATE credenciais SET cre_login = ?, cre_senha = ? WHERE cre_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setString(1, credenciais.getLogin());
+            stmt.setString(2, credenciais.getSenha());
+            stmt.setInt(3, credenciaisId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
 
