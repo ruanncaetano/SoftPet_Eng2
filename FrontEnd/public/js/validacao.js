@@ -334,74 +334,18 @@ function aplicarValidacaoCEP(idInput, idErro)
     }
 }
 
-function validarQuantidade(idInput, idErro) 
-{
-    const quantidade = document.getElementById(idInput);
-    const erro = document.getElementById(idErro);
 
-    if(quantidade) 
-    {
-        quantidade.addEventListener('input', () => {
-        if(quantidade.value < 1)
-            quantidade.value = '';
-        });
-
-        quantidade.addEventListener('blur', () => {
-            const valor = Number(quantidade.value);
-
-            if(isNaN(valor) || valor < 1) 
-            {
-                erro.textContent = 'Quantidade inválida. Deve ser maior ou igual a 1.';
-                quantidade.classList.add('erro-input');
-            } 
-            else 
-            {
-                erro.textContent = '';
-                quantidade.classList.remove('erro-input');
-            }
-        });
-    }
-}
-
-function aplicarValidacaoDataValidade(idInput, idErro) 
-{
-    const input = document.getElementById(idInput);
-    const erro = document.getElementById(idErro);
-    var interagiu = false;
-
-    function validarData() 
-    {
-        const valor = input.value;
-        const dataSelecionada = new Date(valor);
-        const hoje = new Date();
-
-        hoje.setHours(0, 0, 0, 0);
-        dataSelecionada.setHours(0, 0, 0, 0);
-
-        if(interagiu) 
-        {
-            if(!valor || dataSelecionada <= hoje)
-                erro.textContent = "A data de validade deve ser maior que a data atual.";
-            else
-                erro.textContent = "";
-        }
-    }
-    input.addEventListener('input', () => {
-        interagiu = true;
-        validarData();
-    });
-}
 
 
 document.addEventListener('DOMContentLoaded', () => {
     //chamando validação de CPF
     aplicarValidacaoCPF('cpf', 'erroCpf'); //tela de login
-    aplicarValidacaoCPF('cpf-doador', 'erroCpfDoador'); //tela de doador
-    aplicarValidacaoCPF('cpf-doadorPOP', 'erroCpfDoadorPOP');
+    aplicarValidacaoCPF('cpf-adotante', 'erroCpfAdotante'); //tela de adotante
+    aplicarValidacaoCPF('cpf-adotantePOP', 'erroCpfAdotantePOP');
     aplicarValidacaoCPF('cpf-busca', 'erroCpfAtualizar');
-    aplicarValidacaoCPF('buscaDoadorCpf', 'erroCpfBusca');
+    aplicarValidacaoCPF('buscaAdotanteCpf', 'erroCpfBusca');
 
-    //chamando validação de senha
+    //chamando validação de senhaAdotante
     aplicarValidacaoSenha('senha', 'erroSenha');
     aplicarValidacaoSenha('senhaLogin', 'erroSenhaLogin');
 
@@ -409,28 +353,22 @@ document.addEventListener('DOMContentLoaded', () => {
     aplicarValidacaoEmail('email', 'erroEmail');
 
     //chamando validação de nome completo
-    aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');
-    aplicarValidacaoNomeCompleto('nome-doadorPOP', 'erroNomeDoadorPOP');
-    aplicarValidacaoNomeCompleto('nomeAtt', 'erroNomeDoador');
+    aplicarValidacaoNomeCompleto('nome-adotante', 'erroNomeAdotante');
+    aplicarValidacaoNomeCompleto('nome-adotantePOP', 'erroNomeAdotantePOP');
+    aplicarValidacaoNomeCompleto('nomeAtt', 'erroNomeAdotante');
 
     //chamando a validação do RG
-    aplicarValidacaoRG('rg-doador', 'erroRgDoador');
-    aplicarValidacaoRG('rg-doadorPOP', 'erroRgDoadorPOP');
-    aplicarValidacaoRG('rgAtt', 'erroRgDoador');
+    aplicarValidacaoRG('rg-adotante', 'erroRgAdotante');
+    aplicarValidacaoRG('rg-adotantePOP', 'erroRgAdotantePOP');
+    aplicarValidacaoRG('rgAtt', 'erroRgAdotante');
 
     //chamando a validação do numero de telefone
-    aplicarValidacaoTelefone('fone-doador', 'erroFoneDoador');
-    aplicarValidacaoTelefone('fone-doadorPOP', 'erroFoneDoadorPOP');
-    aplicarValidacaoTelefone('telefoneAtt', 'erroFoneDoador');
+    aplicarValidacaoTelefone('fone-adotante', 'erroFoneAdotante');
+    aplicarValidacaoTelefone('fone-adotantePOP', 'erroFoneAdotantePOP');
+    aplicarValidacaoTelefone('telefoneAtt', 'erroFoneAdotante');
 
     //chamando a validação do CEP
-    aplicarValidacaoCEP('cep-doador', 'erroCepDoador');
-    aplicarValidacaoCEP('cep-doadorPOP', 'erroCepDoadorPOP');
-    aplicarValidacaoCEP('cepAtt', 'erroCepDoador');
-
-    //chamando a validação de quantiade
-    validarQuantidade('qtdeDoacao', 'erroQtdeDoacao');
-
-    //chamando a validação da data de validade
-    aplicarValidacaoDataValidade('dataValidade', 'erroDataValidade');
+    aplicarValidacaoCEP('cep-adotante', 'erroCepAdotante');
+    aplicarValidacaoCEP('cep-adotantePOP', 'erroCepAdotantePOP');
+    aplicarValidacaoCEP('cepAtt', 'erroCepAdotante');
 });

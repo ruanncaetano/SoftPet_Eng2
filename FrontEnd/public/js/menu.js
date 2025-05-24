@@ -36,8 +36,8 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-pessoa" class="ml-6 mt-2 space-y-2 hidden">
-        <li><a href="../../views/viewGeral/adotante.html" class="block hover:text-carmesim">Cadastrar Adotante</a></li>
-          <li><a href="../../views/viewGuilherme/doador.html" class="block hover:text-carmesim">Cadastrar Doador</a></li>
+        <li><a href="../../views/viewWilker/adotante.html" class="block hover:text-carmesim">Cadastrar Adotante</a></li>
+          <li><a href="../../views/viewWilker/doador.html" class="block hover:text-carmesim">Cadastrar Doador</a></li>
           <li><a href="#" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
@@ -48,9 +48,9 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
-          <li><a href="../../views/viewGuilherme/consumir.html" class="block hover:text-carmesim">Utilizar Doação</a></li>
-          <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
+          <li><a href="../../views/viewWilker/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
+          <li><a href="../../views/viewWilker/consumir.html" class="block hover:text-carmesim">Utilizar Doação</a></li>
+          <li><a href="../../views/viewWilker/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
 

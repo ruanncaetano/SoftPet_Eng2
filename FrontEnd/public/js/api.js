@@ -45,34 +45,34 @@ function logout()
   localStorage.removeItem("token");
   localStorage.removeItem("usuario");
   
-  window.location.href = "../../views/viewGuilherme/login.html";
+  window.location.href = "../../views/view/login.html";
 }
 
 
-//conexao do front com o backend na pagina de doador
+//conexao do front com o backend na pagina de adotante
 document.getElementById('cadastroForm').addEventListener('submit', async function (event) {
   event.preventDefault();
 
     try 
     {
-        const nome = document.getElementById('nome-doador').value.trim().toUpperCase();
-        const cpf = document.getElementById('cpf-doador').value.trim();
-        const rg = document.getElementById('rg-doador').value.trim();
-        const profissao = document.getElementById('profissao-doador').value.trim();
+        const nome = document.getElementById('nome-adotante').value.trim().toUpperCase();
+        const cpf = document.getElementById('cpf-adotante').value.trim();
+        const rg = document.getElementById('rg-adotante').value.trim();
+        const profissao = document.getElementById('profissao-adotante').value.trim();
 
-        const telefone = document.getElementById('fone-doador').value.trim();
+        const telefone = document.getElementById('fone-adotante').value.trim();
 
-        const cep = document.getElementById('cep-doador').value.trim();
-        const rua = document.getElementById('rua-doador').value.trim();
-        const numero = document.getElementById('numero-doador').value.trim();
-        const bairro = document.getElementById('bairro-doador').value.trim();
-        const cidade = document.getElementById('cidade-doador').value.trim();
-        const uf = document.getElementById('uf-doador').value.trim();
-        const complemento = document.getElementById('complemento-doador').value.trim();
+        const cep = document.getElementById('cep-adotante').value.trim();
+        const rua = document.getElementById('rua-adotante').value.trim();
+        const numero = document.getElementById('numero-adotante').value.trim();
+        const bairro = document.getElementById('bairro-adotante').value.trim();
+        const cidade = document.getElementById('cidade-adotante').value.trim();
+        const uf = document.getElementById('uf-adotante').value.trim();
+        const complemento = document.getElementById('complemento-adotante').value.trim();
 
         //objeto para requisicao
-        const doadorCompleto = {
-            doador: {
+        const adotanteCompleto = {
+            adotante: {
                 cpf: cpf,
                 nome: nome,
                 profissao: profissao,
@@ -92,42 +92,38 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
             }
         };
 
-        const response = await fetch('http://localhost:8080/doador/cadastro', {
+        const response = await fetch('http://localhost:8080/adotante/cadastro', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(doadorCompleto)
+        body: JSON.stringify(adotanteCompleto)
         });
 
-        if(!response.ok) 
-        {
+        if (!response.ok) {
+        let errorMsg = `Erro ${response.status}`;
+        try {
+            const errorData = await response.json();
+            errorMsg += `: ${errorData.message || JSON.stringify(errorData)}`;
+        } catch {
             const errorText = await response.text();
-            throw new Error(`Erro ${response.status}: ${errorText}`);
+            errorMsg += `: ${errorText}`;
+        }
+        throw new Error(errorMsg);
         }
 
-        const data = await response.json();
-        console.log('Sucesso:', data);
-        alert('Doador cadastrado com sucesso!');
-        document.getElementById('cadastroForm').reset();
-
-    } 
-    catch(error) 
-    {
-        console.error('Erro ao cadastrar doador:',error);
-        alert(`Erro: ${error.message}`);
-    }
 });
 
-//fazer a função para quando a pessoa clicar no botão procurar o doador com aquele cpf
-async function buscarDoador() 
+//fazer a função para quando a pessoa clicar no botão procurar o adotante com aquele cpf
+async function buscarAdotante() 
 {
-    const cpf = document.getElementById('buscaDoadorCpf').value.trim();
+    const cpf = document.getElementById('buscaAdotanteCpf').value.trim();
     const erroEl = document.getElementById('erroCpfBusca');
-    const dadosEl = document.getElementById('dadosDoador');
+    const dadosEl = document.getElementById('dadosAdotante');
+    //---------------------------------------------------------------
     const nomeInput = document.getElementById('nomeBuscaDoacao');
     const cpfInput = document.getElementById('cpfBuscaDoacao');
-    const idInput = document.getElementById('idDoadorBusca');
+    const idInput = document.getElementById('idAdotanteBusca');
 
     erroEl.textContent = '';
     dadosEl.classList.add('hidden');
@@ -137,21 +133,21 @@ async function buscarDoador()
 
     if(!cpf) 
     {
-        erroEl.textContent = 'Por favor, informe o CPF do doador.';
+        erroEl.textContent = 'Por favor, informe o CPF do adotante.';
         return;
     }
 
     try 
     {
-        const response = await fetch(`http://localhost:8080/doador/${cpf}`);
+        const response = await fetch(`http://localhost:8080/adotante/${cpf}`);
 
         if(!response.ok)
-            throw new Error('Doador não encontrado.');
+            throw new Error('Adotante não encontrado.');
 
         const data = await response.json();
-        nomeInput.value = data.doador?.nome || '-';
-        cpfInput.value = data.doador?.cpf || '-';
-        idInput.value = data.doador?.id || '';
+        nomeInput.value = data.adotante?.nome || '-';
+        cpfInput.value = data.adotante?.cpf || '-';
+        idInput.value = data.adotante?.id || '';
 
         dadosEl.classList.remove('hidden');
 
@@ -162,64 +158,5 @@ async function buscarDoador()
     }
 }
 
-//função que salva uma doação
-async function registrarDoacao() 
-{
-    const idDoador = document.getElementById('idDoadorBusca').value;
-    if(!idDoador) 
-    {
-        alert('Por favor, busque e selecione um doador antes de registrar a doação.');
-        return;
-    }
 
-    const tipo = document.getElementById('tipoDoacao').value.toUpperCase();
-    const nome = document.getElementById('itemDoacao').value.toUpperCase();
-    const qtde = parseInt(document.getElementById('qtdeDoacao').value);
-    const dataDoacao = document.getElementById('dataDoacao').value;
-    const dataValidade = document.getElementById('dataValidade').value;
-    const uniMedida = document.getElementById('uniMedida').value.toUpperCase();
-
-    if(!tipo || !nome || isNaN(qtde) || !dataDoacao || !dataValidade || !uniMedida) 
-    {
-        alert('Preencha todos os campos obrigatórios corretamente.');
-        return;
-    }
-
-    const doacao = {
-        tipo,
-        qtde,
-        nome,
-        data: dataDoacao,
-        dataValidade,
-        uniMedida
-    };
-    const payload = {
-        doacao,
-        doador: {
-            id: parseInt(idDoador)
-        }
-    };
-
-    try 
-    {
-        const response = await fetch('http://localhost:8080/doacao/cadastro', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-            body: JSON.stringify(payload)
-        });
-
-        if(!response.ok)
-            throw new Error('Erro ao salvar a doação.');
-
-        alert('Doação registrada com sucesso!');
-        document.getElementById('cadastroDoacao').reset();
-
-    }
-    catch(error) 
-    {
-        alert(error.message);
-    }
-}
 
