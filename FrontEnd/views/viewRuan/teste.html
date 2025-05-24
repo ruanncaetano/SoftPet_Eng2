@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <title>Termo de Adoção Animal</title>
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        
+        fieldset {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+        
+        legend {
+            font-weight: bold;
+            padding: 0 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .radio-group {
+            margin: 10px 0;
+        }
+        
+        .radio-group label {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Formulário de Adoção</h1>
+        
+        <fieldset>
+            <legend>Dados do Adotante</legend>
+            
+            <div class="input-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" required>
+            </div>
+
+            <div class="input-group">
+                <label for="rg">RG:</label>
+                <input type="text" id="rg" required>
+            </div>
+
+            <div class="input-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" required>
+            </div>
+
+            <div class="input-group">
+                <label for="endereco">Endereço Residencial:</label>
+                <input type="text" id="endereco" required>
+            </div>
+
+            <div class="input-group">
+                <label for="bairro">Bairro:</label>
+                <input type="text" id="bairro" required>
+            </div>
+
+            <div class="input-group">
+                <label for="cidadeUF">Cidade/UF:</label>
+                <input type="text" id="cidadeUF" required>
+            </div>
+
+            <div class="input-group">
+                <label for="profissao">Profissão:</label>
+                <input type="text" id="profissao" required>
+            </div>
+
+            <div class="input-group">
+                <label for="cel">Celular:</label>
+                <input type="text" id="cel" required>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Dados do Animal</legend>
+            
+            <div class="input-group">
+                <label for="nomeAnimal">Nome do Animal:</label>
+                <input type="text" id="nomeAnimal" required>
+            </div>
+
+            <div class="radio-group">
+                <label>Sexo:</label>
+                <label>
+                    <input type="radio" name="sexo" value="macho" required> Macho
+                </label>
+                <label>
+                    <input type="radio" name="sexo" value="fêmea"> Fêmea
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label for="idade">Idade:</label>
+                <input type="text" id="idade" required>
+            </div>
+
+            <div class="input-group">
+                <label for="pelagem">Cor da Pelagem:</label>
+                <input type="text" id="pelagem" required>
+            </div>
+
+            <div class="radio-group">
+                <label>Porte:</label>
+                <label>
+                    <input type="radio" name="porte" value="pequeno" required> Pequeno
+                </label>
+                <label>
+                    <input type="radio" name="porte" value="médio"> Médio
+                </label>
+                <label>
+                    <input type="radio" name="porte" value="grande"> Grande
+                </label>
+            </div>
+
+            <div class="radio-group">
+                <label>Castrado?</label>
+                <label>
+                    <input type="radio" name="castrado" value="sim" required> Sim
+                </label>
+                <label>
+                    <input type="radio" name="castrado" value="não"> Não
+                </label>
+            </div>
+
+            <div class="input-group">
+                <label for="castrarEm">Data para Castração (se não castrado):</label>
+                <input type="date" id="castrarEm">
+            </div>
+        </fieldset>
+
+        <button onclick="gerarTermoAdocao()">Gerar Termo de Adoção</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    
+function gerarTermoAdocao() {
+    // Coletar dados do formulário
+    const dados = {
+        nome: document.getElementById('nome').value,
+        rg: document.getElementById('rg').value,
+        cpf: document.getElementById('cpf').value,
+        endereco: document.getElementById('endereco').value,
+        bairro: document.getElementById('bairro').value,
+        cidadeUF: document.getElementById('cidadeUF').value,
+        profissao: document.getElementById('profissao').value,
+        cel: document.getElementById('cel').value,
+        nomeAnimal: document.getElementById('nomeAnimal').value,
+        sexo: document.querySelector('input[name="sexo"]:checked')?.value || '',
+        idade: document.getElementById('idade').value,
+        pelagem: document.getElementById('pelagem').value,
+        porte: document.querySelector('input[name="porte"]:checked')?.value || '',
+        castrado: document.querySelector('input[name="castrado"]:checked')?.value || '',
+        castrarEm: document.getElementById('castrarEm').value
+    };
+
+    // Inicializar PDF
+    const doc = new jspdf.jsPDF();
+    let yPos = 15;
+
+    // Configurações iniciais
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    
+    // Cabeçalho
+    doc.text("TERMO DE ADOÇÃO E COMPROMISSO", 105, yPos, { align: 'center' });
+    yPos += 20;
+
+    // Dados do adotante
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Nome do adotante: ${dados.nome}`, 20, yPos);
+    doc.text(`RG: ${dados.rg} CPF: ${dados.cpf}`, 20, yPos + 7);
+    doc.text(`Endereço residencial: ${dados.endereco}`, 20, yPos + 14);
+    doc.text(`Bairro: ${dados.bairro} Cidade/UF: ${dados.cidadeUF}`, 20, yPos + 21);
+    doc.text(`Profissão: ${dados.profissao} Cel: ${dados.cel}`, 20, yPos + 28);
+    yPos += 35;
+
+    // Dados do animal
+    doc.text(`Nome do animal: ${dados.nomeAnimal} Sexo: (${dados.sexo === 'macho' ? 'X' : ' '}) macho (${dados.sexo === 'fêmea' ? 'X' : ' '}) fêmea`, 20, yPos);
+    doc.text(`Idade: ${dados.idade} Cor da pelagem: ${dados.pelagem}`, 20, yPos + 7);
+    doc.text(`Porte: (${dados.porte === 'pequeno' ? 'X' : ' '}) pequeno (${dados.porte === 'médio' ? 'X' : ' '}) médio (${dados.porte === 'grande' ? 'X' : ' '}) grande`, 20, yPos + 14);
+    doc.text(`Castrado? (${dados.castrado === 'sim' ? 'X' : ' '}) sim (${dados.castrado === 'não' ? 'X' : ' '}) não`, 20, yPos + 21);
+    
+    if(dados.castrado === 'não') {
+        doc.text(`Castrar em: ${dados.castrarEm}`, 20, yPos + 28);
+    }
+    yPos += 35;
+
+    // Texto de responsabilidade
+    const termos = [
+        "Ao adotar o animal acima descrito declaro-me apto para assumir a guarda e a responsabilidade sobre este animal, eximindo o doador de toda e qualquer responsabilidade por quaisquer atos praticados pelo animal a partir desta data.",
+                "Declaro ainda estar cliente de todos os cuidados que este animal exige no que se refere á sua guarda e manutenção, além de conhecer todos os riscos inerentes à espécie e raça no convivo com humanos, estando apto a guarda-lo e vigiá-lo, comprometendo-me a proporcionar boas condições de alojamento e alimentações, assim como, espaço físico que possibilite o animal se exercitar. Responsabilizo-me por preservar a saúde e integridade do animal e a submetê-lo aos cuidados médicos veterinários sempre que necessário.",
+        "Comprometo-me a não transmitir a posse deste animal a outrem sem o conhecimento do doador (ONG ADAPV) Comprometo-me também, a permitir o acesso do doador ao local onde se encontra o animal para averiguação de suas condições.",
+        "Tenho conhecimento de que caso seja constatado por parte do doador situação inadequada para o bem estar do animal, perderei a sua guarda, sem prejuízo das penalidades legais.Comprometo-me ainda em castrar o animal adotado se o doador já não o tiver feito, contribuindo assim para o controle da população de animais domésticos.",
+        "Comprometo-me a cumprir toda a legislação vigente, municipal, estadual e federal, relativa à posse de animais",
+        "Declaro-me assim, ciente das normas acima, as quais aceito, assinando o presente termo de Responsabilidade, assumindo plenamente os deveres que dele constam, bem como outros relacionados à posse responsável e que não estejam incluídos neste termo.",
+        "Comprometo-me a cumprir toda a legislação vigente, municipal, estadual e federal, relativa à posse de animais."
+    ];
+
+    termos.forEach(paragrafo => {
+        const splitText = doc.splitTextToSize(paragrafo, 170);
+        doc.text(splitText, 20, yPos);
+        yPos += splitText.length * 5;
+    });
+
+    // Assinaturas
+    yPos += 15;
+    doc.text("_________________________", 40, yPos);
+    doc.text("_________________________", 140, yPos);
+    doc.text("Doador (ONG ADAPV)", 40, yPos + 10);
+    doc.text("Adotante", 140, yPos + 10);
+    doc.text("Presidente Venceslau, ____ de _______________ de 20__.", 105, yPos + 25, { align: 'center' });
+
+    // Nota legal
+    yPos += 40;
+    doc.setFont('helvetica', 'bold');
+    doc.text("ABANDONAR OU MALTRATAR ANIMAIS É CRIME", 105, yPos, { align: 'center' });
+    doc.setFont('helvetica', 'normal');
+    doc.text("LEI 9605/98 ART. 32 - Pena de detenção de 3 meses a 1 ano e multa.", 105, yPos + 7, { align: 'center' });
+
+    // Salvar PDF
+    doc.save('Termo_Adocao.pdf');
+}
+</script>
+</body>
+</html>
