@@ -4,23 +4,19 @@ import SoftPet.backend.model.AdocaoModel;
 import SoftPet.backend.model.AnimalModel;
 import SoftPet.backend.model.PessoaModel;
 
+import java.time.LocalDate;
+
 public class AdocaoDTO {
-    private AdocaoModel adocao;
     private AnimalModel animal;
     private PessoaModel pessoa;
+    private AdocaoModel adocao;
 
     public AdocaoDTO() {}
-    public AdocaoDTO(AdocaoModel adocao, AnimalModel animal) {
+    public AdocaoDTO(LocalDate adoDt, byte[] adoContratoes, AnimalModel animal, PessoaModel adotanteBusca) {}
+    public AdocaoDTO(AdocaoModel adocao, AnimalModel animal, PessoaModel pessoa) {
         this.adocao = adocao;
         this.animal = animal;
-    }
-
-    public AdocaoModel getAdocao() {
-        return adocao;
-    }
-
-    public void setAdocao(AdocaoModel adocao) {
-        this.adocao = adocao;
+        this.pessoa = pessoa;
     }
 
     public AnimalModel getAnimal() {
@@ -37,5 +33,13 @@ public class AdocaoDTO {
 
     public void setPessoa(PessoaModel pessoa) {
         this.pessoa = pessoa;
+    }
+
+    public AdocaoModel getAdocao() {
+        return adocao;
+    }
+
+    public void setAdocao(AdocaoModel adocao) {
+        this.adocao = adocao;
     }
 }

@@ -70,13 +70,13 @@ public class AnimalDAL {
                 animal.setCod(rs.getInt("an_cod"));
                 animal.setNome(rs.getString("an_nome"));
                 animal.setIdade(rs.getInt("an_idade"));
-                animal.setPeso(rs.getInt("an_peso"));
-                animal.setBaia(rs.getString("an_baia"));
-                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
-                animal.setFoto(rs.getBytes("an_foto"));
+                animal.setSexo(rs.getString("an_sexo"));
+                animal.setRaca(rs.getString("an_raca"));
+                animal.setPorte(rs.getString("an_porte"));
                 animal.setCastrado(rs.getBoolean("an_castrado"));
-                animal.setObservacao(rs.getString("an_obs"));
                 animal.setAtivo(rs.getBoolean("an_ativo"));
+                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
+                System.out.println(rs.getInt("an_cod"));
                 return animal;
             }
             return null;

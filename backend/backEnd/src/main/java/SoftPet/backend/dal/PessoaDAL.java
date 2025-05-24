@@ -12,7 +12,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 @Repository
 public class PessoaDAL {
-    public AdotanteCompletoDTO findByDoador(String cpf)
+    public PessoaModel buscarPorId(Long id) {
+        String sql = "SELECT p.pe_cod, p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg " +
+                "FROM pessoa p WHERE p.pe_cod = ?";
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new PessoaModel(
+                        rs.getLong("pe_cod"),
+                        rs.getString("pe_cpf"),
+                        rs.getString("pe_nome"),
+                        rs.getBoolean("pe_status"),
+                        rs.getString("pe_profissao"),
+                        rs.getLong("con_cod"),
+                        rs.getLong("en_id"),
+                        rs.getString("pe_rg")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static AdotanteCompletoDTO findByDoador(String cpf)
     {
         AdotanteCompletoDTO doadorDTO = null;
         String sql = "SELECT p.pe_cod, p.pe_cpf, p.pe_nome, p.pe_status, p.pe_profissao, p.con_cod, p.en_id, p.pe_rg, " +
@@ -30,7 +55,7 @@ public class PessoaDAL {
             if(rs.next())
             {
                 PessoaModel doador = new PessoaModel(
-                        rs.getInt("pe_cod"),
+                        rs.getLong("pe_cod"),
                         rs.getString("pe_cpf"),
                         rs.getString("pe_nome"),
                         rs.getBoolean("pe_status"),

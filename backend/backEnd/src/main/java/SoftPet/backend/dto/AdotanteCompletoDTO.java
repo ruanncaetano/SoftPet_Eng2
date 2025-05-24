@@ -15,7 +15,6 @@ public class AdotanteCompletoDTO {
     public AdotanteCompletoDTO(PessoaModel adotante, ContatoModel contato, EnderecoModel endereco)
     {
         this.adotante = adotante;
-        this.adotante = adotante;
         this.contato = contato;
         this.endereco = endereco;
     }

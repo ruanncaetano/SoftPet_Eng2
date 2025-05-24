@@ -79,6 +79,12 @@ public class AnimalControl
 
         return new ResponseEntity<>(foto, headers, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getId(@PathVariable int id) {
+        AnimalModel animal = animalService.buscarPorCod(id);
+        return ResponseEntity.ok(animal);
+    }
     @PutMapping("/atualizar")
     public ResponseEntity<Object> atualizarAnimal(@RequestParam("cod") int cod,
                                                  @RequestParam("nome") String nome,

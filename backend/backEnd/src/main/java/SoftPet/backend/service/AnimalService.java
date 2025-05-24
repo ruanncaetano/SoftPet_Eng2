@@ -49,7 +49,13 @@ public class AnimalService {
     }
 
     public AnimalModel buscarPorCod(int cod) {
-        return animalDAL.buscarPorCod(cod);
+        AnimalModel animal = animalDAL.buscarPorCod(cod);
+
+        if (animal == null || !animal.getAtivo() || !animal.getDisp_adocao()) {
+            return null;
+        }
+
+        return animal;
     }
 
     public AnimalModel atualizarAnimal(AnimalModel animal) {

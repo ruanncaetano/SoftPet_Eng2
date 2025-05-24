@@ -2,7 +2,7 @@ package SoftPet.backend.model;
 
 public class PessoaModel
 {
-    private int id;
+    private Long id;
     private String cpf;
     private String nome;
     private Boolean status;
@@ -11,7 +11,7 @@ public class PessoaModel
     private Long id_endereco;
     private String rg;
 
-    public PessoaModel(int id, String cpf, String nome, Boolean status, String profissao, Long id_contato, Long id_endereco, String rg)
+    public PessoaModel(Long id, String cpf, String nome, Boolean status, String profissao, Long id_contato, Long id_endereco, String rg)
     {
         this.id = id;
         this.cpf = cpf;
@@ -34,13 +34,13 @@ public class PessoaModel
     }
     public PessoaModel()
     {
-        this(0,"","",false,"",null,null,"");
+        this(0L,"","",false,"",null,null,"");
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

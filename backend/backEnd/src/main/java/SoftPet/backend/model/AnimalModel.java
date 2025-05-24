@@ -22,13 +22,29 @@ public class AnimalModel {
     private byte[] foto;
     private String observacao;
 
-
-
-
-
-
-
     public AnimalModel(){}
+    public AnimalModel (int cod,String nome, int idade, String tipo, String sexo,String porte, String raca,
+                        String pelagem, int peso,String baia, Date dt_resgate,
+                        boolean disp_adocao,boolean castrado, String observacao, boolean ativo)
+    {
+        this.cod = cod;
+        this.nome = nome;
+        this.idade = idade;
+        this.tipo = tipo;
+        this.sexo = sexo;
+        this.porte = porte;
+        this.raca = raca;
+        this.pelagem = pelagem;
+        this.baia = baia;
+        this.dt_resgate = dt_resgate;
+        this.disp_adocao = disp_adocao;
+        this.foto = foto; // esta sendo definida separedamente
+        this.peso=peso;
+        this.castrado=castrado;
+        this.observacao=observacao;
+        this.ativo=ativo;
+
+    }
     public AnimalModel( String nome, int idade, String tipo, String sexo,String porte, String raca,
                        String pelagem, int peso,String baia, Date dt_resgate,
                         boolean disp_adocao,boolean castrado, String observacao, boolean ativo) {
