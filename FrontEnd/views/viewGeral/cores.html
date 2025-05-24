@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Cores</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <!-- Sidebar -->
+<<<<<<<< HEAD:front/views/cores.html
+  <script src="/src/public/js/menu.js"></script>
+========
+  <script src="../../public/js/menu.js"></script>
+>>>>>>>> 52244048f74b7e3649054ea73f2fc2849a9f6053:FrontEnd/views/viewGeral/cores.html
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 bg-neve p-10 overflow-auto">
+    <section id="cores" class="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+      <h1 class="text-3xl font-bold text-noturno mb-6">Identidade Visual: Cores</h1>
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-6">
+        <!-- Cor 1 -->
+        <div class="text-center">
+          <div class="w-full h-24 rounded-xl bg-carmesim shadow-md"></div>
+          <p class="mt-2 font-medium text-carmesim">#A6032F</p>
+        </div>
+        <!-- Cor 2 -->
+        <div class="text-center">
+          <div class="w-full h-24 rounded-xl bg-areia shadow-md"></div>
+          <p class="mt-2 font-medium text-areia">#BCAF9E</p>
+        </div>
+        <!-- Cor 3 -->
+        <div class="text-center">
+          <div class="w-full h-24 rounded-xl bg-noturno shadow-md"></div>
+          <p class="mt-2 font-medium text-noturno">#0B1926</p>
+        </div>
+        <!-- Cor 4 -->
+        <div class="text-center">
+          <div class="w-full h-24 rounded-xl bg-pastel shadow-md"></div>
+          <p class="mt-2 font-medium text-pastel">#D9CAB8</p>
+        </div>
+        <!-- Cor 5 -->
+        <div class="text-center">
+          <div class="w-full h-24 rounded-xl bg-neve border border-gray-300 shadow-md"></div>
+          <p class="mt-2 font-medium text-gray-600">#F2F2F2</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+
+    // Mantém o createIcons global
+    lucide.createIcons();
+    
+  </script>
+</body>
+</html>

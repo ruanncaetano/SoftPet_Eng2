@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Listar Doadores</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+ <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
+  
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Lista de Doadores</h1>
+      <a href="/views/viewGuilherme/doador.html"
+        class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+        Novo Doador
+      </a>
+    </div>
+
+      <!-- Filtro de Doadores -->
+    <div class="mb-6 bg-white p-4 rounded-lg shadow-sm flex flex-col md:flex-row md:items-end md:gap-4">
+      <div class="flex flex-col">
+        <label for="campoFiltro" class="font-medium mb-1">Filtrar por:</label>
+        <select id="campoFiltro" class="border border-gray-300 rounded px-2 py-1">
+          <option value="nome">Nome</option>
+          <option value="cpf">CPF</option>
+          <option value="profissao">Profissão</option>
+          <option value="telefone">Telefone</option>
+          <option value="cidade">Cidade</option>
+        </select>
+      </div>
+
+      <div class="flex flex-col">
+        <label for="valorFiltro" class="font-medium mb-1">Valor:</label>
+        <input id="valorFiltro" type="text" placeholder="Digite o valor" class="border border-gray-300 rounded px-2 py-1"/>
+      </div>
+
+      <button onclick="aplicarFiltroDoador()" class="bg-carmesim text-white px-4 py-2 rounded mt-4 md:mt-0 hover:bg-[#8a0128] transition-all">
+        Aplicar Filtro
+      </button>
+
+      <button onclick="limparFiltroDoador()" class="bg-gray-300 text-noturno px-4 py-2 rounded mt-4 md:mt-0 hover:bg-gray-400 transition-all">
+        Limpar
+      </button>
+    </div>
+
+
+    <!-- Tabela de Doadores -->
+    <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300">
+        <thead class="bg-pastel">
+          <tr>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Nome</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">CPF</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Profissão</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Telefone</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Cidade</th>
+            <th class="px-4 py-3 text-left font-semibold text-noturno">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-doadores" class="bg-white divide-y divide-gray-200">
+
+
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="../../public/js/api.js"></script>
+  <script src="../../public/js/Filter.js"></script>
+  <script src="../../public/js/ListarDoadores.js"></script>
+</body>
+</html>

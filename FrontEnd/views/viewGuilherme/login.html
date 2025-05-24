@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<<<<<<<< HEAD:front/views/login.html
+  <title>ADAPV</title>
+  <link rel="website icon" type="png" href="../../public/img/patinha.png">
+========
+  <title>ADAPV - Login</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+>>>>>>>> 52244048f74b7e3649054ea73f2fc2849a9f6053:FrontEnd/views/viewGuilherme/login.html
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .erro-input {
+      border-color: red !important;
+    }
+  </style>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno items-center justify-center">
+
+  <!-- Formulário de Login -->
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+    <div class="flex items-center justify-center">
+      <div class="w-[180px] ">
+<<<<<<<< HEAD:front/views/login.html
+        <img src="../../public/img/ADAPV.png" alt="logo">
+========
+        <img src="../../public/images/ADAPV.png" alt="logo">
+>>>>>>>> 52244048f74b7e3649054ea73f2fc2849a9f6053:FrontEnd/views/viewGuilherme/login.html
+      </div>
+    </div>  
+    <form action="#" method="POST">
+
+      <!-- Campo de CPF -->
+      <div class="mb-4">
+        <label for="cpf" class="block text-sm font-medium text-noturno">* CPF</label>
+        <input maxlength="14" type="text" id="cpf" name="cpf" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite seu CPF" required />
+        <p id="erroCpf" class="text-red-500 text-sm mt-1"></p>
+      </div>
+
+      <!-- Campo de Senha -->
+      <div class="mb-4">
+        <label for="senha" class="block text-sm font-medium text-noturno">* Senha</label>
+        <input maxlength="12" type="password" id="senha" name="senha" class="w-full p-3 border border-areia rounded-xl focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite sua senha" required />
+        <p id="erroSenha" class="text-red-500 text-sm mt-1"></p>
+      </div>
+
+      <!-- Botão de Login -->
+      <div>
+        <button type="submit" class="w-full py-3 bg-carmesim text-neve font-semibold text-lg rounded-xl hover:bg-pastel transition-colors duration-200">
+          Entrar
+        </button>        
+      </div>
+    </form>
+<<<<<<<< HEAD:front/views/login.html
+========
+
+    <div class="mt-4 text-center">
+      <a href="#" class="text-sm text-carmesim hover:text-pastel">Esqueceu a senha?</a>
+    </div>
+>>>>>>>> 52244048f74b7e3649054ea73f2fc2849a9f6053:FrontEnd/views/viewGuilherme/login.html
+  </div>
+
+  <!-- LUCIDE ICONS -->
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <script src="../../public/js/validacao.js"></script>
+  <script src="../../public/js/api.js"></script>
+</body>
+</html>
