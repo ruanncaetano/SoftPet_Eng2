@@ -14,6 +14,7 @@ import java.util.List;
 @Repository
 public class ContatoDAL
 {
+
     public ContatoModel FindById(Long id)
     {
         ContatoModel contato = null;
@@ -26,7 +27,8 @@ public class ContatoDAL
             {
                 contato = new ContatoModel(
                         rs.getLong("con_cod"),
-                        rs.getString("con_telefone")
+                        rs.getString("con_telefone"),
+                        rs.getString("con_email")
                 );
             }
         }
@@ -39,38 +41,37 @@ public class ContatoDAL
 
     public ContatoModel addContato(ContatoModel contato)
     {
-        String sql = "INSERT INTO contato (con_telefone) VALUES (?)";
+        String sql = "INSERT INTO contato (con_telefone, con_email) VALUES (?, ?)";
+        int idGerado = 0;
 
-        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
-        {
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, contato.getTelefone());
-            int linhasMod = stmt.executeUpdate();
-            if (linhasMod > 0)
-            {
+            stmt.setString(2, contato.getEmail());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next())
-                    contato.setId(rs.getLong(1));
+                if (rs.next()) {
+                    idGerado = rs.getInt(1);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        catch (SQLException e)
-        {
-            throw new RuntimeException("Erro ao adicionar contato: " + e.getMessage(), e);
-        }
+
         return contato;
     }
 
 
-    public Boolean updateContato(Long id, String novoTelefone)
-    {
-        String sql = "UPDATE contato SET con_telefone = ? WHERE con_cod = ?";
-        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
-        {
-            stmt.setString(1, novoTelefone);
-            stmt.setLong(2, id);
+    public boolean updateContato(ContatoModel contato) {
+        String sql = "UPDATE contato SET con_telefone = ?, con_email = ? WHERE con_cod = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setString(1, contato.getTelefone());
+            stmt.setString(2, contato.getEmail());
+            stmt.setLong(3, contato.getId());
             return stmt.executeUpdate() > 0;
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -113,4 +114,6 @@ public class ContatoDAL
         }
         return list;
     }
+
+
 }
