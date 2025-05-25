@@ -15,7 +15,9 @@ public class ContatoControl {
 
     @PostMapping("/criar")
     public ResponseEntity<Integer> criarContato(@RequestBody ContatoModel contato) {
-        int id = contatoService.criarContato(contato);
+        ContatoModel novoContato = contatoService.criarContato(contato);
+        int id = novoContato != null ? novoContato.getId().intValue() : -1;
+
         if (id > 0) {
             return ResponseEntity.ok(id);
         } else {
@@ -44,7 +46,7 @@ public class ContatoControl {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarContato(@PathVariable int id) {
+    public ResponseEntity<Void> deletarContato(@PathVariable Long id) {
         boolean deletado = contatoService.deletarContato(id);
         if (deletado) {
             return ResponseEntity.ok().build();
