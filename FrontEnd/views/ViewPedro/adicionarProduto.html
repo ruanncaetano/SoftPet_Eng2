@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Adicionar Produto</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src ="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<script src="../../public/js/menu.js"></script>
+
+<main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6 text-carmesim">Adicionar Produto</h1>
+
+  <form id="formAdicionar" class="space-y-6">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label for="tipo" class="block font-semibold mb-1">Tipo</label>
+        <input type="text" id="tipo" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="descricao" class="block font-semibold mb-1">Descrição</label>
+        <input type="text" id="descricao" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="unidade_medida" class="block font-semibold mb-1">Unidade de Medida</label>
+        <select id="unidade_medida" class="w-full p-2 border rounded-lg" required>
+          <option value="" disabled selected>Selecione...</option>
+          <option value="LITROS">lt</option>
+          <option value="KG">kg</option>
+          <option value="GRAMAS">gramas</option>
+          <option value="ML">ml</option>
+          <option value="UNIDADE">unidade</option>
+        </select>
+      </div>
+      
+
+      <div>
+        <label for="data_validade" class="block font-semibold mb-1">Data de Validade</label>
+        <input type="date" id="data_validade" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="qntd_estoque" class="block font-semibold mb-1">Quantidade em Estoque</label>
+        <input type="number" id="qntd_estoque" class="w-full p-2 border rounded-lg" min="0" required />
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Salvar Produto
+      </button>
+    </div>
+  </form>
+
+  <div id="mensagem" class="mt-4 font-semibold"></div>
+</main>
+
+<script>
+  lucide.createIcons();
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("formAdicionar");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const tipo = document.getElementById("tipo").value.trim();
+      const unidadeMedida = document.getElementById("unidade_medida").value;
+      const dataValidade = document.getElementById("data_validade").value;
+      const descricao = document.getElementById("descricao").value.trim();
+      const quantidadeEstoque = parseInt(document.getElementById("qntd_estoque").value.trim(), 10);
+
+      const msgEl = document.getElementById("mensagem");
+      msgEl.textContent = "";
+      msgEl.classList.remove("text-red-600", "text-green-700");
+
+      // Validação: tipo deve conter apenas letras e espaços (acentos permitidos)
+      const tipoValido = /^[A-Za-zÀ-ÿ\s]+$/.test(tipo);
+
+      // Validação: unidade de medida permitida
+      const unidadesPermitidas = ["LT", "KG", "GRAMAS", "ML", "mililitros", "UNIDADE"];
+      const unidadeValida = unidadesPermitidas.includes(unidadeMedida);
+
+      // Validação: data de validade no mínimo 1 dia no futuro
+      const hoje = new Date();
+      const validade = new Date(dataValidade);
+      const validadeEhFutura = validade > new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+
+      // Validação: quantidade em estoque deve ser maior que zero
+      const quantidadeValida = Number.isInteger(quantidadeEstoque) && quantidadeEstoque > 0;
+
+      if (!tipo || !tipoValido) {
+        msgEl.textContent = "O campo 'Tipo' deve conter apenas letras (sem símbolos ou números).";
+        msgEl.classList.add("text-red-600");
+        return;
+      }
+
+      if (!unidadeValida) {
+        msgEl.textContent = "Unidade de medida inválida. Use: litros, kg, gramas, ml, mililitros ou unidade.";
+        msgEl.classList.add("text-red-600");
+        return;
+      }
+
+      if (!validadeEhFutura) {
+        msgEl.textContent = "A data de validade deve ser pelo menos 1 dia no futuro.";
+        msgEl.classList.add("text-red-600");
+        return;
+      }
+
+      if (!quantidadeValida) {
+        msgEl.textContent = "A quantidade em estoque deve ser um número maior que zero.";
+        msgEl.classList.add("text-red-600");
+        return;
+      }
+
+      if (!descricao) {
+        msgEl.textContent = "O campo 'Descrição' não pode estar vazio.";
+        msgEl.classList.add("text-red-600");
+        return;
+      }
+
+      const produto = {
+        tipo,
+        unidadeMedida,
+        dataValidade,
+        descricao,
+        quantidadeEstoque
+      };
+
+      try {
+        const resposta = await fetch("http://localhost:8080/produtos/criar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(produto)
+        });
+
+        if (resposta.ok) {
+          msgEl.textContent = "Produto adicionado com sucesso!";
+          msgEl.classList.add("text-green-700");
+          form.reset();
+        } else {
+          const erro = await resposta.text();
+          msgEl.textContent = "Erro ao adicionar produto: " + erro;
+          msgEl.classList.add("text-red-600");
+        }
+      } catch (e) {
+        msgEl.textContent = "Erro de conexão: " + e.message;
+        msgEl.classList.add("text-red-600");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Alterar Produto</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<script src="../../public/js/menu.js"></script>
+
+<main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6 text-carmesim">Alterar Produto</h1>
+
+  <!-- Busca por ID -->
+  <div class="mb-6 space-y-3 max-w-md">
+    <label for="busca_id" class="block font-semibold">Digite o ID do Produto</label>
+    <div class="flex gap-2">
+      <input type="number" id="busca_id" class="w-full p-2 border rounded-lg" placeholder="ID do produto" required />
+      <button id="btnBuscar" class="bg-carmesim text-white px-4 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Buscar Produto
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulário de edição -->
+  <form id="formAlterar" class="space-y-6 hidden">
+    <div>
+      <label for="p_cod" class="block font-semibold mb-1">ID do Produto</label>
+      <input type="number" id="p_cod" class="w-full p-2 border rounded-lg bg-gray-200 cursor-not-allowed" readonly />
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label for="p_tipo" class="block font-semibold mb-1">Tipo</label>
+        <input type="text" id="p_tipo" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="p_descricao" class="block font-semibold mb-1">Descrição</label>
+        <input type="text" id="p_descricao" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="p_unidade_medida" class="block font-semibold mb-1">Unidade de Medida</label>
+        <select id="p_unidade_medida" class="w-full p-2 border rounded-lg" required>
+          <option value="">Selecione</option>
+          <option value="KG">kg</option>
+          <option value="GRAMAS">gramas</option>
+          <option value="LT">LT</option>
+          <option value="ML">ml</option>
+          <option value="UNIDADE">unidade</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="p_data_validade" class="block font-semibold mb-1">Data de Validade</label>
+        <input type="date" id="p_data_validade" class="w-full p-2 border rounded-lg" required />
+      </div>
+
+      <div>
+        <label for="p_qntd_estoque" class="block font-semibold mb-1">Quantidade em Estoque</label>
+        <input type="number" id="p_qntd_estoque" class="w-full p-2 border rounded-lg" min="1" required />
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Atualizar Produto
+      </button>
+    </div>
+  </form>
+
+  <p id="msg" class="mt-4 font-semibold"></p>
+</main>
+<script>
+  lucide.createIcons();
+
+  const msg = document.getElementById("msg");
+  const form = document.getElementById("formAlterar");
+
+  document.getElementById("btnBuscar").addEventListener("click", async () => {
+    const idBusca = document.getElementById("busca_id").value.trim();
+    msg.textContent = "";
+    msg.className = "mt-4 font-semibold";
+
+    if (!idBusca) {
+      msg.textContent = "Informe um ID válido.";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    try {
+      const resposta = await fetch(`http://localhost:8080/produtos/${idBusca}`);
+      if (!resposta.ok) {
+        msg.textContent = "Produto não encontrado.";
+        msg.classList.add("text-red-600");
+        form.classList.add("hidden");
+        return;
+      }
+
+      const produto = await resposta.json();
+      document.getElementById("p_cod").value = produto.id;
+      document.getElementById("p_tipo").value = produto.tipo || "";
+      document.getElementById("p_descricao").value = produto.descricao || "";
+      document.getElementById("p_unidade_medida").value = produto.unidadeMedida || "";
+      document.getElementById("p_data_validade").value = produto.dataValidade || "";
+      document.getElementById("p_qntd_estoque").value = produto.quantidadeEstoque || "";
+
+      form.classList.remove("hidden");
+      msg.textContent = "";
+    } catch (erro) {
+      msg.textContent = "Erro de conexão: " + erro.message;
+      msg.classList.add("text-red-600");
+      form.classList.add("hidden");
+    }
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const tipo = document.getElementById("p_tipo").value.trim();
+    const unidadeMedida = document.getElementById("p_unidade_medida").value;
+    const dataValidade = document.getElementById("p_data_validade").value;
+    const descricao = document.getElementById("p_descricao").value.trim();
+    const quantidadeEstoque = parseInt(document.getElementById("p_qntd_estoque").value.trim(), 10);
+    const id = document.getElementById("p_cod").value;
+
+    msg.textContent = "";
+    msg.className = "mt-4 font-semibold";
+
+    // Validações
+    const tipoValido = /^[A-Za-zÀ-ÿ\s]+$/.test(tipo);
+    const unidadesPermitidas = ["litros", "kg", "gramas", "ml", "mililitros", "unidade"];
+    const unidadeValida = unidadesPermitidas.includes(unidadeMedida);
+    const hoje = new Date();
+    const validade = new Date(dataValidade);
+    const validadeEhFutura = validade > new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const quantidadeValida = Number.isInteger(quantidadeEstoque) && quantidadeEstoque > 0;
+
+    if (!tipo || !tipoValido) {
+      msg.textContent = "O campo 'Tipo' deve conter apenas letras (sem símbolos ou números).";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    if (!unidadeValida) {
+      msg.textContent = "Unidade de medida inválida. Use: litros, kg, gramas, ml, mililitros ou unidade.";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    if (!validadeEhFutura) {
+      msg.textContent = "A data de validade deve ser pelo menos 1 dia no futuro.";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    if (!quantidadeValida) {
+      msg.textContent = "A quantidade em estoque deve ser um número maior que zero.";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    if (!descricao) {
+      msg.textContent = "O campo 'Descrição' não pode estar vazio.";
+      msg.classList.add("text-red-600");
+      return;
+    }
+
+    const produto = {
+      id,
+      tipo,
+      unidadeMedida,
+      dataValidade,
+      descricao,
+      quantidadeEstoque
+    };
+
+    try {
+      const resposta = await fetch("http://localhost:8080/produtos/atualizar", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(produto)
+      });
+
+      if (resposta.ok) {
+        msg.textContent = "Produto atualizado com sucesso!";
+        msg.classList.add("text-green-700");
+        form.reset();
+        form.classList.add("hidden");
+      } else {
+        const erro = await resposta.text();
+        msg.textContent = "Erro ao atualizar produto: " + erro;
+        msg.classList.add("text-red-600");
+      }
+    } catch (erro) {
+      msg.textContent = "Erro de conexão: " + erro.message;
+      msg.classList.add("text-red-600");
+    }
+  });
+</script>
+
+
+</body>
+</html>

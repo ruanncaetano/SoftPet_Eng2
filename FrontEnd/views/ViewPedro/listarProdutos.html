@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Lista de Produtos</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src ="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <script src="../../public/js/menu.js"></script>
+
+  <main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Lista de Produtos</h1>
+
+    <div class="text-right mb-6">
+      <button onclick="carregarProdutos()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Mostrar Produtos
+      </button>
+    </div>
+
+    <div id="listaProdutos" class="space-y-4"></div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    async function carregarProdutos() {
+      const resposta = await fetch("http://localhost:8080/produtos");
+      const produtos = await resposta.json();
+      const container = document.getElementById("listaProdutos");
+      container.innerHTML = "";
+
+      if (produtos.length === 0) {
+        container.innerHTML = "<p class='text-gray-600'>Nenhum produto cadastrado.</p>";
+        return;
+      }
+
+      produtos.forEach(prod => {
+        const item = document.createElement("div");
+        item.className = "p-4 border rounded-lg bg-white shadow";
+
+        item.innerHTML = `
+          <p><strong>ID:</strong> ${prod.id}</p>
+          <p><strong>Tipo:</strong> ${prod.tipo}</p>
+          <p><strong>Descrição:</strong> ${prod.descricao}</p>
+          <p><strong>Unidade de Medida:</strong> ${prod.unidadeMedida}</p>
+          <p><strong>Data de Validade:</strong> ${prod.dataValidade || "N/A"}</p>
+          <p><strong>Quantidade em Estoque:</strong> ${prod.quantidadeEstoque}</p>
+        `;
+
+        container.appendChild(item);
+      });
+    }
+  </script>
+
+</body>
+</html>
