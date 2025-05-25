@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/credenciais")
-public class CredenciaisController {
+public class CredenciaisControl {
 
     @Autowired
     private CredenciaisService credenciaisService;
