@@ -102,7 +102,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
-        if (!id) {
+        if(!id) 
+        {
           alert('ID da doação não fornecido!');
           return;
         }
@@ -135,17 +136,20 @@
 
           document.getElementById('erroQtdeDoacao').textContent = '';
 
-          try {
+          try 
+          {
             const id = document.getElementById('idDoacaoAtt').value;
             const qtdeConsumir = parseInt(document.getElementById('qtdeConsumir').value);
             const qtdeEstoque = parseInt(document.getElementById('qtdeEstoque').value);
 
-            if (!qtdeConsumir || qtdeConsumir <= 0) {
+            if(!qtdeConsumir || qtdeConsumir <= 0) 
+            {
               document.getElementById('erroQtdeDoacao').textContent = 'Informe uma quantidade válida para consumir.';
               return;
             }
 
-            if (qtdeConsumir > qtdeEstoque) {
+            if(qtdeConsumir > qtdeEstoque) 
+            {
               document.getElementById('erroQtdeDoacao').textContent = 'Não é possível consumir mais do que o estoque disponível.';
               return;
             }
@@ -162,7 +166,9 @@
               console.error("Erro ao consumir doação:", error);
               alert("Erro ao consumir doação.");
             });
-          } catch (error) {
+          } 
+          catch(error) 
+          {
             console.error(error);
             alert('Erro ao consumir doação: ' + error.message);
           }
