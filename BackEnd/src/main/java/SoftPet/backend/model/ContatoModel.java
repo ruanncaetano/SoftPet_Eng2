@@ -1,31 +1,31 @@
 package SoftPet.backend.model;
 
 public class ContatoModel {
-    private int id;
-    private Long telefone;
+    private Long id;
+    private String telefone;
     private String email;
 
     public ContatoModel() {}
 
-    public ContatoModel(int id, Long telefone, String email) {
+    public ContatoModel(Long id, String telefone, String email) {
         this.id = id;
         this.telefone = telefone;
         this.email = email;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(Long telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 

@@ -88,7 +88,12 @@ public class AdotanteService
         addotante.setId_endereco(adotanteExistente.getEndereco().getId());
 
         adotanteDAL.updateAdotante(cpf, addotante);
-        contatoDAL.updateContato(addotante.getId_contato(),contato.getTelefone());
+        ContatoModel contatoAtualizado = new ContatoModel();
+        contatoAtualizado.setId(contato.getId());
+        contatoAtualizado.setTelefone(contato.getTelefone());
+        contatoAtualizado.setEmail(contato.getEmail());
+
+        contatoDAL.updateContato(contatoAtualizado);
         enderecoDAL.updateEndereco(addotante.getId_endereco(),endereco);
     }
 

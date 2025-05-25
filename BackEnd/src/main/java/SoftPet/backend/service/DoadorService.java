@@ -89,7 +89,12 @@ public class DoadorService
         doador.setId_endereco(doadorExistente.getEndereco().getId());
 
         doadorDAL.updateDoador(cpf,doador);
-        contatoDAL.updateContato(doador.getId_contato(),contato.getTelefone());
+        ContatoModel contatoAtualizado = new ContatoModel();
+        contatoAtualizado.setId(doador.getId_contato());
+        contatoAtualizado.setTelefone(contato.getTelefone());
+        contatoAtualizado.setEmail(contato.getEmail());
+
+        contatoDAL.updateContato(contatoAtualizado);
         enderecoDAL.updateEndereco(doador.getId_endereco(),endereco);
     }
 
