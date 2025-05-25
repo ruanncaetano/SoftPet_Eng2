@@ -1,11 +1,11 @@
-package SoftPet.ger_adotantes.controll;
+package SoftPet.backend.controll;
 
-import SoftPet.ger_adotantes.model.AdotanteModel;
-import SoftPet.ger_adotantes.service.AdotanteService;
+import SoftPet.backend.model.AdotanteModel;
+import SoftPet.backend.service.AdotanteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import SoftPet.ger_adotantes.dto.AdotanteCompletoDTO;
+import SoftPet.backend.dto.AdotanteCompletoDTO;
 
 import java.util.List;
 

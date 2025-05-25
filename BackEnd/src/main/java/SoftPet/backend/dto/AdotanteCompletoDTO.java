@@ -1,8 +1,8 @@
-package SoftPet.ger_adotantes.dto;
+package SoftPet.backend.dto;
 
-import SoftPet.ger_adotantes.model.ContatoModel;
-import SoftPet.ger_adotantes.model.AdotanteModel;
-import SoftPet.ger_adotantes.model.EnderecoModel;
+import SoftPet.backend.model.ContatoModel;
+import SoftPet.backend.model.AdotanteModel;
+import SoftPet.backend.model.EnderecoModel;
 
 public class AdotanteCompletoDTO
 {
@@ -29,7 +29,7 @@ public class AdotanteCompletoDTO
         this.adotante = adotante;
     }
 
-    public ContatoModel getContato() {
+    public SoftPet.backend.model.ContatoModel getContato() {
         return contato;
     }
     public void setContato(ContatoModel contato)
@@ -37,7 +37,7 @@ public class AdotanteCompletoDTO
         this.contato = contato;
     }
 
-    public EnderecoModel getEndereco()
+    public SoftPet.backend.model.EnderecoModel getEndereco()
     {
         return endereco;
     }

@@ -1,4 +1,4 @@
-package SoftPet.ger_adotantes.model;
+package SoftPet.backend.model;
 
 public class AdotanteModel
 {

@@ -1,10 +1,10 @@
-package SoftPet.ger_adotantes.dal;
+package SoftPet.backend.dal;
 
-import SoftPet.ger_adotantes.config.SingletonDB;
-import SoftPet.ger_adotantes.dto.AdotanteCompletoDTO;
-import SoftPet.ger_adotantes.model.ContatoModel;
-import SoftPet.ger_adotantes.model.AdotanteModel;
-import SoftPet.ger_adotantes.model.EnderecoModel;
+import SoftPet.backend.config.SingletonDB;
+import SoftPet.backend.dto.AdotanteCompletoDTO;
+import SoftPet.backend.model.ContatoModel;
+import SoftPet.backend.model.AdotanteModel;
+import SoftPet.backend.model.EnderecoModel;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;

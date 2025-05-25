@@ -1,16 +1,16 @@
-package SoftPet.ger_adotantes.service;
+package SoftPet.backend.service;
 
-import SoftPet.ger_adotantes.dal.ContatoDAL;
-import SoftPet.ger_adotantes.dal.AdotanteDAL;
-import SoftPet.ger_adotantes.dal.EnderecoDAL;
-import SoftPet.ger_adotantes.dto.AdotanteCompletoDTO;
-import SoftPet.ger_adotantes.model.ContatoModel;
-import SoftPet.ger_adotantes.model.AdotanteModel;
-import SoftPet.ger_adotantes.model.EnderecoModel;
-import SoftPet.ger_adotantes.util.cpfValidator;
+import SoftPet.backend.dal.ContatoDAL;
+import SoftPet.backend.dal.AdotanteDAL;
+import SoftPet.backend.dal.EnderecoDAL;
+import SoftPet.backend.dto.AdotanteCompletoDTO;
+import SoftPet.backend.model.ContatoModel;
+import SoftPet.backend.model.AdotanteModel;
+import SoftPet.backend.model.EnderecoModel;
+import SoftPet.backend.util.cpfValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import SoftPet.ger_adotantes.util.Validation;
+import SoftPet.backend.util.Validation;
 
 import java.util.List;
 
