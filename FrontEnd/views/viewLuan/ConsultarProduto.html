@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Consultar Produtos</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+    function voltarParaInicio() {
+            window.location.href = "../../views/viewGeral/home.html"; // ajuste o caminho se necessário
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<script src="../../public/js/menu.js"></script>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <main class="flex-1 bg-neve p-10 overflow-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Consultar Produtos</h1>
+
+    <div class="mb-6">
+    <label for="tipoProduto" class="block mb-2 font-semibold">Filtrar por Tipo de Produto:</label>
+    <select id="tipoProduto" class="border border-gray-300 rounded px-3 py-2 w-64">
+        <option value="">-- Selecione o tipo --</option>
+        <option value="RAÇÃO">Ração</option>
+        <option value="MEDICAMENTO">Medicamento</option>
+        <option value="Produto de limpeza">Produto de limpeza</option>
+        <!-- Adicione mais tipos conforme necessário -->
+    </select>
+    <button id="btnBuscar" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Filtrar
+    </button>
+
+    <!-- Botão Voltar -->
+    <button onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all">
+        Voltar
+    </button>
+    </div>
+
+
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+      <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-areia text-noturno">
+        <tr>
+            <th class="px-4 py-2 text-left">Descrição</th>
+            <th class="px-4 py-2 text-left">Tipo</th>
+            <th class="px-4 py-2 text-left">Qtd. Estoque</th>
+            <th class="px-4 py-2 text-left">Unidade</th>
+            <th class="px-4 py-2 text-left">Validade</th>
+            <th class="px-4 py-2 text-left">Ações</th>
+        </tr>
+        </thead>
+
+        <tbody id="tabelaProdutos" class="divide-y divide-gray-200"></tbody>
+      </table>
+      
+    </div>
+  </main>
+
+ <script>
+  async function consultarProdutosPorTipo(tipo) {
+    let url = "http://localhost:8080/produtos/listar";
+    if (tipo) {
+      url += "/" + encodeURIComponent(tipo);
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        if (response.status === 204) {
+          alert("Nenhum produto encontrado para o tipo selecionado.");
+          limparTabela();
+          return;
+        }
+        throw new Error("Erro ao buscar produtos.");
+      }
+
+      const produtos = await response.json();
+      preencherTabela(produtos);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao carregar produtos.");
+    }
+  }
+
+  function preencherTabela(produtos) {
+  const tabela = document.getElementById("tabelaProdutos");
+  tabela.innerHTML = "";
+
+  produtos.forEach(p => {
+    // Ajuste para usar o ID do produto correto:
+    const idProduto = p.produto?.id ?? p.id; // tenta pegar p.produto.id ou p.id
+
+    const linha = `
+      <tr>
+        <td class="px-4 py-2">${p.produto?.descricao ?? p.descricao}</td>
+        <td class="px-4 py-2">${p.produto?.tipo ?? p.tipo}</td>
+        <td class="px-4 py-2">${p.produto?.quantidadeEstoque ?? p.quantidadeEstoque}</td>
+        <td class="px-4 py-2">${p.produto?.unidadeMedida ?? p.unidadeMedida}</td>
+        <td class="px-4 py-2">${p.produto?.dataValidade ?? p.dataValidade}</td>
+        <td class="px-4 py-2 space-x-2">
+          <a href="../../views/viewLuan/AlterarProduto.html?id=${idProduto}" 
+             class="text-blue-600 hover:underline">Editar</a>
+          <a href="../../views/viewLuan/ExclusaoDireta.html?id=${idProduto}" class="text-red-600 hover:underline">
+            Excluir</a>
+        </td>
+      </tr>
+    `;
+    tabela.insertAdjacentHTML("beforeend", linha);
+  });
+}
+
+
+  async function confirmarExclusao(id) {
+    const confirmacao = confirm("Tem certeza que deseja excluir este produto?");
+    if (!confirmacao) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/produtos/deletar/${id}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        alert("Produto excluído com sucesso.");
+        consultarProdutosPorTipo(document.getElementById("tipoProduto").value);
+      } else {
+        alert("Erro ao excluir produto.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao conectar com o servidor.");
+    }
+  }
+
+  function limparTabela() {
+    document.getElementById("tabelaProdutos").innerHTML = "";
+  }
+
+  document.getElementById("btnBuscar").addEventListener("click", () => {
+    let tipoSelecionado = document.getElementById("tipoProduto").value;
+    if (tipoSelecionado) {
+      tipoSelecionado = tipoSelecionado.toUpperCase();
+    }
+    consultarProdutosPorTipo(tipoSelecionado);
+  });
+
+  document.addEventListener("DOMContentLoaded", () => consultarProdutosPorTipo(""));
+</script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

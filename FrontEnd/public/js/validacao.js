@@ -1,3 +1,76 @@
+async function registrarProduto() {
+  event.preventDefault(); // Evita o envio padrão do formulário
+
+  // Captura os valores dos inputs
+  const tipo = document.getElementById("tipoDoacao").value;
+  const descricao = document.getElementById("itemDoacao").value;
+  const quantidadeEstoque = parseInt(document.getElementById("qtdeDoacao").value);
+  const dataValidade = document.getElementById("dataValidade").value;
+  const unidadeMedida = document.getElementById("uniMedida").value;
+
+  // Monta o objeto como esperado pelo backend (ProdutoDTO com produto dentro)
+  const produtoDTO = {
+    produto: {
+      tipo: tipo,
+      descricao: descricao,
+      quantidadeEstoque: quantidadeEstoque,
+      dataValidade: dataValidade,
+      unidadeMedida: unidadeMedida
+    }
+  };
+
+  try {
+    const response = await fetch("http://localhost:8080/produtos/cadastro", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(produtoDTO)
+    });
+
+    if (response.ok) {
+      alert("Produto registrado com sucesso!");
+      document.getElementById("cadastroDoacao").reset(); // Limpa o formulário
+    } else {
+      const erro = await response.text();
+      alert("Erro ao registrar produto: " + erro);
+    }
+  } catch (err) {
+    console.error("Erro de rede:", err);
+    alert("Erro ao conectar com o servidor.");
+  }
+}
+
+async function consultarProdutos() {
+  try {
+    const response = await fetch("http://localhost:8080/produtos/listar"); // <-- ajustado aqui
+    if (!response.ok) throw new Error("Erro na requisição");
+
+    const produtos = await response.json();
+
+    const corpoTabela = document.getElementById("tabelaProdutos");
+    corpoTabela.innerHTML = ""; // limpa a tabela antes de preencher
+
+    produtos.forEach(p => {
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td class="border px-4 py-2">${p.produto.tipo}</td>
+        <td class="border px-4 py-2">${p.produto.descricao}</td>
+        <td class="border px-4 py-2">${p.produto.quantidadeEstoque}</td>
+        <td class="border px-4 py-2">${p.produto.dataValidade}</td>
+        <td class="border px-4 py-2">${p.produto.unidadeMedida}</td>
+      `;
+      corpoTabela.appendChild(linha);
+    });
+
+  } catch (erro) {
+    console.error("Erro ao consultar produtos:", erro);
+    alert("Erro ao buscar produtos.");
+  }
+}
+
+
+
 //função de formatação do cpf
 function formatarCPF(cpf)
 {

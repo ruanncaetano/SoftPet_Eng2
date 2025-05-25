@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Excluir Produto</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <script src="../../public/js/menu.js"></script>
+
+  <main class="flex-1 bg-neve p-10 overflow-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Excluir Produto</h1>
+
+    <form id="formExcluirProduto" onsubmit="event.preventDefault(); excluirProduto();">
+      <!-- Campo de busca por ID -->
+      <div class="mb-6">
+        <label class="block font-semibold mb-1">* Digite o ID do Produto</label>
+        <div class="flex gap-2">
+          <input type="number" id="idProduto" class="w-full p-2 border rounded-lg" placeholder="Ex: 101" required>
+          <button type="button" onclick="buscarProdutoPorId()" class="bg-carmesim text-white px-4 py-2 rounded-lg hover:bg-red-700">Buscar</button>
+        </div>
+      </div>
+
+      <!-- Container dos campos ocultos -->
+      <div id="detalhesProduto" class="grid grid-cols-2 gap-4 mb-6 hidden">
+        <div>
+          <label class="block font-semibold mb-1">* Tipo do Produto</label>
+          <input type="text" id="tipoProduto" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">* Descrição</label>
+          <input type="text" id="descricao" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">* Quantidade em estoque</label>
+          <input id="quantidade" type="number" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">* Data de validade</label>
+          <input type="date" id="validade" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1">* Unidade de medida</label>
+          <input type="text" id="unidade" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+        </div>
+      </div>
+
+      <!-- Botões -->
+      <div id="botoesAcao" class="flex justify-end gap-4 mt-6 hidden">
+        <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all">
+          Confirmar Exclusão
+        </button>
+
+        <button type="button" onclick="limparCampos()" class="bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition-all">
+          Limpar
+        </button>
+
+        <button type="button" onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all">
+          Voltar
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    function voltarParaInicio() {
+      window.location.href = "../../views/viewGeral/home.html";
+    }
+
+    function limparCampos() {
+        document.getElementById("formExcluirProduto").reset();
+        document.getElementById("detalhesProduto").classList.add("hidden");
+        document.getElementById("botoesAcao").classList.add("hidden");
+
+        const idInput = document.getElementById("idProduto");
+        idInput.readOnly = false;
+        idInput.classList.remove("bg-gray-100"); // remove o fundo acinzentado
+    }
+
+
+    async function buscarProdutoPorId() {
+      const id = document.getElementById("idProduto").value.trim();
+      if (!id) {
+        alert("Informe o ID do produto.");
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:8080/produtos/${id}`);
+        if (!response.ok) {
+          alert("Produto não encontrado.");
+          return;
+        }
+
+        const produtoDTO = await response.json();
+        const produto = produtoDTO.produto;
+
+        document.getElementById("descricao").value = produto.descricao;
+        document.getElementById("tipoProduto").value = produto.tipo;
+        document.getElementById("quantidade").value = produto.quantidadeEstoque;
+        document.getElementById("validade").value = produto.dataValidade;
+        document.getElementById("unidade").value = produto.unidadeMedida;
+
+        document.getElementById("detalhesProduto").classList.remove("hidden");
+        document.getElementById("botoesAcao").classList.remove("hidden");
+        document.getElementById("idProduto").readOnly = true;
+      } catch (error) {
+        console.error("Erro ao buscar produto:", error);
+        alert("Erro ao buscar dados do produto.");
+      }
+    }
+
+    async function excluirProduto() {
+        const id = Number(document.getElementById("idProduto").value);
+        if (!id) return;
+
+        const confirmacao = confirm("Tem certeza que deseja excluir este produto?");
+        if (!confirmacao) return;
+
+        try {
+            const response = await fetch(`http://localhost:8080/produtos/${id}`, {
+            method: 'DELETE'
+            });
+
+            if (response.ok) {
+            alert('Produto excluído com sucesso!');
+            limparCampos();
+            } else {
+            const msg = await response.text();
+            alert('Erro ao excluir produto: ' + msg);
+            }
+        } catch (error) {
+            console.error("Erro ao excluir produto:", error);
+            alert('Erro de conexão ao excluir produto.');
+        }
+    }
+
+
+    lucide.createIcons();
+
+    document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("idProduto").addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault(); // Impede o submit padrão
+        buscarProdutoPorId();
+      }
+    });
+  });
+
+  </script>
+</body>
+</html>

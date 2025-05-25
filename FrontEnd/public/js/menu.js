@@ -18,6 +18,19 @@ document.write(`
           <li><a href="#" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
+      <div>
+      <button onclick="toggleMenu('menu-produtos', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">
+        <span class="flex gap-2 items-center"><svg data-lucide="package" class="w-5 h-5"></svg>Produtos</span>
+        <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
+      </button>
+      <ul id="menu-produtos" class="ml-6 mt-2 space-y-2 hidden">
+        <li><a href="../../views/viewLuan/RegistrarProduto.html" class="block hover:text-carmesim">Cadastrar</a></li>
+        <li><a href="../../views/viewLuan/ConsultarProduto.html" class="block hover:text-carmesim">Consultar</a></li>
+        <li><a href="../../views/viewLuan/AlterarProduto.html" class="block hover:text-carmesim">Alterar</a></li>
+        <li><a href="../../views/viewLuan/ExcluirProduto.html" class="block hover:text-carmesim">Excluir</a></li>
+      </ul>
+    </div>
+
     <!-- Dropdown adoção -->
       <div>
         <button onclick="toggleMenu('menu-adocao', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">

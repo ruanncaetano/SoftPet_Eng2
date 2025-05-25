@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Excluir Produto</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <script src="../../public/js/menu.js"></script>
+
+  <!-- ... (cabeçalho e estilos permanecem iguais) -->
+
+<main class="flex-1 bg-neve p-10 overflow-auto">
+  <h1 class="text-3xl font-bold mb-6 text-carmesim">Excluir Produto</h1>
+
+  <form id="formExcluirProduto" onsubmit="event.preventDefault(); excluirProduto();">
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div>
+        <label class="block font-semibold mb-1">* ID do Produto</label>
+        <input type="number" id="idProduto" class="w-full p-2 border rounded-lg" placeholder="Informe o ID do produto" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">* Tipo do Produto</label>
+        <select id="tipoProduto" class="w-full p-2 border rounded-lg" required>
+          <option value="">Selecione</option>
+          <option value="Ração">Ração</option>
+          <option value="Produto de limpeza">Produto de limpeza</option>
+          <option value="Medicamento">Medicamento</option>
+          <option value="OUTROS">Outros</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">* Descrição</label>
+        <input type="text" id="descricao" class="w-full p-2 border rounded-lg" placeholder="Descrição do item..." required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">* Quantidade em estoque</label>
+        <input id="quantidade" type="number" min="1" class="w-full p-2 border rounded-lg" placeholder="Ex. 10" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">* Data de validade</label>
+        <input type="date" id="validade" class="w-full p-2 border rounded-lg" required>
+      </div>
+
+      <div>
+        <label class="block font-semibold mb-1">* Unidade de medida</label>
+        <select id="unidade" class="w-full p-2 border rounded-lg" required>
+          <option value="">Selecione</option>
+          <option value="KG">KG</option>
+          <option value="G">G</option>
+          <option value="MG">MG</option>
+          <option value="ML">ML</option>
+          <option value="L">L</option>
+          <option value="CL">CL</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-4 mt-6">
+      <!-- Botão Excluir -->
+      <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-red-700 transition-all">
+        Confirmar Exclusão
+      </button>
+
+      <!-- Botão Limpar -->
+      <button type="button" onclick="voltarParaConsulta()" class="bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition-all">
+        Cancelar Exclusão
+      </button>
+
+      <!-- Botão Voltar -->
+      <button type="button" onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all">
+        Voltar
+      </button>
+    </div>
+  </form>
+</main>
+
+<script>
+  function voltarParaInicio() {
+    window.location.href = "../../views/viewGeral/home.html";
+  }
+  function voltarParaConsulta() {
+    window.location.href = "../../views/viewLuan/ConsultarProduto.html";
+  }
+
+  function obterParametroUrl(nome) {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(nome);
+  }
+
+  function limparCampos() {
+    document.getElementById("formExcluirProduto").reset();
+    document.getElementById("idProduto").readOnly = false;
+    document.getElementById("idProduto").classList.remove("bg-gray-200");
+  }
+
+  async function carregarProdutoPorId(id) {
+    try {
+      const response = await fetch(`http://localhost:8080/produtos/${id}`);
+      if (!response.ok) {
+        alert("Produto não encontrado.");
+        return;
+      }
+
+      const produtoDTO = await response.json();
+      const produto = produtoDTO.produto;
+
+      document.getElementById("idProduto").value = produto.id;
+      document.getElementById("descricao").value = produto.descricao;
+      document.getElementById("tipoProduto").value = produto.tipo;
+      document.getElementById("quantidade").value = produto.quantidadeEstoque;
+      document.getElementById("validade").value = produto.dataValidade;
+      document.getElementById("unidade").value = produto.unidadeMedida;
+
+      document.getElementById("idProduto").readOnly = true;
+    } catch (error) {
+      console.error("Erro ao carregar produto:", error);
+      alert("Erro ao buscar dados do produto.");
+    }
+  }
+
+  async function excluirProduto() {
+    const id = Number(document.getElementById("idProduto").value);
+
+    const confirmacao = confirm("Tem certeza que deseja excluir este produto?");
+    if (!confirmacao) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/produtos/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        alert('Produto excluído com sucesso!');
+        limparCampos();
+      } else {
+        const msg = await response.text();
+        alert('Erro ao excluir produto: ' + msg);
+      }
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+      alert('Erro de conexão ao excluir produto.');
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const id = obterParametroUrl("id");
+    if (id) {
+      carregarProdutoPorId(id);
+    }
+  });
+
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADAPV - Registrar Doação</title>
+  <title>ADAPV - Registrar Produto</title>
   <link rel="website icon" type="png" href="../../public/images/patinha.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -34,52 +34,29 @@
   
   <main class="flex-1 bg-neve p-10 overflow-auto">
 
-    <h1 class="text-3xl font-bold mb-6 text-carmesim">Registrar Doação</h1>
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Registrar Produto</h1>
 
-    <div class="mb-6">
-      <label class="font-semibold block mb-1">* Buscar Doador (CPF)</label>
-      <div class="flex gap-2">
-        <input type="text" id="buscaDoadorCpf" maxlength="14" class="flex-1 p-2 border rounded-lg" placeholder="000.000.000-00" required>
-        <button onclick="buscarDoador()" class="bg-carmesim text-white px-4 rounded-lg">Buscar</button>
-      </div>
-      <p id="erroCpfBusca" class="text-red-500 text-sm mt-1"></p>
-    </div>
-
-    <!-- campo de resultado da busca -->
-    <div id="dadosDoador" class="hidden mt-4 bg-white shadow-md rounded-lg p-4">
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block mb-1 font-semibold">Nome</label>
-          <input type="text" id="nomeBuscaDoacao" class="w-full px-4 py-2 border rounded-lg bg-gray-100 cursor-not-allowed" readonly />
-        </div>
-        <div>
-          <label class="block mb-1 font-semibold">CPF</label>
-          <input type="text" id="cpfBuscaDoacao" class="w-full px-4 py-2 border rounded-lg bg-gray-100 cursor-not-allowed" readonly />
-          <input type="hidden" id="idDoadorBusca">
-        </div>
-      </div>
-    </div> <br> <br>
-    <!-- formulario de doação -->
+    <!-- formulario de produto -->
     <form id="cadastroDoacao">
       <div class="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <label class="block font-semibold mb-1">* Tipo da Doação</label>
+          <label class="block font-semibold mb-1">* Tipo do Produto</label>
           <select id="tipoDoacao" class="w-full p-2 border rounded-lg" required>
             <option value="">Selecione</option>
-            <option value="RAÇÃO">Ração</option>
-            <option value="PRODUTO DE LIMPEZA">Produto de limpeza</option>
-            <option value="MEDICAMENTO">Medicamento</option>
+            <option value="Ração">Ração</option>
+            <option value="Produto de limpeza">Produto de limpeza</option>
+            <option value="Medicamento">Medicamento</option>
             <option value="OUTROS">Outros</option>
           </select>
         </div>
 
         <div>
-          <label class="block font-semibold mb-1">* Item</label>
-          <input type="text" id="itemDoacao" class="w-full p-2 border rounded-lg" placeholder="Digite o item..." required>
+          <label class="block font-semibold mb-1">* Descrição</label>
+          <input type="text" id="itemDoacao" class="w-full p-2 border rounded-lg" placeholder="Descrição do item..." required>
         </div>
 
         <div>
-          <label class="block font-semibold mb-1">* Quantidade</label>
+          <label class="block font-semibold mb-1">* Quantidade em estoque</label>
           <input id="qtdeDoacao" type="number" min="1" class="w-full p-2 border rounded-lg" placeholder="Ex. 10" required>
           <p id="erroQtdeDoacao" class="text-red-500 text-sm mt-1"></p>
         </div>
@@ -103,18 +80,42 @@
         </select>
         </div>
 
-        <div>
-          <label class="block font-semibold mb-1">* Data da doação</label>
-          <input type="date" id="dataDoacao" class="w-full p-2 border rounded-lg" required>
-        </div>
+        
       </div>
       </div>
+      <script>
+        function voltarParaInicio() {
+            window.location.href = "../../views/viewGeral/home.html"; // ajuste o caminho se necessário
+        }
 
-      <div class="text-right mt-6">
-        <button onclick="registrarDoacao()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
-          Salvar Doação
+        function limparCamposCadastro() {
+            const campos = document.querySelectorAll("input, select, textarea");
+            campos.forEach(campo => {
+            if (campo.type === "checkbox" || campo.type === "radio") {
+                campo.checked = false;
+            } else {
+                campo.value = "";
+            }
+            });
+        }
+        </script>
+
+      <div class="flex justify-end gap-4 mt-6">
+        <!-- Botão Registrar -->
+        <button onclick="registrarProduto()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+            Registrar Produto
         </button>
-      </div>
+
+        <!-- Botão Limpar -->
+        <button onclick="limparCamposCadastro()" class="bg-yellow-500 text-white px-6 py-2 rounded-full hover:bg-yellow-600 transition-all">
+            Limpar
+        </button>
+        
+        <!-- Botão Voltar -->
+        <button onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all">
+            Voltar
+        </button>
+        </div>
     </form>
   </main>
   <script src="../../public/js/api.js"></script>
