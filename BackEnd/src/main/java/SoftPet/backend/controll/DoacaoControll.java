@@ -79,4 +79,19 @@ public class DoacaoControll
             return ResponseEntity.badRequest().body("Erro ao deletar doação!");
         }
     }
+
+    @PutMapping("/consumir/{id}/{qtde}")
+    public ResponseEntity<Object> consumirDoacao(@PathVariable Long id, @PathVariable int qtde)
+    {
+        try
+        {
+            doacaoService.consumirDoacao(id, qtde);
+            return ResponseEntity.ok("Consumo da doação realizado com sucesso!");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Erro ao consumir doação: " + e.getMessage());
+        }
+    }
 }
