@@ -1,18 +1,18 @@
 package SoftPet.backend.dto;
 
 import SoftPet.backend.model.DoacaoModel;
-import SoftPet.backend.model.DoadorModel;
+import SoftPet.backend.model.PessoaModel;
 
 public class DoacaoDTO
 {
     private DoacaoModel doacao;
-    private DoadorModel doador;
+    private PessoaModel doador;
 
     public DoacaoDTO()
     {
 
     }
-    public DoacaoDTO(DoacaoModel doacao, DoadorModel doador)
+    public DoacaoDTO(DoacaoModel doacao, PessoaModel doador)
     {
         this.doacao = doacao;
         this.doador = doador;
@@ -25,10 +25,10 @@ public class DoacaoDTO
         this.doacao = doacao;
     }
 
-    public DoadorModel getDoador() {
+    public PessoaModel getDoador() {
         return doador;
     }
-    public void setDoador(DoadorModel doador) {
+    public void setDoador(PessoaModel doador) {
         this.doador = doador;
     }
 }

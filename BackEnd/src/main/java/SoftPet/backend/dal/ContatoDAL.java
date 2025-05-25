@@ -42,21 +42,27 @@ public class ContatoDAL
     public ContatoModel addContato(ContatoModel contato)
     {
         String sql = "INSERT INTO contato (con_telefone, con_email) VALUES (?, ?)";
-        int idGerado = 0;
+        Long idGerado = 0L;
 
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
+        {
             stmt.setString(1, contato.getTelefone());
             stmt.setString(2, contato.getEmail());
 
             int affectedRows = stmt.executeUpdate();
 
-            if (affectedRows > 0) {
+            if (affectedRows > 0)
+            {
                 ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next()) {
-                    idGerado = rs.getInt(1);
+                if (rs.next())
+                {
+                    idGerado = rs.getLong(1);
+                    contato.setId(idGerado);
                 }
             }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
         }
 
@@ -64,14 +70,20 @@ public class ContatoDAL
     }
 
 
-    public boolean updateContato(ContatoModel contato) {
+
+    public boolean updateContato(ContatoModel contato)
+    {
         String sql = "UPDATE contato SET con_telefone = ?, con_email = ? WHERE con_cod = ?";
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+
+        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
+        {
             stmt.setString(1, contato.getTelefone());
             stmt.setString(2, contato.getEmail());
             stmt.setLong(3, contato.getId());
             return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
+        }
+        catch(SQLException e)
+        {
             e.printStackTrace();
             return false;
         }
@@ -103,7 +115,8 @@ public class ContatoDAL
             {
                 ContatoModel contato = new ContatoModel(
                         rs.getLong("con_cod"),
-                        rs.getString("con_telefone")
+                        rs.getString("con_telefone"),
+                        rs.getString("con_email")
                 );
                 list.add(contato);
             }
@@ -114,6 +127,4 @@ public class ContatoDAL
         }
         return list;
     }
-
-
 }

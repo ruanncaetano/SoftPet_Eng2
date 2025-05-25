@@ -1,11 +1,10 @@
 package SoftPet.backend.service;
 
 import SoftPet.backend.dal.DoacaoDAL;
-import SoftPet.backend.dal.DoadorDAL;
+import SoftPet.backend.dal.PessoaDAL;
 import SoftPet.backend.dto.DoacaoDTO;
-import SoftPet.backend.dto.DoadorCompletoDTO;
+import SoftPet.backend.dto.PessoaCompletoDTO;
 import SoftPet.backend.model.DoacaoModel;
-import SoftPet.backend.model.DoadorModel;
 import SoftPet.backend.util.Validation;
 import SoftPet.backend.util.cpfValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +18,16 @@ public class DoacaoService
     @Autowired
     private DoacaoDAL doacaoDAL;
     @Autowired
-    private DoadorDAL doadorDAL;
+    private PessoaDAL pessoaDAL;
 
     public DoacaoModel addDoacao(DoacaoDTO doacaoDTO) throws Exception
     {
-        DoadorCompletoDTO doador = doadorDAL.findById(doacaoDTO.getDoador().getId());
+        PessoaCompletoDTO doador = pessoaDAL.findById(doacaoDTO.getDoador().getId());
 
         if(doador == null)
             throw new IllegalArgumentException("Doador não encontrado!");
 
-        if(!cpfValidator.isCpfValido(doador.getDoador().getCpf()))
+        if(!cpfValidator.isCpfValido(doador.getPessoa().getCpf()))
             throw new IllegalArgumentException("CPF inválido!");
 
         if(!Validation.numNegativo(doacaoDTO.getDoacao().getQtde()))
@@ -44,7 +43,7 @@ public class DoacaoService
             throw new IllegalArgumentException("Data de validade invalida!");
 
         DoacaoModel novaDoacao = doacaoDTO.getDoacao();
-        novaDoacao.setId_doador(doador.getDoador().getId());
+        novaDoacao.setId_doador(doador.getPessoa().getId());
 
         return doacaoDAL.addDoacao(novaDoacao);
     }
@@ -101,5 +100,29 @@ public class DoacaoService
     public List<DoacaoDTO> getAllDoacao()
     {
         return doacaoDAL.getAllDoacoes();
+    }
+
+    public void consumirDoacao(Long id, int qtdeConsumida) throws Exception
+    {
+        if(id == null || id <= 0)
+            throw new IllegalArgumentException("ID da doação inválido!");
+
+        if(!Validation.numNegativo(qtdeConsumida))
+            throw new IllegalArgumentException("Quantidade da doação inválida!");
+
+        DoacaoDTO doacaoExistente = doacaoDAL.findByDoacao(id);
+        if(doacaoExistente == null)
+            throw new Exception("Não existe uma doação com esse ID!");
+
+        int estoqueAtual = doacaoExistente.getDoacao().getQtde();
+
+        if(qtdeConsumida > estoqueAtual)
+            throw new IllegalArgumentException("Quantidade a consumir maior que o estoque atual!");
+
+        int novoEstoque = estoqueAtual - qtdeConsumida;
+        DoacaoModel doacaoAtualizada = doacaoExistente.getDoacao();
+        doacaoAtualizada.setQtde(novoEstoque);
+
+        doacaoDAL.updateDoacao(doacaoAtualizada);
     }
 }

@@ -9,7 +9,7 @@ import java.sql.*;
 @Repository
 public class CredenciaisDAL {
 
-    public int criar(CredenciaisModel credenciais) {
+    public Long criar(CredenciaisModel credenciais) {
         String sql = "INSERT INTO credenciais (cre_login, cre_senha) VALUES (?, ?)";
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, credenciais.getLogin());
@@ -18,12 +18,12 @@ public class CredenciaisDAL {
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getLong(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return 0L;
     }
 
     public boolean atualizar(CredenciaisModel credenciais) {
@@ -41,10 +41,10 @@ public class CredenciaisDAL {
         }
     }
 
-    public boolean deletar(int id) {
+    public boolean deletar(Long id) {
         String sql = "DELETE FROM credenciais WHERE cre_cod = ?";
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             int rows = stmt.executeUpdate();
             return rows > 0;
         } catch (SQLException e) {
@@ -53,12 +53,12 @@ public class CredenciaisDAL {
         }
     }
 
-    public CredenciaisModel findById(int credenciaisCod) {
+    public CredenciaisModel findById(Long credenciaisCod) {
         CredenciaisModel credenciais = null;
         String sql = "SELECT * FROM credenciais WHERE cre_cod = ?";
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, credenciaisCod);
+            stmt.setLong(1, credenciaisCod);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -74,12 +74,12 @@ public class CredenciaisDAL {
 
         return credenciais;
     }
-    public boolean atualizar(CredenciaisModel credenciais, int credenciaisId) {
+    public boolean atualizar(CredenciaisModel credenciais, Long credenciaisId) {
         String sql = "UPDATE credenciais SET cre_login = ?, cre_senha = ? WHERE cre_cod = ?";
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
             stmt.setString(1, credenciais.getLogin());
             stmt.setString(2, credenciais.getSenha());
-            stmt.setInt(3, credenciaisId);
+            stmt.setLong(3, credenciaisId);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

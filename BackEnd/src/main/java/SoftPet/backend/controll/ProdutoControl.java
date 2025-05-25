@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.model.ProdutoModel;
 import SoftPet.backend.service  .ProdutoService;

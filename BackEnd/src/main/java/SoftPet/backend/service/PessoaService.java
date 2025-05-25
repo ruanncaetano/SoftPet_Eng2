@@ -1,11 +1,11 @@
 package SoftPet.backend.service;
 
 import SoftPet.backend.dal.ContatoDAL;
-import SoftPet.backend.dal.DoadorDAL;
+import SoftPet.backend.dal.PessoaDAL;
 import SoftPet.backend.dal.EnderecoDAL;
-import SoftPet.backend.dto.DoadorCompletoDTO;
+import SoftPet.backend.dto.PessoaCompletoDTO;
 import SoftPet.backend.model.ContatoModel;
-import SoftPet.backend.model.DoadorModel;
+import SoftPet.backend.model.PessoaModel;
 import SoftPet.backend.model.EnderecoModel;
 import SoftPet.backend.util.cpfValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,33 +13,32 @@ import org.springframework.stereotype.Service;
 import SoftPet.backend.util.Validation;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class DoadorService
+public class PessoaService
 {
     @Autowired
-    private DoadorDAL doadorDAL;
+    private PessoaDAL pessoaDAL;
     @Autowired
     private ContatoDAL contatoDAL;
     @Autowired
     private EnderecoDAL enderecoDAL;
 
-    public DoadorModel addDoador(DoadorCompletoDTO doador) throws Exception
+    public PessoaModel addDoador(PessoaCompletoDTO doador) throws Exception
     {
-        if(!cpfValidator.isCpfValido(doador.getDoador().getCpf()))
+        if(!cpfValidator.isCpfValido(doador.getPessoa().getCpf()))
             throw new Exception("CPF inválido!");
 
-        if(doadorDAL.findByDoador(doador.getDoador().getCpf()) != null)
+        if(pessoaDAL.findByDoador(doador.getPessoa().getCpf()) != null)
             throw new Exception("Usuário já cadastrado!");
 
-        if(!Validation.validarNomeCompleto(doador.getDoador().getNome()))
+        if(!Validation.validarNomeCompleto(doador.getPessoa().getNome()))
             throw new Exception("Digite o nome completo corretamente!");
 
         if(!Validation.validarTelefone(doador.getContato().getTelefone()))
             throw new Exception("Telefone inválido! Ex: (11) 91234-5678");
 
-        if(!Validation.validarRG(doador.getDoador().getRg()))
+        if(!Validation.validarRG(doador.getPessoa().getRg()))
             throw new Exception("RG inválido!");
 
         if(!Validation.validarCEP(doador.getEndereco().getCep()))
@@ -48,23 +47,23 @@ public class DoadorService
         ContatoModel novoContato = contatoDAL.addContato(doador.getContato());
         EnderecoModel novoEndereco = enderecoDAL.addEndereco(doador.getEndereco());
 
-        DoadorModel novoDoador = doador.getDoador();
+        PessoaModel novoDoador = doador.getPessoa();
         novoDoador.setId_contato(novoContato.getId());
         novoDoador.setId_endereco(novoEndereco.getId());
 
-        DoadorModel doadorFinal = doadorDAL.addDoador(novoDoador);
+        PessoaModel doadorFinal = pessoaDAL.addDoador(novoDoador);
         return doadorFinal;
     }
 
 
-    public DoadorCompletoDTO getDoadorCpf(String cpf)
+    public PessoaCompletoDTO getDoadorCpf(String cpf)
     {
-        if(doadorDAL.findByDoador(cpf) != null)
-            return doadorDAL.findByDoador(cpf);
+        if(pessoaDAL.findByDoador(cpf) != null)
+            return pessoaDAL.findByDoador(cpf);
         return null;
     }
 
-    public void updateDoador(String cpf, DoadorModel doador, ContatoModel contato, EnderecoModel endereco) throws Exception
+    public void updateDoador(String cpf, PessoaModel doador, ContatoModel contato, EnderecoModel endereco) throws Exception
     {
         if(!cpfValidator.isCpfValido(cpf))
             throw new Exception("CPF inválido!");
@@ -81,14 +80,14 @@ public class DoadorService
         if(!Validation.validarCEP(endereco.getCep()))
             throw new Exception("CEP inválido! Ex: 12345-678");
 
-        DoadorCompletoDTO doadorExistente = doadorDAL.findByDoador(cpf);
+        PessoaCompletoDTO doadorExistente = pessoaDAL.findByDoador(cpf);
         if(doadorExistente == null)
             throw new Exception("Não existe esse usuário!");
 
         doador.setId_contato(doadorExistente.getContato().getId());
         doador.setId_endereco(doadorExistente.getEndereco().getId());
 
-        doadorDAL.updateDoador(cpf,doador);
+        pessoaDAL.updateDoador(cpf,doador);
         ContatoModel contatoAtualizado = new ContatoModel();
         contatoAtualizado.setId(doador.getId_contato());
         contatoAtualizado.setTelefone(contato.getTelefone());
@@ -103,20 +102,20 @@ public class DoadorService
         if(!cpfValidator.isCpfValido(cpf))
             throw new Exception("CPF inválido!");
 
-        DoadorCompletoDTO doadorDelete = doadorDAL.findByDoador(cpf);
+        PessoaCompletoDTO doadorDelete = pessoaDAL.findByDoador(cpf);
 
         if(doadorDelete == null)
             throw new Exception("Não existe esse usuário!");
 
-        if(!doadorDAL.deleteByDoador(cpf))
+        if(!pessoaDAL.deleteByDoador(cpf))
             throw new Exception("Erro ao deletar um doador!");
 
         contatoDAL.deleteByContato(doadorDelete.getContato().getId());
         enderecoDAL.deleteByEndereco(doadorDelete.getEndereco().getId());
     }
 
-    public List<DoadorCompletoDTO> getAllDoador()
+    public List<PessoaCompletoDTO> getAllDoador()
     {
-        return doadorDAL.getAll();
+        return pessoaDAL.getAll();
     }
 }

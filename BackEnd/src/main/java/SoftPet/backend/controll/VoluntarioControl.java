@@ -25,7 +25,7 @@ public class VoluntarioControl {
 
     // Atualizar voluntário por ID
     @PutMapping("/{id}")
-    public ResponseEntity<VoluntarioModel> atualizarVoluntario(@PathVariable int id, @RequestBody VoluntarioModel voluntarioAtualizado) {
+    public ResponseEntity<VoluntarioModel> atualizarVoluntario(@PathVariable Long id, @RequestBody VoluntarioModel voluntarioAtualizado) {
         VoluntarioModel voluntarioExistente = voluntarioService.buscarPorId(id);
 
         if (voluntarioExistente == null) {
@@ -61,7 +61,7 @@ public class VoluntarioControl {
 
     // Buscar por ID
     @GetMapping("/id/{id}")
-    public ResponseEntity<VoluntarioModel> buscarPorId(@PathVariable int id) {
+    public ResponseEntity<VoluntarioModel> buscarPorId(@PathVariable Long id) {
         VoluntarioModel voluntario = voluntarioService.buscarPorId(id);
         if (voluntario != null) {
             return ResponseEntity.ok(voluntario);

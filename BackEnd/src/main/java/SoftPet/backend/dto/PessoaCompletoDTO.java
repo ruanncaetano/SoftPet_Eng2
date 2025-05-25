@@ -1,30 +1,32 @@
 package SoftPet.backend.dto;
 
 import SoftPet.backend.model.ContatoModel;
-import SoftPet.backend.model.EnderecoModel;
 import SoftPet.backend.model.PessoaModel;
+import SoftPet.backend.model.EnderecoModel;
 
-public class AdotanteCompletoDTO {
-    private PessoaModel adotante;
+public class PessoaCompletoDTO
+{
+
+    private PessoaModel pessoa;
     private ContatoModel contato;
     private EnderecoModel endereco;
 
-    public AdotanteCompletoDTO() {
+    public PessoaCompletoDTO() {
     }
 
-    public AdotanteCompletoDTO(PessoaModel adotante, ContatoModel contato, EnderecoModel endereco)
+    public PessoaCompletoDTO(PessoaModel pessoa, ContatoModel contato, EnderecoModel endereco)
     {
-        this.adotante = adotante;
+        this.pessoa = pessoa;
         this.contato = contato;
         this.endereco = endereco;
     }
 
     public PessoaModel getPessoa()
     {
-        return adotante;
+        return pessoa;
     }
-    public void setDoador(PessoaModel adotante) {
-        this.adotante = adotante;
+    public void setPessoa(PessoaModel pessoa) {
+        this.pessoa = pessoa;
     }
 
     public ContatoModel getContato() {

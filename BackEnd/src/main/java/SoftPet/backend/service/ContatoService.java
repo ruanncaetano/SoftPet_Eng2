@@ -15,7 +15,7 @@ public class ContatoService {
         return contatoDAL.addContato(contato);
     }
 
-    public ContatoModel buscarPorId(int id) {
+    public ContatoModel buscarPorId(Long id) {
         return contatoDAL.FindById(id);
     }
 

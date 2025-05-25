@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.model.ContatoModel;
 import SoftPet.backend.service.ContatoService;
@@ -26,7 +26,7 @@ public class ContatoControl {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContatoModel> buscarContato(@PathVariable int id) {
+    public ResponseEntity<ContatoModel> buscarContato(@PathVariable Long id) {
         ContatoModel contato = contatoService.buscarPorId(id);
         if (contato != null) {
             return ResponseEntity.ok(contato);

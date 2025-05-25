@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.dal.CargoDAL;
 import SoftPet.backend.model.CargoModel;
@@ -10,7 +10,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/cargos")
-public class CargoController {
+public class CargoControl {
 
     @Autowired
     private CargoDAL cargoDAL;
@@ -31,7 +31,7 @@ public class CargoController {
         }
 
         // Não existe - cria um novo cargo usando o método criar
-        int idGerado = cargoDAL.criar(cargo);
+        Long idGerado = cargoDAL.criar(cargo);
         cargo.setId(idGerado);
         return ResponseEntity.status(201).body(cargo);
     }
@@ -48,7 +48,7 @@ public class CargoController {
 
     // Atualizar cargo
     @PutMapping("/{id}")
-    public ResponseEntity<CargoModel> atualizar(@PathVariable int id, @RequestBody CargoModel cargo) {
+    public ResponseEntity<CargoModel> atualizar(@PathVariable Long id, @RequestBody CargoModel cargo) {
         cargo.setId(id);
         boolean atualizado = cargoDAL.update(cargo);
         if (!atualizado) {
