@@ -26,7 +26,7 @@ public class CargoService {
     }
 
     public CargoModel create(CargoModel cargo) {
-        int id = cargoDAL.criar(cargo);
+        Long id = cargoDAL.criar(cargo);
         if (id != -1) {
             cargo.setId(id);
             return cargo;
@@ -47,7 +47,7 @@ public class CargoService {
      * Retorna o objeto cargo com id preenchido.
      */
     public CargoModel buscarOuCriar(CargoModel cargo) {
-        int id = cargoDAL.buscarOuCriar(cargo);
+        Long id = cargoDAL.buscarOuCriar(cargo);
         cargo.setId(id);
         return cargo;
     }

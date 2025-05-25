@@ -2,6 +2,7 @@ package SoftPet.backend.dal;
 
 import SoftPet.backend.config.SingletonDB;
 import SoftPet.backend.model.CargoModel;
+import SoftPet.backend.model.ContatoModel;
 import SoftPet.backend.model.VoluntarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,21 +25,21 @@ public class VoluntarioDAL {
 
     public VoluntarioModel create(VoluntarioModel voluntario) {
         // Criar credenciais e contato
-        int credId = credenciaisDAL.criar(voluntario.getCredenciais());
-        int contId = contatoDAL.criar(voluntario.getContato());
+        Long credId = credenciaisDAL.criar(voluntario.getCredenciais());
+        ContatoModel contId = contatoDAL.addContato(voluntario.getContato());
 
         voluntario.setCredenciaisCod(credId);
-        voluntario.setContatoCod(contId);
+        voluntario.setContatoCod(contId.getId());
 
         // Buscar ou criar o cargo somente se o ID não estiver presente
-        int cargoId;
+        Long cargoId;
         if (voluntario.getCargoCod() > 0) {
             cargoId = voluntario.getCargoCod(); // Já veio com cargo existente
         } else {
             if (voluntario.getCargoNome() == null || voluntario.getCargoNome().isBlank()) {
                 throw new IllegalArgumentException("Nome do cargo é obrigatório se o ID não for fornecido.");
             }
-            cargoId = cargoDAL.buscarOuCriar(new CargoModel(0, voluntario.getCargoNome()));
+            cargoId = cargoDAL.buscarOuCriar(new CargoModel(0L, voluntario.getCargoNome()));
         }
         voluntario.setCargoCod(cargoId);
 
@@ -47,15 +48,15 @@ public class VoluntarioDAL {
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, voluntario.getCpf());
             stmt.setString(2, voluntario.getNome());
-            stmt.setInt(3, voluntario.getCargoCod());
-            stmt.setInt(4, voluntario.getContatoCod());
-            stmt.setInt(5, voluntario.getCredenciaisCod());
+            stmt.setLong(3, voluntario.getCargoCod());
+            stmt.setLong(4, voluntario.getContatoCod());
+            stmt.setLong(5, voluntario.getCredenciaisCod());
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    voluntario.setId(rs.getInt(1));
+                    voluntario.setId(rs.getLong(1));
                 }
             }
         } catch (SQLException e) {
@@ -64,19 +65,19 @@ public class VoluntarioDAL {
 
         return voluntario;
     }
-    public static VoluntarioModel buscarPorId(int id) {
+    public static VoluntarioModel buscarPorId(Long id) {
         String sql = "SELECT * FROM voluntario WHERE vol_cod = ?";
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 VoluntarioModel voluntario = new VoluntarioModel();
-                voluntario.setId(rs.getInt("vol_cod"));
+                voluntario.setId(rs.getLong("vol_cod"));
                 voluntario.setNome(rs.getString("vol_nome"));
                 voluntario.setCpf(rs.getString("vol_cpf"));
-                voluntario.setCargoCod(rs.getInt("car_cod"));
-                voluntario.setContatoCod(rs.getInt("con_cod"));
-                voluntario.setCredenciaisCod(rs.getInt("cre_cod"));
+                voluntario.setCargoCod(rs.getLong("car_cod"));
+                voluntario.setContatoCod(rs.getLong("con_cod"));
+                voluntario.setCredenciaisCod(rs.getLong("cre_cod"));
                 return voluntario;
             }
         } catch (SQLException e) {
@@ -90,11 +91,11 @@ public class VoluntarioDAL {
     public boolean atualizar(VoluntarioModel voluntario) {
         try {
             // Atualizar cargo (reaproveitar se já existir)
-            int cargoId = cargoDAL.buscarOuCriar(new CargoModel(0, voluntario.getCargoNome()));
+            Long cargoId = cargoDAL.buscarOuCriar(new CargoModel(0L, voluntario.getCargoNome()));
             voluntario.setCargoCod(cargoId);
 
             // Atualizar contato e credenciais
-            contatoDAL.atualizar(voluntario.getContato(), voluntario.getContatoCod());
+            contatoDAL.updateContato(voluntario.getContato());
             credenciaisDAL.atualizar(voluntario.getCredenciais(), voluntario.getCredenciaisCod());
 
             // Atualizar voluntário
@@ -102,8 +103,8 @@ public class VoluntarioDAL {
             try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
                 stmt.setString(1, voluntario.getNome());
                 stmt.setString(2, voluntario.getCpf());
-                stmt.setInt(3, voluntario.getCargoCod());
-                stmt.setInt(4, voluntario.getId());
+                stmt.setLong(3, voluntario.getCargoCod());
+                stmt.setLong(4, voluntario.getId());
                 return stmt.executeUpdate() > 0;
             }
         } catch (SQLException e) {
@@ -112,26 +113,26 @@ public class VoluntarioDAL {
         }
     }
 
-    public VoluntarioModel findById(int id) {
+    public VoluntarioModel findById(Long id) {
         VoluntarioModel voluntario = null;
         String sql = "SELECT * FROM voluntario WHERE vol_cod = ?";
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 voluntario = new VoluntarioModel(
-                        rs.getInt("vol_cod"),
+                        rs.getLong("vol_cod"),
                         rs.getString("vol_cpf"),
                         rs.getString("vol_nome"),
-                        rs.getInt("car_cod"),
-                        rs.getInt("con_cod"),
-                        rs.getInt("cre_cod")
+                        rs.getLong("car_cod"),
+                        rs.getLong("con_cod"),
+                        rs.getLong("cre_cod")
                 );
 
                 voluntario.setCredenciais(credenciaisDAL.findById(voluntario.getCredenciaisCod()));
-                voluntario.setContato(contatoDAL.findById(voluntario.getContatoCod()));
+                voluntario.setContato(contatoDAL.FindById(voluntario.getContato().getId()));
 
                 // Buscar e setar o nome do cargo
                 CargoModel cargo = cargoDAL.buscarPorId(voluntario.getCargoCod());
@@ -159,16 +160,16 @@ public class VoluntarioDAL {
 
             if (rs.next()) {
                 voluntario = new VoluntarioModel(
-                        rs.getInt("vol_cod"),
+                        rs.getLong("vol_cod"),
                         rs.getString("vol_cpf"),
                         rs.getString("vol_nome"),
-                        rs.getInt("car_cod"),
-                        rs.getInt("con_cod"),
-                        rs.getInt("cre_cod")
+                        rs.getLong("car_cod"),
+                        rs.getLong("con_cod"),
+                        rs.getLong("cre_cod")
                 );
 
                 voluntario.setCredenciais(credenciaisDAL.findById(voluntario.getCredenciaisCod()));
-                voluntario.setContato(contatoDAL.findById(voluntario.getContatoCod()));
+                voluntario.setContato(contatoDAL.FindById(voluntario.getContato().getId()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,16 +186,16 @@ public class VoluntarioDAL {
         try {
             while (rs.next()) {
                 VoluntarioModel voluntario = new VoluntarioModel(
-                        rs.getInt("vol_cod"),
+                        rs.getLong("vol_cod"),
                         rs.getString("vol_cpf"),
                         rs.getString("vol_nome"),
-                        rs.getInt("car_cod"),
-                        rs.getInt("con_cod"),
-                        rs.getInt("cre_cod")
+                        rs.getLong("car_cod"),
+                        rs.getLong("con_cod"),
+                        rs.getLong("cre_cod")
                 );
 
                 voluntario.setCredenciais(credenciaisDAL.findById(voluntario.getCredenciaisCod()));
-                voluntario.setContato(contatoDAL.findById(voluntario.getContatoCod()));
+                voluntario.setContato(contatoDAL.FindById(voluntario.getContato().getId()));
 
                 lista.add(voluntario);
             }
@@ -207,7 +208,7 @@ public class VoluntarioDAL {
 
     public boolean update(VoluntarioModel voluntario) {
         boolean credAtualizado = credenciaisDAL.atualizar(voluntario.getCredenciais());
-        boolean contAtualizado = contatoDAL.atualizar(voluntario.getContato());
+        boolean contAtualizado = contatoDAL.updateContato(voluntario.getContato());
         if (!credAtualizado || !contAtualizado) return false;
 
         String sql = "UPDATE voluntario SET vol_cpf = ?, vol_nome = ?, car_cod = ?, con_cod = ?, cre_cod = ? WHERE vol_cod = ?";
@@ -215,10 +216,10 @@ public class VoluntarioDAL {
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
             stmt.setString(1, voluntario.getCpf());
             stmt.setString(2, voluntario.getNome());
-            stmt.setInt(3, voluntario.getCargoCod());
-            stmt.setInt(4, voluntario.getContatoCod());
-            stmt.setInt(5, voluntario.getCredenciaisCod());
-            stmt.setInt(6, voluntario.getId());
+            stmt.setLong(3, voluntario.getCargoCod());
+            stmt.setLong(4, voluntario.getContatoCod());
+            stmt.setLong(5, voluntario.getCredenciaisCod());
+            stmt.setLong(6, voluntario.getId());
 
             int rows = stmt.executeUpdate();
             return rows > 0;
@@ -233,7 +234,7 @@ public class VoluntarioDAL {
         if (voluntario == null) return false;
 
         credenciaisDAL.deletar(voluntario.getCredenciaisCod());
-        contatoDAL.deletar(voluntario.getContatoCod());
+        contatoDAL.deleteByContato(voluntario.getContato().getId());
 
         String sql = "DELETE FROM voluntario WHERE vol_cpf = ?";
 

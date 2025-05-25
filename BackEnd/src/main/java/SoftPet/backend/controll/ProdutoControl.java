@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.model.ProdutoModel;
 import SoftPet.backend.service  .ProdutoService;
@@ -11,7 +11,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/produtos")
-public class ProdutoController {
+public class ProdutoControl {
 
     @Autowired
     private ProdutoService produtoService;

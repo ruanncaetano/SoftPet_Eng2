@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td class="px-4 py-2 space-x-2">
                         <button class="text-blue-600 hover:underline" onclick="editarDoacao(${doacao.id})">Editar</button>
                         <button class="text-red-600 hover:underline" onclick="excluirDoacao(${doacao.id})">Excluir</button>
-                        <button class="text-red-600 hover:underline" onclick="consumirDoacao(${doacao.id})">Consumir</button>
+                        <button class="text-green-600 hover:underlinee" onclick="consumirDoacao(${doacao.id})">Consumir</button>
                     </td>
                 `;
                 tabela.appendChild(tr);

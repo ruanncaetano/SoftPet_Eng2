@@ -1,13 +1,13 @@
 package SoftPet.backend.model;
 
 public class CargoModel {
-    private int id;
+    private Long id;
     private String nome;
 
     public CargoModel() {
     }
 
-    public CargoModel(int id, String nome) {
+    public CargoModel(Long id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -16,11 +16,11 @@ public class CargoModel {
         this.nome = nome;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

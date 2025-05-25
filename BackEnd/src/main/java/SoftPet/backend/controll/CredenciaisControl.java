@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.model.CredenciaisModel;
 import SoftPet.backend.service.CredenciaisService;
@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/credenciais")
-public class CredenciaisController {
+public class CredenciaisControl {
 
     @Autowired
     private CredenciaisService credenciaisService;
 
     @PostMapping("/criar")
-    public ResponseEntity<Integer> criarCredenciais(@RequestBody CredenciaisModel credenciais) {
-        int id = credenciaisService.criarCredenciais(credenciais);
+    public ResponseEntity<Long> criarCredenciais(@RequestBody CredenciaisModel credenciais) {
+        Long id = credenciaisService.criarCredenciais(credenciais);
         if (id > 0) {
             return ResponseEntity.ok(id);
         } else {
@@ -24,7 +24,7 @@ public class CredenciaisController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CredenciaisModel> buscarCredenciais(@PathVariable int id) {
+    public ResponseEntity<CredenciaisModel> buscarCredenciais(@PathVariable Long id) {
         CredenciaisModel credenciais = credenciaisService.buscarPorId(id);
         if (credenciais != null) {
             return ResponseEntity.ok(credenciais);
@@ -44,7 +44,7 @@ public class CredenciaisController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarCredenciais(@PathVariable int id) {
+    public ResponseEntity<Void> deletarCredenciais(@PathVariable Long id) {
         boolean deletado = credenciaisService.deletarCredenciais(id);
         if (deletado) {
             return ResponseEntity.ok().build();

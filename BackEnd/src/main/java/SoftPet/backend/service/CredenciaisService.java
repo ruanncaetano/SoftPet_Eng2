@@ -11,11 +11,11 @@ public class CredenciaisService {
     @Autowired
     private CredenciaisDAL credenciaisDAL;
 
-    public int criarCredenciais(CredenciaisModel credenciais) {
+    public Long criarCredenciais(CredenciaisModel credenciais) {
         return credenciaisDAL.criar(credenciais);
     }
 
-    public CredenciaisModel buscarPorId(int id) {
+    public CredenciaisModel buscarPorId(Long id) {
         return credenciaisDAL.findById(id);
     }
 
@@ -23,7 +23,7 @@ public class CredenciaisService {
         return credenciaisDAL.atualizar(credenciais);
     }
 
-    public boolean deletarCredenciais(int id) {
+    public boolean deletarCredenciais(Long id) {
         return credenciaisDAL.deletar(id);
     }
 }

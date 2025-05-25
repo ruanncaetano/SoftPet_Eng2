@@ -1,19 +1,19 @@
 package SoftPet.backend.model;
 
 public class VoluntarioModel {
-    private int id;
+    private Long id;
     private String cpf;
     private String nome;
-    private int cargoCod;
-    private int contatoCod;
-    private int credenciaisCod;
+    private Long cargoCod;
+    private Long contatoCod;
+    private Long credenciaisCod;
     private CredenciaisModel credenciais;
     private ContatoModel contato;
     private CargoModel cargo;
 
 
     // Construtor completo com objetos (útil para retorno com JOINs)
-    public VoluntarioModel(int id, String cpf, String nome, int cargoCod, int contatoCod, CredenciaisModel credenciais, ContatoModel contato) {
+    public VoluntarioModel(Long id, String cpf, String nome, Long cargoCod, Long contatoCod, CredenciaisModel credenciais, ContatoModel contato) {
         this.id = id;
         this.cpf = cpf;
         this.nome = nome;
@@ -28,7 +28,7 @@ public class VoluntarioModel {
     }
 
     // Construtor com apenas os códigos (usado nas queries SQL do DAL)
-    public VoluntarioModel(int id, String cpf, String nome, int cargoCod, int contatoCod, int credenciaisCod) {
+    public VoluntarioModel(Long id, String cpf, String nome, Long cargoCod, Long contatoCod, Long credenciaisCod) {
         this.id = id;
         this.cpf = cpf;
         this.nome = nome;
@@ -37,11 +37,11 @@ public class VoluntarioModel {
         this.credenciaisCod = credenciaisCod;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,7 +61,7 @@ public class VoluntarioModel {
         this.nome = nome;
     }
 
-    public int getCargoCod() {
+    public Long getCargoCod() {
         return cargoCod != 0 ? cargoCod : (cargo != null ? cargo.getId() : 0);
     }
 
@@ -72,19 +72,19 @@ public class VoluntarioModel {
         }
     }
 
-    public int getContatoCod() {
+    public Long getContatoCod() {
         return contatoCod;
     }
 
-    public void setContatoCod(int contatoCod) {
+    public void setContatoCod(Long contatoCod) {
         this.contatoCod = contatoCod;
     }
 
-    public int getCredenciaisCod() {
+    public Long getCredenciaisCod() {
         return credenciaisCod;
     }
 
-    public void setCredenciaisCod(int credenciaisCod) {
+    public void setCredenciaisCod(Long credenciaisCod) {
         this.credenciaisCod = credenciaisCod;
     }
 
@@ -116,7 +116,7 @@ public class VoluntarioModel {
         }
         this.cargo.setNome(nome);
     }
-    public void setCargoCod(int cargoCod) {
+    public void setCargoCod(Long cargoCod) {
         this.cargoCod = cargoCod;
         if (this.cargo == null) {
             this.cargo = new CargoModel();

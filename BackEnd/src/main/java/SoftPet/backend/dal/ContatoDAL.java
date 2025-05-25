@@ -15,77 +15,90 @@ import java.util.List;
 public class ContatoDAL
 {
 
-
-    public ContatoModel addContato(ContatoModel contato) {
-        String sql = "INSERT INTO contato (con_telefone, con_email) VALUES (?, ?)";
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, contato.getTelefone());
-            stmt.setString(2, contato.getEmail());
-
-            int affectedRows = stmt.executeUpdate();
-
-            if (affectedRows > 0) {
-                ResultSet rs = stmt.getGeneratedKeys();
-                if (rs.next()) {
-                    contato.setId(rs.getLong(1));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return contato;
-    }
-
-
-
-    public ContatoModel FindById(Long id) {
+    public ContatoModel FindById(Long id)
+    {
         ContatoModel contato = null;
         String sql = "SELECT * FROM contato WHERE con_cod = ?";
-
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, id);
+        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
+        {
+            stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
+            if(rs.next())
+            {
                 contato = new ContatoModel(
                         rs.getLong("con_cod"),
                         rs.getString("con_telefone"),
                         rs.getString("con_email")
                 );
             }
-        } catch (SQLException e) {
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return contato;
+    }
+
+    public ContatoModel addContato(ContatoModel contato)
+    {
+        String sql = "INSERT INTO contato (con_telefone, con_email) VALUES (?, ?)";
+        Long idGerado = 0L;
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
+        {
+            stmt.setString(1, contato.getTelefone());
+            stmt.setString(2, contato.getEmail());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows > 0)
+            {
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next())
+                {
+                    idGerado = rs.getLong(1);
+                    contato.setId(idGerado);
+                }
+            }
+        }
+        catch (SQLException e)
+        {
             e.printStackTrace();
         }
 
         return contato;
     }
 
-    public boolean updateContato(ContatoModel contato) {
+
+
+    public boolean updateContato(ContatoModel contato)
+    {
         String sql = "UPDATE contato SET con_telefone = ?, con_email = ? WHERE con_cod = ?";
 
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
+        {
             stmt.setString(1, contato.getTelefone());
             stmt.setString(2, contato.getEmail());
             stmt.setLong(3, contato.getId());
-
-            int linhasAfetadas = stmt.executeUpdate();
-            return linhasAfetadas > 0;
-        } catch (SQLException e) {
+            return stmt.executeUpdate() > 0;
+        }
+        catch(SQLException e)
+        {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean deleteByContato(Long id) {
+    public Boolean deleteByContato(Long id)
+    {
         String sql = "DELETE FROM contato WHERE con_cod = ?";
-
-        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
+        {
             stmt.setLong(1, id);
-
-            int linhasAfetadas = stmt.executeUpdate();
-            return linhasAfetadas > 0;
-        } catch (SQLException e) {
+            return stmt.executeUpdate() > 0;
+        }
+        catch(SQLException e)
+        {
             e.printStackTrace();
             return false;
         }
@@ -114,5 +127,4 @@ public class ContatoDAL
         }
         return list;
     }
-
 }

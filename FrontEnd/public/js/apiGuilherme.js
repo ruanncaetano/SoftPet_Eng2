@@ -61,6 +61,7 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
         const profissao = document.getElementById('profissao-doador').value.trim();
 
         const telefone = document.getElementById('fone-doador').value.trim();
+        const email = document.getElementById('email-doador').value.trim();
 
         const cep = document.getElementById('cep-doador').value.trim();
         const rua = document.getElementById('rua-doador').value.trim();
@@ -72,14 +73,15 @@ document.getElementById('cadastroForm').addEventListener('submit', async functio
 
         //objeto para requisicao
         const doadorCompleto = {
-            doador: {
+            pessoa: {
                 cpf: cpf,
                 nome: nome,
                 profissao: profissao,
                 rg: rg
             },
             contato: {
-                telefone: telefone
+                telefone: telefone,
+                email: email
             },
             endereco: {
                 cep: cep,
@@ -149,9 +151,9 @@ async function buscarDoador()
             throw new Error('Doador não encontrado.');
 
         const data = await response.json();
-        nomeInput.value = data.doador?.nome || '-';
-        cpfInput.value = data.doador?.cpf || '-';
-        idInput.value = data.doador?.id || '';
+        nomeInput.value = data.pessoa?.nome || '-';
+        cpfInput.value = data.pessoa?.cpf || '-';
+        idInput.value = data.pessoa?.id || '';
 
         dadosEl.classList.remove('hidden');
 

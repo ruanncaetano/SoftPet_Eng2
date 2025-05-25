@@ -51,7 +51,6 @@ document.write(`
         </button>
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
-          <li><a href="../../views/viewGuilherme/consumirDoacao.html" class="block hover:text-carmesim">Consumir Doação</a></li>
           <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
@@ -118,7 +117,7 @@ document.write(`
         </div>
       </nav>
     </aside>
-    <script src="/public/js/api.js"></script>
+    <script src="/public/js/apiGuilherme.js"></script>
     <script>
       function toggleMenu(id, btn) {
         const menu = document.getElementById(id);

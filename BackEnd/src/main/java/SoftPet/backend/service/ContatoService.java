@@ -11,19 +11,19 @@ public class ContatoService {
     @Autowired
     private ContatoDAL contatoDAL;
 
-    public int criarContato(ContatoModel contato) {
-        return contatoDAL.criar(contato);
+    public ContatoModel criarContato(ContatoModel contato) {
+        return contatoDAL.addContato(contato);
     }
 
-    public ContatoModel buscarPorId(int id) {
-        return contatoDAL.findById(id);
+    public ContatoModel buscarPorId(Long id) {
+        return contatoDAL.FindById(id);
     }
 
     public boolean atualizarContato(ContatoModel contato) {
-        return contatoDAL.atualizar(contato);
+        return contatoDAL.updateContato(contato);
     }
 
-    public boolean deletarContato(int id) {
-        return contatoDAL.deletar(id);
+    public boolean deletarContato(Long id) {
+        return contatoDAL.deleteByContato(id);
     }
 }

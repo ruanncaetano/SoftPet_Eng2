@@ -3,7 +3,7 @@ package SoftPet.backend.dal;
 import SoftPet.backend.config.SingletonDB;
 import SoftPet.backend.dto.DoacaoDTO;
 import SoftPet.backend.model.DoacaoModel;
-import SoftPet.backend.model.DoadorModel;
+import SoftPet.backend.model.PessoaModel;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -38,7 +38,7 @@ public class DoacaoDAL
                         rs.getString("doa_unidade"),
                         rs.getLong("pe_cod")
                 );
-                DoadorModel doador = new DoadorModel(
+                PessoaModel doador = new PessoaModel(
                         rs.getLong("pe_cod"),
                         rs.getString("pe_cpf"),
                         rs.getString("pe_nome"),
@@ -151,7 +151,7 @@ public class DoacaoDAL
                         rs.getLong("pe_cod")
                 );
 
-                DoadorModel doador = new DoadorModel(
+                PessoaModel doador = new PessoaModel(
                         rs.getLong("pe_cod"),
                         rs.getString("pe_cpf"),
                         rs.getString("pe_nome"),

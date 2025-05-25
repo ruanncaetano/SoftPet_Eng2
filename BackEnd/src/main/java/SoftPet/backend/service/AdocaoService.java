@@ -4,16 +4,13 @@ import SoftPet.backend.dal.AdocaoDAL;
 import SoftPet.backend.dal.AnimalDAL;
 import SoftPet.backend.dal.PessoaDAL;
 import SoftPet.backend.dto.AdocaoDTO;
-import SoftPet.backend.dto.AdotanteCompletoDTO;
+import SoftPet.backend.dto.PessoaCompletoDTO;
 import SoftPet.backend.model.AdocaoModel;
 import SoftPet.backend.model.AnimalModel;
 import SoftPet.backend.model.PessoaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import SoftPet.backend.util.Validation;
-import SoftPet.backend.util.cpfValidator;
-
-import java.util.Date;
 
 @Service
 public class AdocaoService {
@@ -40,13 +37,13 @@ public class AdocaoService {
             System.out.println(adocaoDTO.getAnimal().getCod());
             throw new IllegalArgumentException("Animal não encontrado!");
         }
-        if (!Validation.ValidarIdae(animal.getIdade())) {
+        if (!Validation.ValidarIdade(animal.getIdade())) {
 
             throw new IllegalArgumentException("Idade do animal negativa!");
         }
 
         // Busca adotante - usando pe_cod do JSON
-        PessoaModel pessoa = pessoaDAL.buscarPorId(adocaoDTO.getPessoa().getId());
+        PessoaCompletoDTO pessoa = pessoaDAL.findById(adocaoDTO.getPessoa().getId());
         if (pessoa == null) {
             throw new IllegalArgumentException("Adotante não encontrado!");
         }
@@ -55,18 +52,18 @@ public class AdocaoService {
         AdocaoModel novaAdocao = new AdocaoModel();
         novaAdocao.setAdo_dt(adocaoDTO.getAdocao().getAdo_dt());
         novaAdocao.setAn_cod(animal.getCod());
-        novaAdocao.setPe_cod(pessoa.getId());
+        novaAdocao.setPe_cod(pessoa.getPessoa().getId());
 
         return adocaoDAL.NovaAdocao(novaAdocao);
     }
 
     public AdocaoDTO getAdocao(Long pessoaId) {
-        PessoaModel pessoa = pessoaDAL.buscarPorId(pessoaId);
+        PessoaCompletoDTO pessoa = pessoaDAL.findById(pessoaId);
         if (pessoa == null) {
             throw new IllegalArgumentException("Adotante não encontrado!");
         }
 
-        return adocaoDAL.buscarAdocao(pessoa);
+        return adocaoDAL.buscarAdocao(pessoa.getPessoa());
     }
 
     public AdocaoDTO getAdocao(String CPF)
@@ -74,7 +71,7 @@ public class AdocaoService {
 //        if(!cpfValidator.isCpfValido(CPF))
 //            throw new IllegalArgumentException("CPF inválido!");
 
-        AdotanteCompletoDTO adotante = PessoaDAL.findByDoador(CPF);
+        PessoaCompletoDTO adotante = PessoaDAL.findByDoador(CPF);
         if(adotante == null)
             throw new IllegalArgumentException("Adotante não Localizado!");
 

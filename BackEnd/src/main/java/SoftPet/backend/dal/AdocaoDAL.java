@@ -2,11 +2,9 @@ package SoftPet.backend.dal;
 
 import SoftPet.backend.config.SingletonDB;
 import SoftPet.backend.dto.AdocaoDTO;
-import SoftPet.backend.dto.AdotanteCompletoDTO;
 import SoftPet.backend.model.AdocaoModel;
 import SoftPet.backend.model.AnimalModel;
 import SoftPet.backend.model.PessoaModel;
-import SoftPet.backend.service.AnimalService;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.sql.PreparedStatement;

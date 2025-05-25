@@ -18,7 +18,7 @@ public class CargoDAL {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new CargoModel(rs.getInt("car_cod"), rs.getString("car_nome"));
+                return new CargoModel(rs.getLong("car_cod"), rs.getString("car_nome"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,7 +33,7 @@ public class CargoDAL {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return new CargoModel(rs.getInt("car_cod"), rs.getString("car_nome"));
+                return new CargoModel(rs.getLong("car_cod"), rs.getString("car_nome"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class CargoDAL {
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                lista.add(new CargoModel(rs.getInt("car_cod"), rs.getString("car_nome")));
+                lista.add(new CargoModel(rs.getLong("car_cod"), rs.getString("car_nome")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,9 +57,9 @@ public class CargoDAL {
         return lista;
     }
 
-    public int criar(CargoModel cargo) {
+    public Long criar(CargoModel cargo) {
         String sql = "INSERT INTO cargo (car_nome) VALUES (?)";
-        int idGerado = -1;
+        Long idGerado = (long) -1;
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, cargo.getNome());
@@ -68,7 +68,7 @@ public class CargoDAL {
             if (rows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    idGerado = rs.getInt(1);
+                    idGerado = rs.getLong(1);
                 }
             }
         } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class CargoDAL {
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
             stmt.setString(1, cargo.getNome());
-            stmt.setInt(2, cargo.getId());
+            stmt.setLong(2, cargo.getId());
 
             int rows = stmt.executeUpdate();
             return rows > 0;
@@ -106,7 +106,7 @@ public class CargoDAL {
         }
     }
 
-    public int buscarOuCriar(CargoModel cargo) {
+    public Long buscarOuCriar(CargoModel cargo) {
         String buscarSql = "SELECT car_cod FROM cargo WHERE LOWER(car_nome) = LOWER(?)";
         String inserirSql = "INSERT INTO cargo (car_nome) VALUES (?)";
 
@@ -118,7 +118,7 @@ public class CargoDAL {
             buscarStmt.setString(1, cargo.getNome());
             ResultSet rs = buscarStmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt("car_cod"); // Cargo já existe
+                return rs.getLong("car_cod"); // Cargo já existe
             }
 
             // Se não encontrar, insere o novo
@@ -127,27 +127,27 @@ public class CargoDAL {
             if (linhasAfetadas > 0) {
                 ResultSet generatedKeys = inserirStmt.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1); // Retorna o ID gerado
+                    return generatedKeys.getLong(1); // Retorna o ID gerado
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return -1; // Falha ao inserir ou buscar
+        return (long) -1; // Falha ao inserir ou buscar
     }
 
 
-    public CargoModel buscarPorId(int id) {
+    public CargoModel buscarPorId(Long id) {
         String sql = "SELECT * FROM cargo WHERE car_cod = ?";
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
-            stmt.setInt(1, id);
+            stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return new CargoModel(
-                        rs.getInt("car_cod"),
+                        rs.getLong("car_cod"),
                         rs.getString("car_nome")
                 );
             }

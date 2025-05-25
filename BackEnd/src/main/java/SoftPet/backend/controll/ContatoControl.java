@@ -1,4 +1,4 @@
-package SoftPet.backend.controller;
+package SoftPet.backend.controll;
 
 import SoftPet.backend.model.ContatoModel;
 import SoftPet.backend.service.ContatoService;
@@ -8,14 +8,16 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/contatos")
-public class ContatoController {
+public class ContatoControl {
 
     @Autowired
     private ContatoService contatoService;
 
     @PostMapping("/criar")
     public ResponseEntity<Integer> criarContato(@RequestBody ContatoModel contato) {
-        int id = contatoService.criarContato(contato);
+        ContatoModel novoContato = contatoService.criarContato(contato);
+        int id = novoContato != null ? novoContato.getId().intValue() : -1;
+
         if (id > 0) {
             return ResponseEntity.ok(id);
         } else {
@@ -24,7 +26,7 @@ public class ContatoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContatoModel> buscarContato(@PathVariable int id) {
+    public ResponseEntity<ContatoModel> buscarContato(@PathVariable Long id) {
         ContatoModel contato = contatoService.buscarPorId(id);
         if (contato != null) {
             return ResponseEntity.ok(contato);
@@ -44,7 +46,7 @@ public class ContatoController {
     }
 
     @DeleteMapping("/deletar/{id}")
-    public ResponseEntity<Void> deletarContato(@PathVariable int id) {
+    public ResponseEntity<Void> deletarContato(@PathVariable Long id) {
         boolean deletado = contatoService.deletarContato(id);
         if (deletado) {
             return ResponseEntity.ok().build();

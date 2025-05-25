@@ -38,7 +38,7 @@ public class VoluntarioService {
         return voluntarioDAL.atualizar(voluntario);
     }
 
-    public VoluntarioModel buscarPorId(int id) {
+    public VoluntarioModel buscarPorId(Long id) {
         return voluntarioDAL.buscarPorId(id);
     }
 

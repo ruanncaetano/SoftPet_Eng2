@@ -45,6 +45,8 @@ public class Validation
         return true;
     }
 
+    public static boolean ValidarIdade(int idade) { return idade >=0;}
+
     public static boolean numNegativo(int num)
     {
         return num >= 0;

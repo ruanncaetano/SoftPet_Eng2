@@ -1,29 +1,26 @@
 package SoftPet.backend.controll;
 
-import SoftPet.backend.model.ContatoModel;
-import SoftPet.backend.model.DoadorModel;
-import SoftPet.backend.model.EnderecoModel;
-import SoftPet.backend.service.DoadorService;
-import org.apache.coyote.Response;
+import SoftPet.backend.model.PessoaModel;
+import SoftPet.backend.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import SoftPet.backend.dto.DoadorCompletoDTO;
+import SoftPet.backend.dto.PessoaCompletoDTO;
 
 import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/doador")
-public class DoadorControll
+public class PessoaControll
 {
     @Autowired
-    DoadorService doadorService;
+    PessoaService pessoaService;
 
     @GetMapping("/listar")
     public ResponseEntity<Object> getAll()
     {
-        List<DoadorCompletoDTO> listDoador = doadorService.getAllDoador();
+        List<PessoaCompletoDTO> listDoador = pessoaService.getAllDoador();
         if(!listDoador.isEmpty())
             return ResponseEntity.ok(listDoador);
         return ResponseEntity.badRequest().body("Erro ao listar todos os doadores!");
@@ -32,32 +29,33 @@ public class DoadorControll
     @GetMapping("/{cpf}")
     public ResponseEntity<Object> getDoadorCpf(@PathVariable String cpf)
     {
-        DoadorCompletoDTO doador = doadorService.getDoadorCpf(cpf);
+        PessoaCompletoDTO doador = pessoaService.getDoadorCpf(cpf);
         if(doador != null)
             return ResponseEntity.ok(doador);
         return ResponseEntity.badRequest().body("Doador não encontrado!");
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<Object> addDoador(@RequestBody DoadorCompletoDTO doador)
+    public ResponseEntity<Object> addDoador(@RequestBody PessoaCompletoDTO doador)
     {
         try
         {
-            DoadorModel novoDoador = doadorService.addDoador(doador);
+            PessoaModel novoDoador = pessoaService.addDoador(doador);
             return ResponseEntity.ok(novoDoador);
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             return  ResponseEntity.badRequest().body("Erro ao adicionar doador!");
         }
     }
 
     @PutMapping("/alterar")
-    public ResponseEntity<Object> updateDoador(@RequestBody DoadorCompletoDTO doador)
+    public ResponseEntity<Object> updateDoador(@RequestBody PessoaCompletoDTO doador)
     {
         try
         {
-            doadorService.updateDoador(doador.getDoador().getCpf(), doador.getDoador(), doador.getContato(), doador.getEndereco());
+            pessoaService.updateDoador(doador.getPessoa().getCpf(), doador.getPessoa(), doador.getContato(), doador.getEndereco());
             return ResponseEntity.ok("Doador alterado com sucesso!");
         }
         catch(Exception e)
@@ -72,7 +70,7 @@ public class DoadorControll
     {
         try
         {
-            doadorService.deleteDoador(cpf);
+            pessoaService.deleteDoador(cpf);
             return ResponseEntity.ok("Doador deletado com sucesso!");
         }
         catch(Exception e)
