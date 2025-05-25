@@ -316,44 +316,44 @@ function aplicarValidacaoRG(idInput, idErro)
 }
 
 //função de formatação de telefone
-function formatarTelefone(telefone)
+function formatarTelefone(telefone) 
 {
     telefone = telefone.replace(/\D/g, '');
+
     if(telefone.length <= 2)
         return '(' + telefone;
     if(telefone.length <= 6)
         return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2);
-
-    return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2, 7) + '-' + telefone.slice(7, 11);
+    if(telefone.length <= 10)
+        return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2, 6) + '-' + telefone.slice(6);
+    else
+        return '(' + telefone.slice(0, 2) + ') ' + telefone.slice(2, 7) + '-' + telefone.slice(7, 11);
 }
 
-//função que valida o número de telefone
-function validarTelefone(telefone)
+function validarTelefone(telefone) 
 {
     var regex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/;
-
     return regex.test(telefone);
 }
 
-//função que aplica a validação de telefone
-function aplicarValidacaoTelefone(idInput, idErro)
+function aplicarValidacaoTelefone(idInput, idErro) 
 {
     var input = document.getElementById(idInput);
     var erro = document.getElementById(idErro);
 
-    if(input)
+    if(input) 
     {
         input.addEventListener('input', () => {
             input.value = formatarTelefone(input.value);
         });
 
         input.addEventListener('blur', () => {
-            if(!validarTelefone(input.value))
+            if(!validarTelefone(input.value)) 
             {
                 erro.textContent = 'Número de telefone inválido.';
                 input.classList.add('erro-input');
-            }
-            else
+            } 
+            else 
             {
                 erro.textContent = '';
                 input.classList.remove('erro-input');
