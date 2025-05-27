@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Gerenciar Doador</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    .erro-input {
+      border-color: red !important;
+    }
+  </style>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Cadastrar Doador</h1>
+      <a href="/views/viewGuilherme/listarDoadores.html"
+        class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+        Ver Doadores
+      </a>
+    </div>
+
+    <section>
+        <form id="cadastroForm">
+          <div class="grid md:grid-cols-2 gap-4 mt-4">
+              <div class="md:col-span-2">
+                  <label class="block font-semibold mb-1">* Nome</label>
+                  <input id="nome-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva" required>
+                  <p id="erroNomeDoador" class="text-red-500 text-sm mt-1"></p>
+                </div>
+              <div>
+                <label class="block font-semibold mb-1">* CPF</label>
+                <input id="cpf-doador" maxlength="14" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00" required>
+                <p id="erroCpfDoador" class="text-red-500 text-sm mt-1"></p>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* RG</label>
+                <input id="rg-doador" maxlength="12" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-0" required>
+                <p id="erroRgDoador" class="text-red-500 text-sm mt-1"></p>
+              </div>
+              <div class="md:col-span-2">
+                  <label class="block font-semibold mb-1">* Profissão</label>
+                  <input id="profissao-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Desenvolvedor, enfermeiro..." required>
+                </div>
+              <div>
+                <label class="block font-semibold mb-1">* Telefone</label>
+                <input id="fone-doador" maxlength="15" type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(00) 00000-0000" required>
+                <p id="erroFoneDoador" class="text-red-500 text-sm mt-1"></p>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* Email</label>
+                <input id="email-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="xxxxx@gmail.com" required>
+                <p id="erroEmailDoador" class="text-red-500 text-sm mt-1"></p>
+              </div>
+
+              <!-- APENAS PARA MUDANÇAS-->
+               <div>
+                <label class="block font-semibold mb-1">* CEP</label>
+                <input id="cep-doador" maxlength="9" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00000-000" required>
+                <p id="erroCepDoador" class="text-red-500 text-sm mt-1"></p>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* Rua</label>
+                <input id="rua-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua ..." required>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">Número</label>
+                <input id="numero-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nº">
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* Bairro</label>
+                <input id="bairro-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Centro, Vila..." required>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* Cidade</label>
+                <input id="cidade-doador" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Presidente Venceslau" required>
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">* UF</label>
+                <select id="uf-doador" class="w-full p-3 border border-gray-300 rounded-lg" required>
+                  <option value="">Selecione</option>
+                  <option value="SP">SP</option>
+                  <option value="MG">MG</option>
+                  <option value="RJ">RJ</option>
+                  <option value="PR">PR</option>
+                  <option value="MS">MS</option>
+                </select>
+              </div>
+              <div class="md:col-span-2">
+                  <label class="block font-semibold mb-1">Complemento</label>
+                  <input id="complemento-doador" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex. Casa...">
+                  <p id="erroNomeDoador" class="text-red-500 text-sm mt-1"></p>
+                </div>
+              <div>
+          </div>
+          <div class="text-right pt-6">
+              <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+                Cadastrar
+              </button>
+          </div>
+        </form>
+    </section>
+  </main>
+    <!-- LUCIDE ICONS -->
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="../../public/js/validacao.js"></script>
+  <script src="../../public/js/apiGuilherme.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/FrontEnd-Guilherme/public/js/index.js"></script>
+  
+</body>
+</html>

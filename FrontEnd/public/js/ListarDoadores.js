@@ -10,14 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
         lista.forEach(item => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-            <td class="px-4 py-2">${item.doador?.nome || '-'}</td>
-            <td class="px-4 py-2">${item.doador?.cpf || '-'}</td>
-            <td class="px-4 py-2">${item.doador?.profissao || '-'}</td>
+            <td class="px-4 py-2">${item.pessoa?.nome || '-'}</td>
+            <td class="px-4 py-2">${item.pessoa?.cpf || '-'}</td>
+            <td class="px-4 py-2">${item.pessoa?.profissao || '-'}</td>
             <td class="px-4 py-2">${item.contato?.telefone || '-'}</td>
             <td class="px-4 py-2">${item.endereco?.cidade || '-'}</td>
             <td class="px-4 py-2 space-x-2">
-                <button class="text-blue-600 hover:underline" onclick="editarDoador('${item.doador?.cpf}')">Editar</button>
-                <button class="text-red-600 hover:underline" onclick="excluirDoador('${item.doador?.cpf}')">Excluir</button>
+                <button class="text-blue-600 hover:underline" onclick="editarDoador('${item.pessoa?.cpf}')">Editar</button>
+                <button class="text-red-600 hover:underline" onclick="excluirDoador('${item.pessoa?.cpf}')">Excluir</button>
             </td>`;
             tabela.appendChild(tr);
       });

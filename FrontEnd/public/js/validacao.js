@@ -480,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //chamando validação de email
     aplicarValidacaoEmail('email', 'erroEmail');
+    aplicarValidacaoEmail('email-doador', 'erroEmailDoador');
 
     //chamando validação de nome completo
     aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');

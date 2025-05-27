@@ -15,8 +15,53 @@ public class Validation {
         return quantidade >= 0;
     }
 
+<<<<<<< HEAD
     // Verifica se a data de validade é futura
     public static boolean validarDataValidade(LocalDate dataValidade) {
+=======
+    public static boolean validarRG(String rg)
+    {
+        if(rg == null)
+            return false;
+        rg = rg.replaceAll("\\D", "");
+        return rg.length() == 9;
+    }
+
+    public static boolean validarNomeCompleto(String nome)
+    {
+        if(nome == null || nome.trim().isEmpty())
+            return false;
+
+        String[] partes = nome.trim().split("\\s+");
+
+        if(partes.length < 2)
+            return false;
+
+        for(String parte : partes)
+        {
+            if (!parte.matches("^[A-Za-zÀ-ÿ]+$"))
+                return false;
+        }
+        return true;
+    }
+
+    public static boolean ValidarIdade(int idade) { return idade >=0;}
+
+    public static boolean numNegativo(int num)
+    {
+        return num >= 0;
+    }
+
+    public static boolean validarStringDocao(String str)
+    {
+        if(str == null || str.trim().isEmpty())
+            return false;
+        return true;
+    }
+
+    public static boolean isDataValidade(LocalDate dataValidade)
+    {
+>>>>>>> main
         if (dataValidade == null)
             return false;
         return dataValidade.isAfter(LocalDate.now());

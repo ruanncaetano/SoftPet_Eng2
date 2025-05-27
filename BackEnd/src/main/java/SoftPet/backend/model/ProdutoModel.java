@@ -3,14 +3,25 @@ package SoftPet.backend.model;
 import java.time.LocalDate;
 
 public class ProdutoModel {
+<<<<<<< HEAD
     private Long id;
+=======
+    private int id;
+>>>>>>> main
     private String tipo;
     private String unidadeMedida;
     private LocalDate dataValidade;
     private String descricao;
     private int quantidadeEstoque;
 
+<<<<<<< HEAD
     public ProdutoModel(Long id, String tipo, String unidadeMedida, LocalDate dataValidade, String descricao, int quantidadeEstoque) {
+=======
+    public ProdutoModel() {
+    }
+
+    public ProdutoModel(int id, String tipo, String unidadeMedida, LocalDate dataValidade, String descricao, int quantidadeEstoque) {
+>>>>>>> main
         this.id = id;
         this.tipo = tipo;
         this.unidadeMedida = unidadeMedida;
@@ -20,6 +31,7 @@ public class ProdutoModel {
     }
 
     public ProdutoModel(String tipo, String unidadeMedida, LocalDate dataValidade, String descricao, int quantidadeEstoque) {
+<<<<<<< HEAD
         this(null, tipo, unidadeMedida, dataValidade, descricao, quantidadeEstoque);
     }
 
@@ -32,6 +44,22 @@ public class ProdutoModel {
     }
 
     public void setId(Long id) {
+=======
+        this.tipo = tipo;
+        this.unidadeMedida = unidadeMedida;
+        this.dataValidade = dataValidade;
+        this.descricao = descricao;
+        this.quantidadeEstoque = quantidadeEstoque;
+    }
+
+
+    // Getters e Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+>>>>>>> main
         this.id = id;
     }
 

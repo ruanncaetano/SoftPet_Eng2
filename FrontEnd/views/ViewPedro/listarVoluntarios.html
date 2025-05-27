@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Lista de Voluntários</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+  <script src="../../public/js/menu.js"></script>
+
+  <main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Lista de Voluntários</h1>
+
+    <div class="text-right mb-6">
+      <button onclick="carregarVoluntarios()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Mostrar Voluntários
+      </button>
+    </div>
+
+    <div id="listaVoluntarios" class="space-y-4"></div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    async function buscarCargoPorId(cargoId) {
+      if (!cargoId) return "Não especificado";
+
+      try {
+        const res = await fetch(`http://localhost:8080/cargos/${cargoId}`);
+        if (!res.ok) throw new Error("Erro ao buscar cargo");
+        const cargo = await res.json();
+        return cargo.nome || "Sem nome";
+      } catch {
+        return "Erro ao buscar cargo";
+      }
+    }
+
+    async function carregarVoluntarios() {
+      const container = document.getElementById("listaVoluntarios");
+      container.innerHTML = "";
+
+      try {
+        const resposta = await fetch("http://localhost:8080/voluntarios/listar");
+        if (!resposta.ok) throw new Error("Erro ao carregar voluntários.");
+
+        const voluntarios = await resposta.json();
+
+        if (voluntarios.length === 0) {
+          container.innerHTML = "<p class='text-gray-600'>Nenhum voluntário cadastrado.</p>";
+          return;
+        }
+
+        for (const vol of voluntarios) {
+          const cargoNome = await buscarCargoPorId(vol.cargoCod);
+
+          const item = document.createElement("div");
+          item.className = "p-4 border rounded-lg bg-white shadow";
+
+          item.innerHTML = `
+            <p><strong>ID:</strong> ${vol.id}</p>
+            <p><strong>Nome:</strong> ${vol.nome}</p>
+            <p><strong>CPF:</strong> ${vol.cpf}</p>
+            <p><strong>Cargo:</strong> ${cargoNome}</p>
+            <p><strong>Telefone:</strong> ${vol.contato?.telefone || "N/A"}</p>
+            <p><strong>Email:</strong> ${vol.contato?.email || "N/A"}</p>
+            <p><strong>Login:</strong> ${vol.credenciais?.login || "N/A"}</p>
+          `;
+
+          container.appendChild(item);
+        }
+
+      } catch (erro) {
+        container.innerHTML = `<p class="text-red-600">Erro ao carregar voluntários: ${erro.message}</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
