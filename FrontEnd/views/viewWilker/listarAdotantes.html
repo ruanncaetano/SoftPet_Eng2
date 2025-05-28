@@ -21,12 +21,12 @@
       },
     };
   </script>
- <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
   <!-- Sidebar -->
   <script src="../../public/js/menu.js"></script>
-  
+
   <!-- Conteúdo Principal -->
   <main class="flex-1 p-8 overflow-y-auto">
     <div class="flex items-center justify-between mb-6">
@@ -36,34 +36,6 @@
         Novo Adotante
       </a>
     </div>
-
-      <!-- Filtro de Adotantes -->
-    <div class="mb-6 bg-white p-4 rounded-lg shadow-sm flex flex-col md:flex-row md:items-end md:gap-4">
-      <div class="flex flex-col">
-        <label for="campoFiltro" class="font-medium mb-1">Filtrar por:</label>
-        <select id="campoFiltro" class="border border-gray-300 rounded px-2 py-1">
-          <option value="nome">Nome</option>
-          <option value="cpf">CPF</option>
-          <option value="profissao">Profissão</option>
-          <option value="telefone">Telefone</option>
-          <option value="cidade">Cidade</option>
-        </select>
-      </div>
-
-      <div class="flex flex-col">
-        <label for="valorFiltro" class="font-medium mb-1">Valor:</label>
-        <input id="valorFiltro" type="text" placeholder="Digite o valor" class="border border-gray-300 rounded px-2 py-1"/>
-      </div>
-
-      <button onclick="aplicarFiltroDoador()" class="bg-carmesim text-white px-4 py-2 rounded mt-4 md:mt-0 hover:bg-[#8a0128] transition-all">
-        Aplicar Filtro
-      </button>
-
-      <button onclick="limparFiltroDoador()" class="bg-gray-300 text-noturno px-4 py-2 rounded mt-4 md:mt-0 hover:bg-gray-400 transition-all">
-        Limpar
-      </button>
-    </div>
-
 
     <!-- Tabela de Adotantes -->
     <div class="bg-white shadow-md rounded-lg overflow-x-auto">
@@ -79,8 +51,7 @@
           </tr>
         </thead>
         <tbody id="tabela-adotantes" class="bg-white divide-y divide-gray-200">
-
-
+          <!-- Dados injetados via JS -->
         </tbody>
       </table>
     </div>
@@ -89,8 +60,6 @@
   <script>
     lucide.createIcons();
   </script>
-  <script src="../../public/js/api.js"></script>
-  <script src="../../public/js/Filter.js"></script>
   <script src="../../public/js/ListarAdotantes.js"></script>
 </body>
 </html>

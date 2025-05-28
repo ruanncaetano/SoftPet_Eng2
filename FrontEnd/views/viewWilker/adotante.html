@@ -36,20 +36,20 @@
   <main class="flex-1 p-8 overflow-y-auto">
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-3xl font-bold text-carmesim">Cadastrar Adotante</h1>
-      <a href="/views/viewWilker/listarAdotantes.html"
+      <a href="listarAdotantes.html"
         class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
         Ver Adotantes
       </a>
     </div>
 
     <section>
-        <form id="cadastroForm">
+        <form id="cadastroFormAdotante">
           <div class="grid md:grid-cols-2 gap-4 mt-4">
               <div class="md:col-span-2">
                   <label class="block font-semibold mb-1">* Nome</label>
-                  <input id="nome-adotante" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Francisco Moedas" required>
+                  <input id="nome-adotante" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="João da Silva" required>
                   <p id="erroNomeAdotante" class="text-red-500 text-sm mt-1"></p>
-                </div>
+              </div>
               <div>
                 <label class="block font-semibold mb-1">* CPF</label>
                 <input id="cpf-adotante" maxlength="14" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="000.000.000-00" required>
@@ -63,18 +63,22 @@
               <div class="md:col-span-2">
                   <label class="block font-semibold mb-1">* Profissão</label>
                   <input id="profissao-adotante" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Desenvolvedor, enfermeiro..." required>
-                </div>
+              </div>
               <div>
                 <label class="block font-semibold mb-1">* Telefone</label>
                 <input id="fone-adotante" maxlength="15" type="tel" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(00) 00000-0000" required>
                 <p id="erroFoneAdotante" class="text-red-500 text-sm mt-1"></p>
               </div>
               <div>
+                <label class="block font-semibold mb-1">* Email</label>
+                <input id="email-adotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="xxxxx@gmail.com" required>
+                <p id="erroEmailAdotante" class="text-red-500 text-sm mt-1"></p>
+              </div>
+              <div>
                 <label class="block font-semibold mb-1">* CEP</label>
                 <input id="cep-adotante" maxlength="9" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00000-000" required>
-                <p id="erroCepAdotante" class="text-red-500 text-sm mt-1"></p>
               </div>
-              <div class="md:col-span-2">
+              <div>
                 <label class="block font-semibold mb-1">* Rua</label>
                 <input id="rua-adotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua ..." required>
               </div>
@@ -104,9 +108,7 @@
               <div class="md:col-span-2">
                   <label class="block font-semibold mb-1">Complemento</label>
                   <input id="complemento-adotante" maxlength="30" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ex. Casa...">
-                  <p id="erroNomeAdotante" class="text-red-500 text-sm mt-1"></p>
-                </div>
-              <div>
+              </div>
           </div>
           <div class="text-right pt-6">
               <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
@@ -116,14 +118,11 @@
         </form>
     </section>
   </main>
-    <!-- LUCIDE ICONS -->
+
   <script>
     lucide.createIcons();
   </script>
   <script src="../../public/js/validacao.js"></script>
-  <script src="../../public/js/api.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- <script src="/front_ger_adotantes/public/js/index.js"></script> -->
-  
+  <script src="../../public/js/apiWilker.js"></script>
 </body>
 </html>

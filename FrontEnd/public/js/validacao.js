@@ -400,6 +400,9 @@ document.addEventListener('DOMContentLoaded', () => {
     aplicarValidacaoCPF('cpf-doadorPOP', 'erroCpfDoadorPOP');
     aplicarValidacaoCPF('cpf-busca', 'erroCpfAtualizar');
     aplicarValidacaoCPF('buscaDoadorCpf', 'erroCpfBusca');
+    aplicarValidacaoCPF('cpf-adotante', 'erroCpfAdotante');
+    aplicarValidacaoCPF('cpf-adotantePOP', 'erroCpfAdotantePOP');
+    aplicarValidacaoCPF('buscaAdotanteCpf', 'erroCpfBusca');
 
     //chamando validação de senha
     aplicarValidacaoSenha('senha', 'erroSenha');
@@ -408,26 +411,39 @@ document.addEventListener('DOMContentLoaded', () => {
     //chamando validação de email
     aplicarValidacaoEmail('email', 'erroEmail');
     aplicarValidacaoEmail('email-doador', 'erroEmailDoador');
+    aplicarValidacaoEmail('email-adotante', 'erroEmailAdotante');
 
     //chamando validação de nome completo
     aplicarValidacaoNomeCompleto('nome-doador', 'erroNomeDoador');
     aplicarValidacaoNomeCompleto('nome-doadorPOP', 'erroNomeDoadorPOP');
     aplicarValidacaoNomeCompleto('nomeAtt', 'erroNomeDoador');
+    aplicarValidacaoNomeCompleto('nome-adotante', 'erroNomeAdotante');
+    aplicarValidacaoNomeCompleto('nome-adotantePOP', 'erroNomeAdotantePOP');
+    aplicarValidacaoNomeCompleto('nomeAtt', 'erroNomeAdotante');
 
     //chamando a validação do RG
     aplicarValidacaoRG('rg-doador', 'erroRgDoador');
     aplicarValidacaoRG('rg-doadorPOP', 'erroRgDoadorPOP');
     aplicarValidacaoRG('rgAtt', 'erroRgDoador');
+    aplicarValidacaoRG('rg-adotante', 'erroRgAdotante');
+    aplicarValidacaoRG('rg-adotantePOP', 'erroRgAdotantePOP');
+    aplicarValidacaoRG('rgAtt', 'erroRgAdotante');
 
     //chamando a validação do numero de telefone
     aplicarValidacaoTelefone('fone-doador', 'erroFoneDoador');
     aplicarValidacaoTelefone('fone-doadorPOP', 'erroFoneDoadorPOP');
     aplicarValidacaoTelefone('telefoneAtt', 'erroFoneDoador');
+    aplicarValidacaoTelefone('fone-adotante', 'erroFoneAdotante');
+    aplicarValidacaoTelefone('fone-adotantePOP', 'erroFoneAdotantePOP');
+    aplicarValidacaoTelefone('telefoneAtt', 'erroFoneAdotante');
 
     //chamando a validação do CEP
     aplicarValidacaoCEP('cep-doador', 'erroCepDoador');
     aplicarValidacaoCEP('cep-doadorPOP', 'erroCepDoadorPOP');
     aplicarValidacaoCEP('cepAtt', 'erroCepDoador');
+    aplicarValidacaoCEP('cep-adotante', 'erroCepAdotante');
+    aplicarValidacaoCEP('cep-adotantePOP', 'erroCepAdotantePOP');
+    aplicarValidacaoCEP('cepAtt', 'erroCepAdotante');
 
     //chamando a validação de quantiade
     validarQuantidade('qtdeDoacao', 'erroQtdeDoacao');
