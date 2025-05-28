@@ -21,7 +21,7 @@ public class AdocaoDAL {
 
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setDate(1, Date.valueOf(adocao.getAdo_dt()));
-            stmt.setBytes(2, adocao.getContrato());
+            stmt.setBytes(2, adocao.getAdo_contrato()); // Use o nome correto do getter
             stmt.setLong(3, adocao.getPe_cod());
             stmt.setLong(4, adocao.getAn_cod());
 
@@ -55,10 +55,10 @@ public class AdocaoDAL {
                         rs.getDate("ado_dt").toLocalDate(),
                         rs.getBytes("ado_contrato"),
                         rs.getLong("pe_cod"),
-                        rs.getInt("an_cod") );
+                        rs.getLong("an_cod") );
 
                 AnimalModel animal = new AnimalModel(
-                        rs.getInt("an_cod"),
+                        (long) rs.getInt("an_cod"),
                         rs.getString("an_nome"),
                         rs.getInt("an_idade"),
                         rs.getString("an_tipo"),

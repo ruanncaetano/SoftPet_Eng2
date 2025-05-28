@@ -50,7 +50,7 @@ public class AnimalDAL {
                 ResultSet rs = stmt.getGeneratedKeys(); // pega o id gerado
                 if(rs.next())
                 {
-                    animal.setCod(rs.getInt(1)); // pega o cod gerado
+                    animal.setCod((long) rs.getInt(1)); // pega o cod gerado
                 }
             }
 
@@ -67,7 +67,7 @@ public class AnimalDAL {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 AnimalModel animal = new AnimalModel();
-                animal.setCod(rs.getInt("an_cod"));
+                animal.setCod((long) rs.getInt("an_cod"));
                 animal.setNome(rs.getString("an_nome"));
                 animal.setIdade(rs.getInt("an_idade"));
                 animal.setSexo(rs.getString("an_sexo"));
@@ -99,7 +99,7 @@ public class AnimalDAL {
             stmt.setBoolean(7, animal.getCastrado());
             stmt.setString(8, animal.getObservacao());
             stmt.setBoolean(9, animal.getAtivo());
-            stmt.setInt(10, animal.getCod());
+            stmt.setLong(10, animal.getCod());
             System.out.println("Atualizando animal com COD: " + animal.getCod());
 
             int rows = stmt.executeUpdate();
@@ -146,7 +146,7 @@ public class AnimalDAL {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 AnimalModel animal = new AnimalModel();
-                animal.setCod(rs.getInt("an_cod"));
+                animal.setCod((long) rs.getInt("an_cod"));
                 animal.setNome(rs.getString("an_nome"));
                 animal.setIdade(rs.getInt("an_idade"));
                 animal.setTipo(rs.getString("an_tipo"));
@@ -171,6 +171,24 @@ public class AnimalDAL {
 
         return lista;
     }
+    public AnimalModel buscarPorCod(Long cod) {
+        if (cod == null) { return null; }
+        String sql = "SELECT AN_COD, AN_NOME, ... FROM ANIMAIS WHERE AN_COD = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setInt(1, cod.intValue()); // Converte Long para int para a coluna INTEGER
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                AnimalModel animal = new AnimalModel();
+                animal.setCod(rs.getLong("AN_COD")); // Lê como Long (driver JDBC geralmente lida bem com INTEGER -> Long)
+                animal.setNome(rs.getString("AN_NOME"));
+                // ... mapear outros campos
+                return animal;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar animal por código: " + e.getMessage(), e);
+        }
+    }
     public AnimalModel buscarId(Long id) {
         String sql = "SELECT * FROM animais WHERE an_cod = ?";
         AnimalModel animal = null;
@@ -181,7 +199,7 @@ public class AnimalDAL {
 
             if (rs.next()) {
                 animal = new AnimalModel();
-                animal.setCod(rs.getInt("an_cod"));
+                animal.setCod((long) rs.getInt("an_cod"));
                 animal.setNome(rs.getString("an_nome"));
                 animal.setIdade(rs.getInt("an_idade"));
                 animal.setTipo(rs.getString("an_tipo"));
@@ -215,7 +233,7 @@ public class AnimalDAL {
 
             if (rs.next()) {
                 animal = new AnimalModel();
-                animal.setCod(rs.getInt("an_cod"));
+                animal.setCod((long) rs.getInt("an_cod"));
                 animal.setNome(rs.getString("an_nome"));
                 animal.setIdade(rs.getInt("an_idade"));
                 animal.setTipo(rs.getString("an_tipo"));

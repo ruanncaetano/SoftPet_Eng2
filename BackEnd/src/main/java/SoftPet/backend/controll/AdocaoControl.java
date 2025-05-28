@@ -44,7 +44,7 @@ public class AdocaoControl {
             AdocaoDTO adocaoDTO = new AdocaoDTO();
 
             AdocaoModel adocaoModel = new AdocaoModel();
-            adocaoModel.setContrato(contratoBytes);
+            adocaoModel.setAdo_contrato(contratoBytes);
             adocaoModel.setAdo_dt(data);
             adocaoDTO.setAdocao(adocaoModel);
             PessoaModel pessoa = new PessoaModel();
@@ -52,7 +52,7 @@ public class AdocaoControl {
             adocaoDTO.setPessoa(pessoa);
 
             AnimalModel animal = new AnimalModel();
-            animal.setCod(animalId);
+            animal.setCod((long) animalId);
             adocaoDTO.setAnimal(animal);
 
             AdocaoModel novaAdocao = adocaoService.addAdocao(adocaoDTO);
