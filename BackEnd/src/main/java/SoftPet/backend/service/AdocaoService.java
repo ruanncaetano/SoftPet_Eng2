@@ -7,10 +7,12 @@ import SoftPet.backend.dto.AdocaoDTO;
 import SoftPet.backend.dto.PessoaCompletoDTO;
 import SoftPet.backend.model.AdocaoModel;
 import SoftPet.backend.model.AnimalModel;
-import SoftPet.backend.model.PessoaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import SoftPet.backend.util.Validation;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class AdocaoService {
@@ -57,25 +59,18 @@ public class AdocaoService {
         return adocaoDAL.NovaAdocao(novaAdocao);
     }
 
-    public AdocaoDTO getAdocao(Long pessoaId) {
-        PessoaCompletoDTO pessoa = pessoaDAL.findById(pessoaId);
-        if (pessoa == null) {
-            throw new IllegalArgumentException("Adotante não encontrado!");
-        }
-
-        return adocaoDAL.buscarAdocao(pessoa.getPessoa());
+    public List<AdocaoDTO> buscarAdocoes(String cpf, LocalDate dataInicio, LocalDate dataFim) {
+        return adocaoDAL.buscarAdocoes(cpf, dataInicio, dataFim);
     }
 
-    public AdocaoDTO getAdocao(String CPF)
+    public boolean upContrato(Long id, byte[] contrato)
     {
-//        if(!cpfValidator.isCpfValido(CPF))
-//            throw new IllegalArgumentException("CPF inválido!");
-
-        PessoaCompletoDTO adotante = PessoaDAL.findByDoador(CPF);
-        if(adotante == null)
-            throw new IllegalArgumentException("Adotante não Localizado!");
-
-        return adocaoDAL.buscarAdocao(adotante.getPessoa());
+        AdocaoModel adocao = new AdocaoModel();
+        adocao=adocaoDAL.buscarAdocaoPorId(id).getAdocao();
+        if(adocao!=null)
+        {
+            return adocaoDAL.atualizarContratoAdocao(id, contrato);
+        }
+        return false;
     }
-
 }

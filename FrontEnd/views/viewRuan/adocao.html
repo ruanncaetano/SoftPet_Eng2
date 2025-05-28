@@ -208,7 +208,7 @@
             alert("Preencha um cpf")
 
     try {
-        const response = await fetch(`http://localhost:8080/pessoa/${cpf}`);
+        const response = await fetch(`http://localhost:8080/doador/${cpf}`);
 
         if (!response.ok) {
             throw new Error("CPF inválido ou não encontrado");

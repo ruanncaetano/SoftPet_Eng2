@@ -6,10 +6,13 @@ import SoftPet.backend.model.AnimalModel;
 import SoftPet.backend.model.PessoaModel;
 import SoftPet.backend.service.AdocaoService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -64,18 +67,27 @@ public class AdocaoControl {
         }
     }
 
-    @GetMapping("/bucarAdocao")
-    public ResponseEntity<Object> buscarAdocao(@RequestParam String cpf)
-    {
-        AdocaoDTO adocao = null;
-        try
-        {
-            adocao= adocaoService.getAdocao(cpf);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @GetMapping("/buscarAdocao")
+    public ResponseEntity<Object> buscarAdocao(
+            @RequestParam(required = false) String cpf,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
 
-        return ResponseEntity.ok(adocao);
+        try {
+            List<AdocaoDTO> lista = adocaoService.buscarAdocoes(cpf, dataInicio, dataFim);
+            return ResponseEntity.ok(lista);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
+    }
+    @PostMapping("/upcontrato")
+    public ResponseEntity<Object> upcontrato(@RequestParam(value = "id") Long id,@RequestParam(value = "contrato") MultipartFile contrato)
+    {
+        try {
+           boolean adocao = adocaoService.upContrato(id,contrato.getBytes());
+            return ResponseEntity.ok(adocao);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
     }
 }
