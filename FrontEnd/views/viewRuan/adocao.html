@@ -42,7 +42,7 @@
   
     <form class="bg-white p-6 rounded-2xl shadow-md max-w-4xl mx-auto space-y-8" onsubmit="handleSubmit(event)">
       <!-- Adotante -->
-      <section>
+      <form id="fomulario">
         <h2 class="text-2xl font-semibold mb-4 text-noturno">Dados do Adotante</h2>
   
         <!-- Nome + busca -->
@@ -107,7 +107,7 @@
               <input type="text" id="profissao"class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Profissão">
             </div>
         </div>
-      </section>
+      </form>
   
       <!-- Animal -->
       <section>
@@ -200,8 +200,7 @@
   </main>
   
   <script>
-    lucide.createIcons();
-  
+      lucide.createIcons();
     async function buscarAdotante() {
           const cpf = document.getElementById('CpfAdotante').value;
           if(cpf==null)
@@ -387,7 +386,7 @@ document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(el 
 
     // Salvar PDF
     doc.save(`Termo_Adocao_${dados.nome.replace(/\s/g, '_')}_${dados.nomeAnimal.replace(/\s/g, '_')}.pdf`);
-
+    
  
   }
   async function registrarAdocao() {
@@ -435,7 +434,7 @@ document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(el 
         
         // Opcional: gerar o termo de adoção após sucesso
         gerarTermoAdocao();
-        
+        document.querySelector('form').reset();   
         // Opcional: redirecionar ou limpar o formulário
         // window.location.href = '/pagina-de-sucesso';
         
