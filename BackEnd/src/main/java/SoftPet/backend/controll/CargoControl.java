@@ -31,15 +31,15 @@ public class CargoControl {
         }
 
         // Não existe - cria um novo cargo usando o método criar
-        Long idGerado = cargoDAL.criar(cargo);
+        Long idGerado = cargoDAL.criar(cargo).getId();
         cargo.setId(idGerado);
         return ResponseEntity.status(201).body(cargo);
     }
 
     // Buscar cargo por ID
     @GetMapping("/{id}")
-    public ResponseEntity<CargoModel> buscarPorId(@PathVariable int id) {
-        CargoModel cargo = cargoDAL.findById(id);
+    public ResponseEntity<CargoModel> buscarPorId(@PathVariable Long id) {
+        CargoModel cargo = cargoDAL.buscarPorId(id);
         if (cargo == null) {
             return ResponseEntity.notFound().build();
         }
@@ -59,7 +59,7 @@ public class CargoControl {
 
     // Deletar cargo
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable int id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         boolean deletado = cargoDAL.delete(id);
         if (!deletado) {
             return ResponseEntity.notFound().build();

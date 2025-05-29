@@ -9,6 +9,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,8 +75,7 @@ public class AuthService
         userDAL.deleteByCPF(cpf);
     }
 
-    public List<UserModel> getAllLogins()
-    {
+    public List<UserModel> getAllLogins() throws SQLException, ClassNotFoundException {
         return userDAL.getAll();
     }
 
