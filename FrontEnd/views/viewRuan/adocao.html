@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,111 +24,126 @@
     };
 
   </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-  // Inicialize o jsPDF
-  const { jsPDF } = window.jspdf;
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Inicialize o jsPDF
+    const { jsPDF } = window.jspdf;
+  </script>
   <!-- Ícones -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+
 <body class="flex h-screen bg-neve font-sans text-noturno overflow-hidden">
 
- <!-- Sidebar -->
- <script src="/public/js/menu.js"></script>
+  <!-- Sidebar -->
+  <script src="/public/js/menu.js"></script>
 
   <!-- Conteúdo principal -->
   <main class="flex-1 p-8 overflow-y-auto">
     <h1 class="text-3xl font-bold mb-6 text-carmesim">Registrar Adoção</h1>
-  
+
     <form class="bg-white p-6 rounded-2xl shadow-md max-w-4xl mx-auto space-y-8" onsubmit="handleSubmit(event)">
       <!-- Adotante -->
-      <form id="fomulario">
+      <section id="fomulario">
         <h2 class="text-2xl font-semibold mb-4 text-noturno">Dados do Adotante</h2>
-  
+
         <!-- Nome + busca -->
-        
+
         <div class="flex gap-2 items-end">
           <div class="flex-1">
             <label for="nomeAdotante" class="block font-semibold mb-1">*CPF</label>
-            <input id="CpfAdotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite o cpf para busca">
+            <input id="CpfAdotante" type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim"
+              placeholder="Digite o cpf para busca">
           </div>
-          <button type="button" onclick="buscarAdotante()" class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
+          <button type="button" onclick="buscarAdotante()"
+            class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
             <i data-lucide="search" class="w-5 h-5 text-noturno"></i>
           </button>
         </div>
         <div class="flex gap-4 items-end">
-        <div class="flex-1">
+          <div class="flex-1">
             <label for="nomeAdotante" class="block font-semibold mb-1">Nome do Adotante</label>
-            <input id="nomeAdotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite ou busque um nome">
-        </div>
-        <div class="w-24">
+            <input id="nomeAdotante" type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim"
+              placeholder="Digite ou busque um nome">
+          </div>
+          <div class="w-24">
             <label for="codigoAdotante" class="block font-semibold mb-1">Código</label>
-            <input id="codigoAdotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Código" readonly>
+            <input id="codigoAdotante" type="text" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Código" readonly>
+          </div>
         </div>
-    </div>
         <!-- Demais campos -->
         <div class="grid md:grid-cols-2 gap-4 mt-4">
-            <div>
-              <label class="block font-semibold mb-1">RG</label>
-              <input type="text"id="rg" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-X">
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">Telefone</label>
-              <input type="tel"  id="telefone" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="(xx) xxxxx-xxxx">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block font-semibold mb-1">Endereço</label>
-              <input type="text" id="rua"class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua Exemplo">
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">Número</label>
-              <input type="text" id="num"class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nº">
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">Bairro</label>
-              <input type="text"id="bairro" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Centro, Vila...">
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">Cidade</label>
-              <input type="text" id="cidade" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Presidente Venceslau">
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">UF</label>
-              <select id ="uf"class="w-full p-3 border border-gray-300 rounded-lg">
-                <option value="">Selecione</option>
-                <option value="SP">SP</option>
-                <option value="PR">PR</option>
-                <option value="MG">MG</option>
-                <!-- Adicione os demais estados -->
-              </select>
-            </div>
-            <div>
-              <label class="block font-semibold mb-1">Profissão</label>
-              <input type="text" id="profissao"class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Profissão">
-            </div>
+          <div>
+            <label class="block font-semibold mb-1">RG</label>
+            <input type="text" id="rg" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="00.000.000-X">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Telefone</label>
+            <input type="tel" id="telefone" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="(xx) xxxxx-xxxx">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block font-semibold mb-1">Endereço</label>
+            <input type="text" id="rua" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Rua Exemplo">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Número</label>
+            <input type="text" id="num" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Nº">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Bairro</label>
+            <input type="text" id="bairro" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Centro, Vila...">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Cidade</label>
+            <input type="text" id="cidade" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Presidente Venceslau">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">UF</label>
+            <select id="uf" class="w-full p-3 border border-gray-300 rounded-lg">
+              <option value="">Selecione</option>
+              <option value="SP">SP</option>
+              <option value="PR">PR</option>
+              <option value="MG">MG</option>
+              <!-- Adicione os demais estados -->
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">Profissão</label>
+            <input type="text" id="profissao" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Profissão">
+          </div>
         </div>
-      </form>
-  
+      </section>
+
       <!-- Animal -->
       <section>
         <h2 class="text-2xl font-semibold mb-4 text-noturno">Dados do Animal</h2>
-  
+
         <!-- Nome + busca -->
         <div class="flex gap-2 items-end">
           <div class="flex-1">
             <label for="nomeAnimal" class="block font-semibold mb-1">Nome</label>
-            <input id="nomeAnimal" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite ou busque um nome">
+            <input id="nomeAnimal" type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim"
+              placeholder="Digite ou busque um nome">
           </div>
           <div class="flex-1">
             <label for="nomeAnimal" class="block font-semibold mb-1">Codigo</label>
-            <input id="codigo" type="text" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim" placeholder="Digite ou busque um nome">
+            <input id="codigo" type="text"
+              class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-carmesim"
+              placeholder="Digite ou busque um nome">
           </div>
           <button type="button" onclick="buscarAnimal()" class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
             <i data-lucide="search" class="w-5 h-5 text-noturno"></i>
           </button>
         </div>
-  
+
         <!-- Demais campos -->
         <div class="grid md:grid-cols-3 gap-4 mt-4">
           <div>
@@ -136,17 +152,18 @@
           </div>
           <div>
             <label class="block font-semibold mb-1">Idade</label>
-            <input type="number"id="idade" min="0" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Em anos">
+            <input type="number" id="idade" min="0" class="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Em anos">
           </div>
           <div>
             <label class="block font-semibold mb-1">Sexo</label>
             <select id="sexo" class="w-full p-3 border border-gray-300 rounded-lg">
               <option value="">Selecione</option>
               <option value="FEMEA">Fêmea</option>
-              <option value = "MACHO">Macho</option>
+              <option value="MACHO">Macho</option>
             </select>
           </div>
-        
+
           <!-- Porte do Animal ocupa as 3 colunas -->
           <div class="col-span-3 mb-4">
             <label class="block font-semibold mb-2 text-noturno">Porte do Animal</label>
@@ -165,292 +182,298 @@
               </label>
             </div>
           </div>
-        
+
           <!-- Castrado ocupa as 3 colunas -->
           <div class="col-span-3 mb-4">
-  <label class="block font-semibold mb-2 text-noturno">Castrado</label>
-  <div class="flex gap-6">
-    <label class="flex items-center space-x-2">
-      <input type="radio" name="castrado" value="true" class="accent-carmesim w-5 h-5" id="castradoSim">
-      <span class="text-noturno">Sim</span>
-    </label>
-    <label class="flex items-center space-x-2">
-      <input type="radio" name="castrado" value="false" class="accent-carmesim w-5 h-5" id="castradoNao">
-      <span class="text-noturno">Não</span>
-    </label>
-  </div>
-</div>
+            <label class="block font-semibold mb-2 text-noturno">Castrado</label>
+            <div class="flex gap-6">
+              <label class="flex items-center space-x-2">
+                <input type="radio" name="castrado" value="true" class="accent-carmesim w-5 h-5" id="castradoSim">
+                <span class="text-noturno">Sim</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input type="radio" name="castrado" value="false" class="accent-carmesim w-5 h-5" id="castradoNao">
+                <span class="text-noturno">Não</span>
+              </label>
+            </div>
+          </div>
         </div>
-        
+
       </section>
-  
+
       <!-- Data e Observações -->
       <div class="grid md:grid-cols-2 gap-4">
         <div>
           <label class="block font-semibold mb-1">*Data da Adoção</label>
           <input type="date" class="w-full p-3 border border-gray-300 rounded-lg" required>
         </div>
-      <!-- Botão -->
-      <div class="text-center pt-6">
-        <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
-          Confirmar Adoção
-        </button>
-      </div>
+        <!-- Botão -->
+        <div class="text-center pt-6">
+          <button type="submit"
+            class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+            Confirmar Adoção
+          </button>
+        </div>
     </form>
   </main>
-  
+
   <script>
-      lucide.createIcons();
+    lucide.createIcons();
     async function buscarAdotante() {
-          const cpf = document.getElementById('CpfAdotante').value;
-          if(cpf==null)
-            alert("Preencha um cpf")
+      const cpf = document.getElementById('CpfAdotante').value;
 
-    try {
-        const response = await fetch(`http://localhost:8080/doador/${cpf}`);
+      if (!cpf || !/^\d{11}$/.test(cpf.replace(/\D/g, ""))) {
+        alert("CPF inválido! Deve conter 11 dígitos");
+      }
+      else {
 
-        if (!response.ok) {
+
+        try {
+          const response = await fetch(`http://localhost:8080/doador/${cpf}`);
+
+          if (!response.ok) {
             throw new Error("CPF inválido ou não encontrado");
+          }
+
+          const data = await response.json();
+
+          // Preenchendo os campos com os dados da resposta
+          document.getElementById('nomeAdotante').value = data.pessoa.nome || '';
+          document.getElementById('CpfAdotante').value = data.pessoa.cpf || '';
+          document.getElementById('rg').value = data.pessoa.rg || '';
+          document.getElementById('profissao').value = data.pessoa.profissao || '';
+          document.getElementById('codigoAdotante').value = data.pessoa.id || '';
+          document.getElementById('telefone').value = data.contato.telefone || '';
+
+
+          document.getElementById('rua').value = data.endereco.rua || '';
+          document.getElementById('num').value = data.endereco.numero || '';
+          document.getElementById('bairro').value = data.endereco.bairro || '';
+          document.getElementById('cidade').value = data.endereco.cidade || '';
+          document.getElementById('uf').value = data.endereco.uf || '';
+          const camposAdotante = ['nomeAdotante', 'rg', 'profissao', 'telefone', 'rua', 'num', 'bairro', 'cidade', 'uf'];
+          camposAdotante.forEach(id => {
+            document.getElementById(id).readOnly = true;
+          });
+        } catch (error) {
+          alert(error.message);
+          console.error("Erro ao buscar adotante:", error);
         }
-
-        const data = await response.json();
-      
-        // Preenchendo os campos com os dados da resposta
-        document.getElementById('nomeAdotante').value = data.pessoa.nome || '';
-        document.getElementById('CpfAdotante').value = data.pessoa.cpf || '';
-        document.getElementById('rg').value = data.pessoa.rg || '';
-        document.getElementById('profissao').value = data.pessoa.profissao || '';
-        document.getElementById('codigoAdotante').value = data.pessoa.id || '';
-        document.getElementById('telefone').value = data.contato.telefone || '';
-
-
-        document.getElementById('rua').value = data.endereco.rua || '';
-        document.getElementById('num').value = data.endereco.numero || '';
-        document.getElementById('bairro').value = data.endereco.bairro || '';
-        document.getElementById('cidade').value = data.endereco.cidade || '';
-        document.getElementById('uf').value = data.endereco.uf || '';
-const camposAdotante = ['nomeAdotante', 'rg', 'profissao', 'telefone', 'rua', 'num', 'bairro', 'cidade', 'uf'];
-camposAdotante.forEach(id => {
-    document.getElementById(id).readOnly = true;
-});
-    } catch (error) {
-        alert(error.message);
-        console.error("Erro ao buscar adotante:", error);
+      }
     }
-  }
-  
-    async function buscarAnimal() {
-          const cod = document.getElementById('codigo').value;
+      async function buscarAnimal() {
+        const cod = document.getElementById('codigo').value;
 
-    try {
-        const response = await fetch(`http://localhost:8080/animal/${cod}`);
+        try {
+          const response = await fetch(`http://localhost:8080/animal/${cod}`);
 
-        if (!response.ok) {
+          if (!response.ok) {
             throw new Error("Codigo inválido ou não encontrado");
+          }
+
+          const data = await response.json();
+
+          // Preenchendo os campos com os dados da resposta
+          document.getElementById('nomeAnimal').value = data.nome || '';
+          document.getElementById('raca').value = data.raca || '';
+          document.getElementById('idade').value = data.idade || '';
+          document.getElementById('sexo').value = data.sexo || '';
+
+
+          // Porte (ajustar com base no valor retornado e nos checkboxes)
+          const portes = document.querySelectorAll("input[type=checkbox]");
+          portes.forEach((checkbox) => {
+            const label = checkbox.nextElementSibling.textContent.toUpperCase();
+            checkbox.checked = (data.porte && data.porte.toUpperCase() === label);
+          });
+          if (data.castrado === true) {
+            document.getElementById('castradoSim').checked = true;
+          } else {
+            document.getElementById('castradoNao').checked = true;
+          }
+
+
+          // No buscarAnimal()
+          const camposAnimal = ['raca', 'idade', 'sexo'];
+          camposAnimal.forEach(id => {
+            document.getElementById(id).readOnly = true;
+          });
+
+          // Para radios e checkboxes (precisa de outra abordagem)
+          document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(el => {
+            el.onclick = (e) => e.preventDefault();
+          });
+
+
+        } catch (error) {
+          alert(error.message);
+          console.error("Erro ao buscar adotante:", error);
         }
-
-        const data = await response.json();
-      
-        // Preenchendo os campos com os dados da resposta
-        document.getElementById('nomeAnimal').value = data.nome || '';
-        document.getElementById('raca').value = data.raca || '';
-        document.getElementById('idade').value = data.idade || '';
-        document.getElementById('sexo').value = data.sexo || '';
-       
-
-    // Porte (ajustar com base no valor retornado e nos checkboxes)
-    const portes = document.querySelectorAll("input[type=checkbox]");
-    portes.forEach((checkbox) => {
-      const label = checkbox.nextElementSibling.textContent.toUpperCase();
-      checkbox.checked = (data.porte && data.porte.toUpperCase() === label);
-    });
-    if (data.castrado === true) {
-  document.getElementById('castradoSim').checked = true;
-} else {
-  document.getElementById('castradoNao').checked = true;
-}
+      }
 
 
-// No buscarAnimal()
-const camposAnimal = ['raca', 'idade', 'sexo'];
-camposAnimal.forEach(id => {
-    document.getElementById(id).readOnly = true;
-});
+      function gerarTermoAdocao() {
+        // Coletar dados do formulário com os IDs corretos
+        const dados = {
+          // Dados do Adotante
+          nome: document.getElementById('nomeAdotante').value,
+          rg: document.getElementById('rg').value,
+          cpf: document.getElementById('CpfAdotante').value,
+          endereco: document.getElementById('rua').value + ', ' + document.getElementById('num').value,
+          bairro: document.getElementById('bairro').value,
+          cidadeUF: document.getElementById('cidade').value + '/' + document.getElementById('uf').value,
+          profissao: document.getElementById('profissao').value,
+          cel: document.getElementById('telefone').value,
 
-// Para radios e checkboxes (precisa de outra abordagem)
-document.querySelectorAll('input[type=radio], input[type=checkbox]').forEach(el => {
-    el.onclick = (e) => e.preventDefault();
-});
+          // Dados do Animal
+          nomeAnimal: document.getElementById('nomeAnimal').value,
+          sexo: document.getElementById('sexo').value,
+          idade: document.getElementById('idade').value + ' anos',
+          pelagem: '', // Seu formulário não tem este campo, mantive para compatibilidade
+          porte: document.querySelector('input[name="porte"]:checked')?.nextElementSibling.textContent || '',
+          castrado: document.querySelector('input[name="castrado"]:checked')?.value === 'true' ? 'sim' : 'não',
+          castrarEm: '' // Seu formulário não tem este campo
+        };
 
+        // Inicializar PDF
+        const doc = new jspdf.jsPDF();
+        let yPos = 15;
 
-    } catch (error) {
-        alert(error.message);
-        console.error("Erro ao buscar adotante:", error);
-    }
-  }
-  
+        // Configurações iniciais
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
 
-    function gerarTermoAdocao() {
-    // Coletar dados do formulário com os IDs corretos
-    const dados = {
-        // Dados do Adotante
-        nome: document.getElementById('nomeAdotante').value,
-        rg: document.getElementById('rg').value,
-        cpf: document.getElementById('CpfAdotante').value,
-        endereco: document.getElementById('rua').value + ', ' + document.getElementById('num').value,
-        bairro: document.getElementById('bairro').value,
-        cidadeUF: document.getElementById('cidade').value + '/' + document.getElementById('uf').value,
-        profissao: document.getElementById('profissao').value,
-        cel: document.getElementById('telefone').value,
-        
-        // Dados do Animal
-        nomeAnimal: document.getElementById('nomeAnimal').value,
-        sexo: document.getElementById('sexo').value,
-        idade: document.getElementById('idade').value + ' anos',
-        pelagem: '', // Seu formulário não tem este campo, mantive para compatibilidade
-        porte: document.querySelector('input[name="porte"]:checked')?.nextElementSibling.textContent || '',
-        castrado: document.querySelector('input[name="castrado"]:checked')?.value === 'true' ? 'sim' : 'não',
-        castrarEm: '' // Seu formulário não tem este campo
-    };
+        // Cabeçalho
+        doc.text("TERMO DE ADOÇÃO E COMPROMISSO", 105, yPos, { align: 'center' });
+        yPos += 20;
 
-    // Inicializar PDF
-    const doc = new jspdf.jsPDF();
-    let yPos = 15;
+        // Dados do adotante
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Nome do adotante: ${dados.nome}`, 20, yPos);
+        doc.text(`RG: ${dados.rg} CPF: ${dados.cpf}`, 20, yPos + 7);
+        doc.text(`Endereço residencial: ${dados.endereco}`, 20, yPos + 14);
+        doc.text(`Bairro: ${dados.bairro} Cidade/UF: ${dados.cidadeUF}`, 20, yPos + 21);
+        doc.text(`Profissão: ${dados.profissao} Cel: ${dados.cel}`, 20, yPos + 28);
+        yPos += 35;
 
-    // Configurações iniciais
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    
-    // Cabeçalho
-    doc.text("TERMO DE ADOÇÃO E COMPROMISSO", 105, yPos, { align: 'center' });
-    yPos += 20;
+        // Dados do animal
+        doc.text(`Nome do animal: ${dados.nomeAnimal} Sexo: (${dados.sexo === 'MACHO' ? 'X' : ' '}) macho (${dados.sexo === 'FEMEA' ? 'X' : ' '}) fêmea`, 20, yPos);
+        doc.text(`Idade: ${dados.idade}`, 20, yPos + 7);
+        doc.text(`Raça: ${document.getElementById('raca').value}`, 20, yPos + 14);
 
-    // Dados do adotante
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Nome do adotante: ${dados.nome}`, 20, yPos);
-    doc.text(`RG: ${dados.rg} CPF: ${dados.cpf}`, 20, yPos + 7);
-    doc.text(`Endereço residencial: ${dados.endereco}`, 20, yPos + 14);
-    doc.text(`Bairro: ${dados.bairro} Cidade/UF: ${dados.cidadeUF}`, 20, yPos + 21);
-    doc.text(`Profissão: ${dados.profissao} Cel: ${dados.cel}`, 20, yPos + 28);
-    yPos += 35;
+        // Porte (ajustado para os checkboxes do seu formulário)
+        const porteSelecionado = document.querySelector('input[name="porte"]:checked')?.value || '';
+        doc.text(`Porte: (${porteSelecionado === 'PEQUENO' ? 'X' : ' '}) pequeno (${porteSelecionado === 'MEDIO' ? 'X' : ' '}) médio (${porteSelecionado === 'GRANDE' ? 'X' : ' '}) grande`, 20, yPos + 21);
 
-    // Dados do animal
-    doc.text(`Nome do animal: ${dados.nomeAnimal} Sexo: (${dados.sexo === 'MACHO' ? 'X' : ' '}) macho (${dados.sexo === 'FEMEA' ? 'X' : ' '}) fêmea`, 20, yPos);
-    doc.text(`Idade: ${dados.idade}`, 20, yPos + 7);
-    doc.text(`Raça: ${document.getElementById('raca').value}`, 20, yPos + 14);
-    
-    // Porte (ajustado para os checkboxes do seu formulário)
-    const porteSelecionado = document.querySelector('input[name="porte"]:checked')?.value || '';
-    doc.text(`Porte: (${porteSelecionado === 'PEQUENO' ? 'X' : ' '}) pequeno (${porteSelecionado === 'MEDIO' ? 'X' : ' '}) médio (${porteSelecionado === 'GRANDE' ? 'X' : ' '}) grande`, 20, yPos + 21);
-    
-    doc.text(`Castrado? (${dados.castrado === 'sim' ? 'X' : ' '}) sim (${dados.castrado === 'não' ? 'X' : ' '}) não`, 20, yPos + 28);
-    yPos += 35;
+        doc.text(`Castrado? (${dados.castrado === 'sim' ? 'X' : ' '}) sim (${dados.castrado === 'não' ? 'X' : ' '}) não`, 20, yPos + 28);
+        yPos += 35;
 
-    // Texto de responsabilidade
-    const termos = [
-        "Ao adotar o animal acima descrito declaro-me apto para assumir a guarda e a responsabilidade sobre este animal, eximindo o doador de toda e qualquer responsabilidade por quaisquer atos praticados pelo animal a partir desta data.",
-        "Declaro ainda estar cliente de todos os cuidados que este animal exige no que se refere á sua guarda e manutenção, além de conhecer todos os riscos inerentes à espécie e raça no convivo com humanos, estando apto a guarda-lo e vigiá-lo, comprometendo-me a proporcionar boas condições de alojamento e alimentações, assim como, espaço físico que possibilite o animal se exercitar. Responsabilizo-me por preservar a saúde e integridade do animal e a submetê-lo aos cuidados médicos veterinários sempre que necessário.",
-        "Comprometo-me a não transmitir a posse deste animal a outrem sem o conhecimento do doador (ONG ADAPV) Comprometo-me também, a permitir o acesso do doador ao local onde se encontra o animal para averiguação de suas condições.",
-        "Tenho conhecimento de que caso seja constatado por parte do doador situação inadequada para o bem estar do animal, perderei a sua guarda, sem prejuízo das penalidades legais.Comprometo-me ainda em castrar o animal adotado se o doador já não o tiver feito, contribuindo assim para o controle da população de animais domésticos.",
-        "Comprometo-me a cumprir toda a legislação vigente, municipal, estadual e federal, relativa à posse de animais",
-        "Declaro-me assim, ciente das normas acima, as quais aceito, assinando o presente termo de Responsabilidade, assumindo plenamente os deveres que dele constam, bem como outros relacionados à posse responsável e que não estejam incluídos neste termo."
-    ];
+        // Texto de responsabilidade
+        const termos = [
+          "Ao adotar o animal acima descrito declaro-me apto para assumir a guarda e a responsabilidade sobre este animal, eximindo o doador de toda e qualquer responsabilidade por quaisquer atos praticados pelo animal a partir desta data.",
+          "Declaro ainda estar cliente de todos os cuidados que este animal exige no que se refere á sua guarda e manutenção, além de conhecer todos os riscos inerentes à espécie e raça no convivo com humanos, estando apto a guarda-lo e vigiá-lo, comprometendo-me a proporcionar boas condições de alojamento e alimentações, assim como, espaço físico que possibilite o animal se exercitar. Responsabilizo-me por preservar a saúde e integridade do animal e a submetê-lo aos cuidados médicos veterinários sempre que necessário.",
+          "Comprometo-me a não transmitir a posse deste animal a outrem sem o conhecimento do doador (ONG ADAPV) Comprometo-me também, a permitir o acesso do doador ao local onde se encontra o animal para averiguação de suas condições.",
+          "Tenho conhecimento de que caso seja constatado por parte do doador situação inadequada para o bem estar do animal, perderei a sua guarda, sem prejuízo das penalidades legais.Comprometo-me ainda em castrar o animal adotado se o doador já não o tiver feito, contribuindo assim para o controle da população de animais domésticos.",
+          "Comprometo-me a cumprir toda a legislação vigente, municipal, estadual e federal, relativa à posse de animais",
+          "Declaro-me assim, ciente das normas acima, as quais aceito, assinando o presente termo de Responsabilidade, assumindo plenamente os deveres que dele constam, bem como outros relacionados à posse responsável e que não estejam incluídos neste termo."
+        ];
 
-    termos.forEach(paragrafo => {
-        const splitText = doc.splitTextToSize(paragrafo, 170);
-        doc.text(splitText, 20, yPos);
-        yPos += splitText.length * 5;
-    });
-
-    // Assinaturas
-    yPos += 15;
-    doc.text("_________________________", 40, yPos);
-    doc.text("_________________________", 140, yPos);
-    doc.text("Doador (ONG ADAPV)", 40, yPos + 10);
-    doc.text("Adotante", 140, yPos + 10);
-    
-    // Data atual formatada
-    const dataAtual = new Date();
-    const dia = dataAtual.getDate();
-    const mes = dataAtual.toLocaleString('pt-BR', { month: 'long' });
-    const ano = dataAtual.getFullYear();
-    doc.text(`Presidente Venceslau, ${dia} de ${mes} de ${ano}.`, 105, yPos + 25, { align: 'center' });
-
-    // Nota legal
-    yPos += 40;
-    doc.setFont('helvetica', 'bold');
-    doc.text("ABANDONAR OU MALTRATAR ANIMAIS É CRIME", 105, yPos, { align: 'center' });
-    doc.setFont('helvetica', 'normal');
-    doc.text("LEI 9605/98 ART. 32 - Pena de detenção de 3 meses a 1 ano e multa.", 105, yPos + 7, { align: 'center' });
-
-    // Salvar PDF
-    doc.save(`Termo_Adocao_${dados.nome.replace(/\s/g, '_')}_${dados.nomeAnimal.replace(/\s/g, '_')}.pdf`);
-    
- 
-  }
-  async function registrarAdocao() {
-    // Obter os dados necessários do formulário
-   
-    const dataAdocao= document.querySelector('input[type="date"]').value;
-    const idPessoa= document.getElementById('codigoAdotante').value;
-    const idAnimal= document.getElementById('codigo').value ;// Assumindo que código é o identificador do animal
-    // Validar campos obrigatórios
-    if (!dataAdocao || !idPessoa || !idAnimal) {
-        alert('Preencha todos os campos obrigatórios!');
-        return;
-    }
-
-    try {
-        // Criar os parâmetros da URL
-        const params = new URLSearchParams();
-        params.append('ado_dt', dataAdocao);
-        params.append('pe_cod', idPessoa);
-        params.append('an_cod', idAnimal);
-        // O contrato é opcional, então só adicionamos se existir
-        // params.append('ado_contrato', contrato); // Descomente se tiver esse campo
-
-        const url = `http://localhost:8080/adocao/NovaAdocao?${params.toString()}`;
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                // Não é mais necessário o Content-Type para application/json
-                // Pois estamos enviando como parâmetros de URL
-            }
-            // Não enviamos mais um body JSON
+        termos.forEach(paragrafo => {
+          const splitText = doc.splitTextToSize(paragrafo, 170);
+          doc.text(splitText, 20, yPos);
+          yPos += splitText.length * 5;
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Erro ao registrar adoção');
+        // Assinaturas
+        yPos += 15;
+        doc.text("_________________________", 40, yPos);
+        doc.text("_________________________", 140, yPos);
+        doc.text("Doador (ONG ADAPV)", 40, yPos + 10);
+        doc.text("Adotante", 140, yPos + 10);
+
+        // Data atual formatada
+        const dataAtual = new Date();
+        const dia = dataAtual.getDate();
+        const mes = dataAtual.toLocaleString('pt-BR', { month: 'long' });
+        const ano = dataAtual.getFullYear();
+        doc.text(`Presidente Venceslau, ${dia} de ${mes} de ${ano}.`, 105, yPos + 25, { align: 'center' });
+
+        // Nota legal
+        yPos += 40;
+        doc.setFont('helvetica', 'bold');
+        doc.text("ABANDONAR OU MALTRATAR ANIMAIS É CRIME", 105, yPos, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.text("LEI 9605/98 ART. 32 - Pena de detenção de 3 meses a 1 ano e multa.", 105, yPos + 7, { align: 'center' });
+
+        // Salvar PDF
+        doc.save(`Termo_Adocao_${dados.nome.replace(/\s/g, '_')}_${dados.nomeAnimal.replace(/\s/g, '_')}.pdf`);
+
+
+      }
+      async function registrarAdocao() {
+        // Obter os dados necessários do formulário
+
+        const dataAdocao = document.querySelector('input[type="date"]').value;
+        const idPessoa = document.getElementById('codigoAdotante').value;
+        const idAnimal = document.getElementById('codigo').value;// Assumindo que código é o identificador do animal
+        // Validar campos obrigatórios
+        if (!dataAdocao || !idPessoa || !idAnimal) {
+          alert('Preencha todos os campos obrigatórios!');
+          return;
         }
 
-        const data = await response.json();
-        
-        // Se chegou aqui, a adoção foi registrada com sucesso
-        alert('Adoção registrada com sucesso!');
-        console.log('Adoção registrada:', data);
-        
-        // Opcional: gerar o termo de adoção após sucesso
-        gerarTermoAdocao();
-        document.querySelector('form').reset();   
-        // Opcional: redirecionar ou limpar o formulário
-        // window.location.href = '/pagina-de-sucesso';
-        
-    } catch (error) {
-        console.error('Erro ao registrar adoção:', error);
-        alert(`Erro ao registrar adoção: ${error.message}`);
-    }
-}
+        try {
+          // Criar os parâmetros da URL
+          const params = new URLSearchParams();
+          params.append('ado_dt', dataAdocao);
+          params.append('pe_cod', idPessoa);
+          params.append('an_cod', idAnimal);
+          // O contrato é opcional, então só adicionamos se existir
+          // params.append('ado_contrato', contrato); // Descomente se tiver esse campo
 
-// Modifique seu onSubmit para chamar esta função
-function handleSubmit(e) {
-    e.preventDefault();
-    registrarAdocao();
-}
+          const url = `http://localhost:8080/adocao/NovaAdocao?${params.toString()}`;
+
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              // Não é mais necessário o Content-Type para application/json
+              // Pois estamos enviando como parâmetros de URL
+            }
+            // Não enviamos mais um body JSON
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Erro ao registrar adoção');
+          }
+
+          const data = await response.json();
+
+          // Se chegou aqui, a adoção foi registrada com sucesso
+          alert('Adoção registrada com sucesso!');
+          console.log('Adoção registrada:', data);
+
+          // Opcional: gerar o termo de adoção após sucesso
+          gerarTermoAdocao();
+          document.querySelector('form').reset();
+          // Opcional: redirecionar ou limpar o formulário
+          // window.location.href = '/pagina-de-sucesso';
+
+        } catch (error) {
+          console.error('Erro ao registrar adoção:', error);
+          alert(`Erro ao registrar adoção: ${error.message}`);
+        }
+      }
+
+      // Modifique seu onSubmit para chamar esta função
+      function handleSubmit(e) {
+        e.preventDefault();
+        registrarAdocao();
+      }
   </script>
-  
-  
+
+
 </body>
+
 </html>

@@ -6,7 +6,9 @@ import SoftPet.backend.model.AnimalModel;
 import SoftPet.backend.model.PessoaModel;
 import SoftPet.backend.service.AdocaoService;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -88,6 +90,24 @@ public class AdocaoControl {
             return ResponseEntity.ok(adocao);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
+    }
+    @GetMapping("/{id}/contrato")
+    public ResponseEntity<byte[]> buscarContratoPorIdAdocao(@PathVariable Long id) {
+        try {
+            byte[] contrato = adocaoService.buscarContratoPorIdAdocao(id);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF); // Ou o tipo apropriado para seu contrato
+            headers.setContentDispositionFormData("attachment", "contrato-adocao-" + id + ".pdf");
+
+            return new ResponseEntity<>(contrato, headers, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }

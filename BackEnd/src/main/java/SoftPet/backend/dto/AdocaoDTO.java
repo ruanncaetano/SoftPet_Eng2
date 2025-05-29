@@ -7,6 +7,7 @@ import SoftPet.backend.model.PessoaModel;
 import java.time.LocalDate;
 
 public class AdocaoDTO {
+
     private AnimalModel animal;
     private PessoaModel pessoa;
     private AdocaoModel adocao;
