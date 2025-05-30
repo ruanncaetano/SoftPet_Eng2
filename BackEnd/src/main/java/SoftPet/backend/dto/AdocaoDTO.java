@@ -16,7 +16,7 @@ public class AdocaoDTO {
     public AdocaoDTO(Long id,LocalDate adoDt, byte[] adoContratoes, AnimalModel animal, PessoaModel adotanteBusca) {
         this.adocao = new AdocaoModel(); // Instancia o objeto antes de usar
         this.adocao.setAdo_dt(adoDt);
-        this.adocao.setContrato(adoContratoes);
+        this.adocao.setAdo_contrato(adoContratoes);
         this.adocao.setAdo_cod(id);
         this.animal = animal;
         this.pessoa = adotanteBusca; // Usa o parâmetro correto

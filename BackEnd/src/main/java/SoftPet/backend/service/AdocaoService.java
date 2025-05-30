@@ -75,9 +75,9 @@ public class AdocaoService {
     }
     public byte[] buscarContratoPorIdAdocao(Long idAdocao) {
         AdocaoDTO adocao = adocaoDAL.buscarAdocaoPorId(idAdocao);
-        if (adocao.getAdocao().getContrato() == null || adocao.getAdocao().getContrato().length == 0) {
+        if (adocao.getAdocao().getAdo_contrato() == null || adocao.getAdocao().getAdo_contrato().length == 0) {
             throw new RuntimeException("Contrato não encontrado para a adoção ID: " + idAdocao);
         }
-        return adocao.getAdocao().getContrato();
+        return adocao.getAdocao().getAdo_contrato();
     }
 }

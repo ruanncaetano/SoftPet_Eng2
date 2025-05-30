@@ -168,8 +168,8 @@ public class AdocaoDAL {
                     pessoa.setNome(rs.getString("pe_nome"));
                     pessoa.setStatus(rs.getBoolean("pe_status"));
                     pessoa.setProfissao(rs.getString("pe_profissao"));
-                    pessoa.setContatoCod(rs.getLong("con_cod"));
-                    pessoa.setEnderecoId(rs.getLong("en_id"));
+                    pessoa.setId_contato(rs.getLong("con_cod"));
+                    pessoa.setId_endereco(rs.getLong("en_id"));
                     pessoa.setRg(rs.getString("pe_rg"));
                     // Popular ContatoModel e EnderecoModel se necessário para o DTO
 
@@ -231,8 +231,8 @@ public class AdocaoDAL {
                     adotante.setNome(rs.getString("pe_nome"));
                     adotante.setStatus(rs.getBoolean("pe_status"));
                     adotante.setProfissao(rs.getString("pe_profissao"));
-                    adotante.setContatoCod(rs.getLong("con_cod"));
-                    adotante.setEnderecoId(rs.getLong("en_id"));
+                    adotante.setId_contato(rs.getLong("con_cod"));
+                    adotante.setId_endereco(rs.getLong("en_id"));
                     adotante.setRg(rs.getString("pe_rg"));
                     // Popular ContatoModel e EnderecoModel se necessário para o DTO
 
