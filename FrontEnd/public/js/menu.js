@@ -54,6 +54,17 @@ document.write(`
           <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
         </ul>
       </div>
+      <!-- Dropdown Vacinas -->
+      <div>
+        <button onclick="toggleMenu('menu-vacina', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">
+          <span class="flex gap-2 items-center"><svg data-lucide="dog" class="w-5 h-5"></svg>Vacinas</span>
+          <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
+        </button>
+        <ul id="menu-vacina" class="ml-6 mt-2 space-y-2 hidden">
+          <li><a href="../../views/ViewPedro/cadastrarVacina.html" class="block hover:text-carmesim">Cadastrar</a></li>
+          <li><a href="../../views/viewWilker/agendarVacinacao.html" class="block hover:text-carmesim">Agendar</a></li>
+        </ul>
+      </div>
 
       <!-- Acesso à página de cores -->
       <div>
