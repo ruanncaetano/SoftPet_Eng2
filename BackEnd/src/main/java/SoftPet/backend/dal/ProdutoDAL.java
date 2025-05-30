@@ -40,7 +40,7 @@ public class ProdutoDAL {
 
     public List<ProdutoModel> getAll() {
         List<ProdutoModel> lista = new ArrayList<>();
-        String sql = "SELECT p_cod, p_tipo, p_unidade_medida, p_data_validade, p_descricao, p_qntd_estoque FROM produtos ORDER BY p_nome"; // Adicionado ORDER BY p_nome (se existir p_nome) ou p_cod
+        String sql = "SELECT p_cod, p_tipo, p_unidade_medida, p_data_validade, p_descricao, p_qntd_estoque FROM produtos";
 
         try (ResultSet rs = SingletonDB.getConexao().consultar(sql)) { // Usa o consultar do SingletonDB
             if (rs != null) {

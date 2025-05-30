@@ -33,42 +33,58 @@
   <form id="formVoluntario" class="space-y-6">
     <div class="grid md:grid-cols-2 gap-6">
       <div>
-        <label for="nome" class="block font-semibold mb-1">Nome do Voluntário</label>
+        <label for="nome" class="block font-semibold mb-1">
+          Nome do Voluntário <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="nome" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="cpf" class="block font-semibold mb-1">CPF</label> 
+        <label for="cpf" class="block font-semibold mb-1">
+          CPF <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="cpf" class="w-full p-2 border rounded-lg" placeholder="Apenas números" required />
       </div>
 
       <div>
-        <label for="cargo" class="block font-semibold mb-1">Cargo</label> 
+        <label for="cargo" class="block font-semibold mb-1">
+          Cargo <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="cargo" class="w-full p-2 border rounded-lg" placeholder="Digite seu cargo" required />
       </div>
 
       <div>
-        <label for="telefone" class="block font-semibold mb-1">Telefone</label> 
+        <label for="telefone" class="block font-semibold mb-1">
+          Telefone <span class="text-red-600">*</span>
+        </label>
         <input type="tel" id="telefone" class="w-full p-2 border rounded-lg" placeholder="(99) 99999-9999" required />
       </div>
 
       <div>
-        <label for="email" class="block font-semibold mb-1">Email</label>
+        <label for="email" class="block font-semibold mb-1">
+          Email <span class="text-red-600">*</span>
+        </label>
         <input type="email" id="email" class="w-full p-2 border rounded-lg" placeholder="exemplo@dominio.com" required />
       </div>
 
       <div>
-        <label for="login" class="block font-semibold mb-1">Login</label>
+        <label for="login" class="block font-semibold mb-1">
+          Login <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="login" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="senha" class="block font-semibold mb-1">Senha</label>
+        <label for="senha" class="block font-semibold mb-1">
+          Senha <span class="text-red-600">*</span>
+        </label>
         <input type="password" id="senha" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="confirmSenha" class="block font-semibold mb-1">Confirme a Senha</label>
+        <label for="confirmSenha" class="block font-semibold mb-1">
+          Confirme a Senha <span class="text-red-600">*</span>
+        </label>
         <input type="password" id="confirmSenha" class="w-full p-2 border rounded-lg" required />
       </div>
     </div>
@@ -82,7 +98,6 @@
 
   <div id="mensagem" class="mt-4 font-semibold"></div>
 </main>
-
 <script>
   lucide.createIcons();
 document.getElementById("formVoluntario").addEventListener("submit", async function(event) {
