@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "build": "tailwindcss -i ./FrontEnd/public/css/input.css -o ./FrontEnd/public/build/output.css --minify",
+    "dev": "tailwindcss -i ./FrontEnd/public/css/input.css -o ./FrontEnd/public/build/output.css --watch "
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.7"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.7"
+  }
+}

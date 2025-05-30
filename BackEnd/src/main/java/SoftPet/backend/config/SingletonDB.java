@@ -13,7 +13,7 @@ public class SingletonDB
         {
             //informações do banco
             Class.forName("org.postgresql.Driver"); //driver do banco
-            conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SoftPet", "postgres", "10131518");
+            conexao = DriverManager.getConnection("jdbc:postgresql://localhost:5432/SoftPet", "postgres", "postgres123");
         }
         catch(Exception e)
         {

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Banir adotante</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+    function voltarParaInicio() {
+      window.location.href = "../../views/viewGeral/home.html";
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<script src="../../public/js/menu.js"></script>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <main class="flex-1 bg-neve p-10 overflow-auto">
+    <h1 class="text-3xl font-bold mb-6 text-carmesim">Buscar adotante por ID</h1>
+
+    <div class="mb-6">
+      <label for="produtoId" class="block mb-2 font-semibold">Informe o ID do adotante:</label>
+      <input id="produtoId" type="number" class="border border-gray-300 rounded px-3 py-2 w-64" placeholder="Ex: 1" />
+      <button id="btnBuscar" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all ml-2">
+        Buscar por ID
+      </button>
+      <button onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all ml-2">
+        Voltar
+      </button>
+    </div>
+
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+      <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-areia text-noturno">
+          <tr>
+            <th class="px-4 py-2 text-left">Descrição</th>
+            <th class="px-4 py-2 text-left">Tipo</th>
+            <th class="px-4 py-2 text-left">Qtd. Estoque</th>
+            <th class="px-4 py-2 text-left">Unidade</th>
+            <th class="px-4 py-2 text-left">Validade</th>
+            <th class="px-4 py-2 text-left">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaProduto" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    async function consultarProdutoPorId(id) {
+      const url = `http://localhost:8080/produtos/${id}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          if (response.status === 404 || response.status === 204) {
+            alert("Adotante não encontrado.");
+            limparTabela();
+            return;
+          }
+          throw new Error("Erro ao buscar produto.");
+        }
+
+        const produto = await response.json();
+        preencherTabela([produto]); // Envia como array para reaproveitar a função
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao conectar com o servidor.");
+      }
+    }
+
+    function preencherTabela(produtos) {
+      const tabela = document.getElementById("tabelaProduto");
+      tabela.innerHTML = "";
+
+      produtos.forEach(p => {
+        const idProduto = p.produto?.id ?? p.id;
+
+        const linha = `
+          <tr>
+            <td class="px-4 py-2">${p.produto?.descricao ?? p.descricao}</td>
+            <td class="px-4 py-2">${p.produto?.tipo ?? p.tipo}</td>
+            <td class="px-4 py-2">${p.produto?.quantidadeEstoque ?? p.quantidadeEstoque}</td>
+            <td class="px-4 py-2">${p.produto?.unidadeMedida ?? p.unidadeMedida}</td>
+            <td class="px-4 py-2">${p.produto?.dataValidade ?? p.dataValidade}</td>
+            <td class="px-4 py-2 space-x-2">
+              <a href="../../views/viewLuan/ExclusaoDiretaAdotante.html?id=${idProduto}" class="text-red-600 hover:underline">Banir Adotante</a>
+            </td>
+          </tr>
+        `;
+        tabela.insertAdjacentHTML("beforeend", linha);
+      });
+    }
+
+    function limparTabela() {
+      document.getElementById("tabelaProduto").innerHTML = "";
+    }
+
+    document.getElementById("btnBuscar").addEventListener("click", () => {
+      const id = document.getElementById("produtoId").value;
+      if (id) {
+        consultarProdutoPorId(id);
+      } else {
+        alert("Por favor, informe o ID do produto.");
+      }
+    });
+  </script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

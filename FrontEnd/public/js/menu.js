@@ -18,7 +18,6 @@ document.write(`
           <li><a href="../../views/viewRuan/consultaAnimal.html" class="block hover:text-carmesim">Consultar</a></li>
         </ul>
       </div>
-<<<<<<< HEAD
       <div>
       <button onclick="toggleMenu('menu-produtos', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">
         <span class="flex gap-2 items-center"><svg data-lucide="package" class="w-5 h-5"></svg>Produtos</span>
@@ -29,10 +28,9 @@ document.write(`
         <li><a href="../../views/viewLuan/ConsultarProduto.html" class="block hover:text-carmesim">Consultar</a></li>
         <li><a href="../../views/viewLuan/AlterarProduto.html" class="block hover:text-carmesim">Alterar</a></li>
         <li><a href="../../views/viewLuan/ExcluirProduto.html" class="block hover:text-carmesim">Excluir</a></li>
+        <li><a href="../../views/viewLuan/BanirAdotante.html" class="block hover:text-carmesim">Banir adotante</a></li>
       </ul>
     </div>
-=======
->>>>>>> main
 
     <!-- Dropdown adoção -->
       <div>
@@ -123,12 +121,21 @@ document.write(`
 
         </ul>
       </div>
+
+      <div>
+        <a href="../../views/viewLuan/Perfil.html" class="w-full flex justify-start items-center gap-2 text-left hover:text-carmesim transition">
+          <svg data-lucide="file-text" class="w-5 h-5"></svg>
+          Perfil Empresa
+        </a>
+      </div>
+
       <!-- Botão de Logout -->
         <div class="mt-4 border-t border-areia pt-4">
           <button onclick="logout()" class="w-full text-left flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition">
             <svg data-lucide="log-out" class="w-5 h-5"></svg>
-            Sair
+            Sair   
           </button>
+          
         </div>
       </nav>
     </aside>

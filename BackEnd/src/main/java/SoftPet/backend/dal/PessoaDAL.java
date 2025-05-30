@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PessoaDAL
+public class    PessoaDAL
 {
     public static PessoaCompletoDTO findByDoador(String cpf)
     {

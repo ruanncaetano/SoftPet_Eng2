@@ -3,22 +3,22 @@ package SoftPet.backend.util;
 import java.time.LocalDate;
 import java.util.regex.Pattern;
 
-public class Validation {
-
-    // Valida campos de texto como tipo, nome ou descrição do produto
-    public static boolean validarTextoProduto(String texto) {
-        return texto != null && !texto.trim().isEmpty();
+public class Validation
+{
+    public static boolean validarCEP(String cep)
+    {
+        if(cep == null)
+            return false;
+        return Pattern.matches("^\\d{5}-\\d{3}$", cep);
     }
 
-    // Verifica se a quantidade é válida (zero ou positiva)
-    public static boolean validarQuantidadeEstoque(int quantidade) {
-        return quantidade >= 0;
+    public static boolean validarTelefone(String telefone)
+    {
+        if(telefone == null)
+            return false;
+        return Pattern.matches("^\\(\\d{2}\\)\\s\\d{4,5}-\\d{4}$", telefone);
     }
 
-<<<<<<< HEAD
-    // Verifica se a data de validade é futura
-    public static boolean validarDataValidade(LocalDate dataValidade) {
-=======
     public static boolean validarRG(String rg)
     {
         if(rg == null)
@@ -61,17 +61,29 @@ public class Validation {
 
     public static boolean isDataValidade(LocalDate dataValidade)
     {
->>>>>>> main
         if (dataValidade == null)
             return false;
-        return dataValidade.isAfter(LocalDate.now());
+        LocalDate hoje = LocalDate.now();
+        return dataValidade.isAfter(hoje);
+    }
+
+    // Valida campos de texto como tipo, nome ou descrição do produto
+    public static boolean validarTextoProduto(String texto) {
+        return texto != null && !texto.trim().isEmpty();
+    }
+
+    // Verifica se a quantidade é válida (zero ou positiva)
+    public static boolean validarQuantidadeEstoque(int quantidade) {
+        return quantidade >= 0;
+    }
+
+    // Verifica se a data de validade é futura
+    public static boolean validarDataValidade(LocalDate dataValidade) {
+        return dataValidade != null && dataValidade.isAfter(LocalDate.now());
     }
 
     // Valida unidade de medida (ex: kg, litros, pacotes etc.)
     public static boolean validarUnidadeMedida(String unidade) {
         return unidade != null && !unidade.trim().isEmpty();
     }
-
-
-
 }
