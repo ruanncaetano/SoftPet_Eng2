@@ -19,9 +19,16 @@ async function salvarAnimal(event) {
     const foto = document.getElementById('foto').files[0];
     const ativo = 1;
 
-    alert(obs)
-    alert(castrado)
-    alert(ativo)
+   if(idade<=0)
+   {alert("Idade invalida")}
+   else{
+        if(peso<=0)
+        {
+          alert("peso invalido")
+        }
+   else{
+    
+  
     const formData = new FormData();
     formData.append('ativo', ativo);
     formData.append('nome', nome);
@@ -55,7 +62,7 @@ async function salvarAnimal(event) {
     console.log('Sucesso:', data);
     alert('Animal cadastrado com sucesso!');
     document.querySelector('form').reset();
-
+   }}
   } catch (error) {
     console.error('Erro completo:', error);
     alert(`Erro: ${error.message}`);

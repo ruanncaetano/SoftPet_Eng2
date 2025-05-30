@@ -83,7 +83,13 @@ public class AnimalControl
     @GetMapping("/{id}")
     public ResponseEntity<Object> getId(@PathVariable int id) {
         AnimalModel animal = animalService.buscarPorCod(id);
-        return ResponseEntity.ok(animal);
+
+        if (animal != null) {
+            return ResponseEntity.ok(animal);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Animal não encontrado ou indisponível para adoção.");
+        }
     }
     @PutMapping("/atualizar")
     public ResponseEntity<Object> atualizarAnimal(@RequestParam("cod") int cod,
