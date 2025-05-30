@@ -33,42 +33,58 @@
   <form id="formVoluntario" class="space-y-6">
     <div class="grid md:grid-cols-2 gap-6">
       <div>
-        <label for="nome" class="block font-semibold mb-1">Nome do Voluntário</label>
+        <label for="nome" class="block font-semibold mb-1">
+          Nome do Voluntário <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="nome" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="*cpf" class="block font-semibold mb-1">CPF</label>
+        <label for="cpf" class="block font-semibold mb-1">
+          CPF <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="cpf" class="w-full p-2 border rounded-lg" placeholder="Apenas números" required />
       </div>
 
       <div>
-        <label for="*cargo" class="block font-semibold mb-1">Cargo</label>
+        <label for="cargo" class="block font-semibold mb-1">
+          Cargo <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="cargo" class="w-full p-2 border rounded-lg" placeholder="Digite seu cargo" required />
       </div>
 
       <div>
-        <label for="*telefone" class="block font-semibold mb-1">Telefone</label>
+        <label for="telefone" class="block font-semibold mb-1">
+          Telefone <span class="text-red-600">*</span>
+        </label>
         <input type="tel" id="telefone" class="w-full p-2 border rounded-lg" placeholder="(99) 99999-9999" required />
       </div>
 
       <div>
-        <label for="email" class="block font-semibold mb-1">Email</label>
+        <label for="email" class="block font-semibold mb-1">
+          Email <span class="text-red-600">*</span>
+        </label>
         <input type="email" id="email" class="w-full p-2 border rounded-lg" placeholder="exemplo@dominio.com" required />
       </div>
 
       <div>
-        <label for="login" class="block font-semibold mb-1">Login</label>
+        <label for="login" class="block font-semibold mb-1">
+          Login <span class="text-red-600">*</span>
+        </label>
         <input type="text" id="login" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="senha" class="block font-semibold mb-1">Senha</label>
+        <label for="senha" class="block font-semibold mb-1">
+          Senha <span class="text-red-600">*</span>
+        </label>
         <input type="password" id="senha" class="w-full p-2 border rounded-lg" required />
       </div>
 
       <div>
-        <label for="confirmSenha" class="block font-semibold mb-1">Confirme a Senha</label>
+        <label for="confirmSenha" class="block font-semibold mb-1">
+          Confirme a Senha <span class="text-red-600">*</span>
+        </label>
         <input type="password" id="confirmSenha" class="w-full p-2 border rounded-lg" required />
       </div>
     </div>
@@ -82,7 +98,6 @@
 
   <div id="mensagem" class="mt-4 font-semibold"></div>
 </main>
-
 <script>
   lucide.createIcons();
 document.getElementById("formVoluntario").addEventListener("submit", async function(event) {
@@ -93,34 +108,65 @@ document.getElementById("formVoluntario").addEventListener("submit", async funct
   msgEl.classList.remove("text-red-600", "text-green-700");
 
   const nome = document.getElementById("nome").value.trim();
-  const cpf = document.getElementById("cpf").value.trim();
+  const cpf = document.getElementById("cpf").value.trim().replace(/[^\d]+/g, ''); // Limpa CPF para ter só números
   const cargoNome = document.getElementById("cargo").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
+  const telefone = document.getElementById("telefone").value.trim().replace(/[^\d]+/g, ''); // Limpa telefone para ter só números
   const email = document.getElementById("email").value.trim();
   const login = document.getElementById("login").value.trim();
   const senha = document.getElementById("senha").value;
   const confirmSenha = document.getElementById("confirmSenha").value;
 
-  const cpfRegex = /^\d{11}$/;
+  // Validações básicas de preenchimento
+  if (!nome || !cpf || !cargoNome || !telefone || !email || !login || !senha || !confirmSenha) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
 
-  const telefoneRegex = /^\(?\d{2}\)?[\s-]?\d{5}[\s-]?\d{4}$/;
-
-  if (!nome || nome.length < 3) {
+  if (nome.length < 3) {
     alert("Nome deve conter pelo menos 3 caracteres.");
     return;
   }
-  if (!cpfRegex.test(cpf)) {
-  alert("CPF inválido. Digite apenas 11 números.");
-  return;
 
-  if (!telefoneRegex.test(telefone)) {
-    alert("Telefone inválido. Use o formato (99) 99999-9999.");
+  // Validação do formato e lógica do CPF
+  function validarCPF(cpf) {
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false; // Verifica se tem 11 dígitos e não são todos iguais
+
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+      soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(9))) return false;
+
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+      soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    resto = (soma * 10) % 11;
+    if (resto === 10 || resto === 11) resto = 0;
+    if (resto !== parseInt(cpf.charAt(10))) return false;
+
+    return true;
+  }
+
+  if (!validarCPF(cpf)) {
+    alert("CPF inválido. Verifique os dígitos.");
     return;
   }
-  if (!email.includes("@") || email.length < 5) {
+  
+  // Validação do formato do telefone (Exemplo: apenas 10 ou 11 dígitos)
+  if (!/^\d{10,11}$/.test(telefone)) {
+    alert("Telefone inválido. Deve conter 10 ou 11 dígitos (incluindo DDD).");
+    return;
+  }
+
+  // Validação básica de email
+  if (!email.includes("@") || email.length < 5) { // Simplificado
     alert("Email inválido.");
     return;
   }
+
   if (senha.length < 6) {
     alert("A senha deve conter pelo menos 6 caracteres.");
     return;
@@ -129,40 +175,16 @@ document.getElementById("formVoluntario").addEventListener("submit", async funct
     alert("As senhas não coincidem.");
     return;
   }
-  function validarCPF(cpf) {
-  cpf = cpf.replace(/[^\d]+/g, '');
 
-  if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-
-  let soma = 0;
-  for (let i = 0; i < 9; i++) {
-    soma += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-  let resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpf.charAt(9))) return false;
-
-  soma = 0;
-  for (let i = 0; i < 10; i++) {
-    soma += parseInt(cpf.charAt(i)) * (11 - i);
-  }
-  resto = (soma * 10) % 11;
-  if (resto === 10 || resto === 11) resto = 0;
-  if (resto !== parseInt(cpf.charAt(10))) return false;
-
-  return true;
-}
-
-if (!validarCPF(cpf)) {
-  alert("CPF inválido. Verifique os dígitos.");
-  return;
-}
-
+  // Se todas as validações do frontend passaram, tenta enviar para o backend
   try {
+    // A lógica de criar ou buscar cargo primeiro, depois cadastrar voluntário,
+    // é uma abordagem. Certifique-se que seu backend /cargos e /voluntarios/cadastrar
+    // estão funcionando como esperado.
     let respostaCargo = await fetch("http://localhost:8080/cargos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome: cargoNome })
+      body: JSON.stringify({ nome: cargoNome }) // Supondo que CargoRequestDTO/CargoModel espera 'nome'
     });
 
     if (!respostaCargo.ok) {
@@ -170,15 +192,26 @@ if (!validarCPF(cpf)) {
       throw new Error("Erro ao criar ou buscar o cargo: " + textoErro);
     }
 
-    const cargo = await respostaCargo.json();
+    const cargo = await respostaCargo.json(); // Supondo que o backend retorna o objeto Cargo com 'id'
 
     const voluntario = {
       nome: nome,
       cpf: cpf,
-      cargoCod: cargo.id,
-      contato: { telefone: telefone, email: email },
-      credenciais: { login: login, senha: senha }
+      cargoCod: cargo.id, // Usa o ID do cargo retornado/criado
+      // cargoNome: cargo.nome, // Opcional, se seu VoluntarioDTO/Model no backend precisar
+      contato: { 
+          // Se seu ContatoModel/DTO no backend espera um ID ou é criado junto, ajuste aqui.
+          // Por agora, estou assumindo que você envia os dados e o backend os processa.
+          telefone: telefone, 
+          email: email 
+      },
+      credenciais: { 
+          login: login, 
+          senha: senha 
+      }
     };
+
+    console.log("Enviando voluntário:", JSON.stringify(voluntario));
 
     const respostaVoluntario = await fetch("http://localhost:8080/voluntarios/cadastrar", {
       method: "POST",
@@ -187,23 +220,25 @@ if (!validarCPF(cpf)) {
     });
 
     if (respostaVoluntario.ok) {
-      const resultado = await respostaVoluntario.json();
-      msgEl.textContent = `Voluntário cadastrado com sucesso! ID: ${resultado.id}`;
+      const resultado = await respostaVoluntario.json(); // Supondo que o backend retorna o voluntário salvo com ID
+      msgEl.textContent = `Voluntário cadastrado com sucesso! ID: ${resultado.id || resultado.cod || 'N/A'}`; // Tenta pegar id ou cod
       msgEl.classList.add("text-green-700");
       document.getElementById("formVoluntario").reset();
-      alert("Voluntário cadastrado com sucesso! ID: " + resultado.id);
+      alert("Voluntário cadastrado com sucesso! ID: " + (resultado.id || resultado.cod || 'N/A'));
     } else {
-      const erro = await respostaVoluntario.text();
-      msgEl.textContent = "Erro ao cadastrar voluntário: " + erro;
+      const erro = await respostaVoluntario.json().catch(async () => ({message: await respostaVoluntario.text()}));
+      msgEl.textContent = "Erro ao cadastrar voluntário: " + (erro.message || erro);
       msgEl.classList.add("text-red-600");
+      console.error("Erro do backend (voluntário):", erro);
     }
 
   } catch (e) {
-    msgEl.textContent = "Erro na conexão com o servidor: " + e.message;
+    console.error("Erro geral:", e);
+    msgEl.textContent = "Erro na conexão com o servidor ou erro inesperado: " + e.message;
     msgEl.classList.add("text-red-600");
   }
 });
 </script>
- 
+  
 </body>
 </html>

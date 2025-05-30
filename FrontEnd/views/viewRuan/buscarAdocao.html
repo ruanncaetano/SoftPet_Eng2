@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Correção importante aqui -->
   <title>ADAPV - Buscar Adoção</title>
   <link rel="website icon" type="png" href="../../public/images/patinha.png">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,77 +22,417 @@
     };
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Garante que o modal não seja visível inicialmente */
+    #modalDetalhes {
+      display: none;
+    }
+  </style>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
 
   <!-- Sidebar -->
   <script src="../../public/js/menu.js"></script>
+
   <!-- Conteúdo Principal -->
-  <main class="flex-1 p-8 overflow-y-auto">
-    <h1 class="text-3xl font-bold mb-6 text-carmesim">Consultar Adoções</h1>
+  <main class="flex-1 p-4 md:p-8 overflow-y-auto"> <!-- Ajuste de padding para mobile -->
+    <h1 class="text-2xl md:text-3xl font-bold mb-6 text-carmesim">Consultar Adoções</h1>
   
-    <!-- Filtros -->
-    <section class="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto space-y-6 mb-10">
-      <h2 class="text-xl font-semibold text-noturno mb-2">Filtros</h2>
-  
-      <div class="grid md:grid-cols-3 gap-4">
-        <div>
-          <label class="block font-semibold mb-1">Data Inicial</label>
-          <input type="date" class="w-full p-3 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Data Final</label>
-          <input type="date" class="w-full p-3 border border-gray-300 rounded-lg">
-        </div>
-        <div>
-          <label class="block font-semibold mb-1">Nome do Adotante</label>
-          <div class="flex gap-2 items-end">
-            <input type="text" class="flex-1 p-3 border border-gray-300 rounded-lg" placeholder="Digite o nome">
-            <button type="button" onclick="buscarAdoacoes()" class="bg-areia p-3 rounded-lg hover:bg-[#a39283] transition">
-              <i data-lucide="search" class="w-5 h-5 text-noturno"></i>
-            </button>
-          </div>
-        </div>
+    <!-- Filtros: Data Inicial, Data Final, CPF -->
+    <section class="bg-white p-4 md:p-6 rounded-2xl shadow-md max-w-3xl mx-auto mb-6 md:mb-10"> <!-- Ajustes de padding -->
+      <h2 class="text-lg md:text-xl font-semibold text-noturno mb-4">Filtros de Busca</h2>
+      <div class="flex flex-col md:flex-row gap-3">
+        <input id="dataInicial" type="date" 
+          class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg" 
+          placeholder="Data Inicial" />
+        
+        <input id="dataFinal" type="date" 
+          class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg" 
+          placeholder="Data Final" />
+        
+        <input id="cpfInput" type="text" placeholder="Digite o CPF" 
+          class="flex-1 p-2 md:p-3 border border-gray-300 rounded-lg" />
+        
+        <button type="button" onclick="buscarAdoacoes()" 
+          class="bg-areia p-2 md:p-3 rounded-lg hover:bg-[#a39283] transition flex items-center justify-center gap-2">
+          <i data-lucide="search" class="w-4 h-4 md:w-5 md:h-5 text-noturno"></i> Buscar
+        </button>
       </div>
     </section>
   
     <!-- Resultados -->
-    <section class="bg-white p-6 rounded-2xl shadow-md max-w-5xl mx-auto">
-      <h2 class="text-xl font-semibold text-noturno mb-4">Resultados</h2>
+    <section class="bg-white p-4 md:p-6 rounded-2xl shadow-md max-w-5xl mx-auto">
+      <h2 class="text-lg md:text-xl font-semibold text-noturno mb-4">Resultados</h2>
   
-      <table class="min-w-full text-left">
-        <thead>
-          <tr class="text-noturno border-b border-gray-200">
-            <th class="py-2 px-4">Adotante</th>
-            <th class="py-2 px-4">Animal</th>
-            <th class="py-2 px-4">Data</th>
-            <th class="py-2 px-4">Ações</th>
-          </tr>
-        </thead>
-        <tbody id="resultadoAdocoes">
-          <!-- Exemplo de linha -->
-          <tr class="border-t border-gray-100 hover:bg-gray-50">
-            <td class="py-2 px-4">João Silva</td>
-            <td class="py-2 px-4">Mel</td>
-            <td class="py-2 px-4">2025-04-20</td>
-            <td class="py-2 px-4">
-              <button class="text-carmesim hover:underline">Ver detalhes</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto"> <!-- Adicionado para scroll horizontal em mobile -->
+        <table class="min-w-full text-left">
+          <thead>
+            <tr class="text-noturno border-b border-gray-200">
+              <th class="py-2 px-2 md:px-4">Adotante</th>
+              <th class="py-2 px-2 md:px-4">Animal</th>
+              <th class="py-2 px-2 md:px-4">Data</th>
+              <th class="py-2 px-2 md:px-4">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="resultadoAdocoes">
+            <!-- Linhas serão inseridas via JS -->
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
 
-  <script src="../../public/js/validacao.js"></script>
+  <!-- Modal de Detalhes da Adoção -->
+  <div id="modalDetalhes" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center p-4"> <!-- Adicionado p-4 para mobile -->
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-lg p-6 space-y-4 relative max-h-[90vh] overflow-y-auto"> <!-- Adicionado scroll no modal -->
+
+      <button onclick="fecharModal()" class="absolute top-4 right-4 text-gray-500 hover:text-carmesim">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <h2 class="text-xl md:text-2xl font-semibold text-carmesim mb-4">Detalhes da Adoção</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium">Codigo da adocao</label>
+          <input id="modalIdAdo" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Nome do Adotante</label>
+          <input id="modalAdotante" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">CPF do Adotante</label>
+          <input id="modalCpf" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Telefone do Adotante</label>
+          <input id="modalTelefone" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Nome do Animal</label>
+          <input id="modalAnimal" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Data da Adoção</label>
+          <input id="modalData" readonly class="w-full mt-1 p-2 md:p-3 border rounded-lg bg-gray-100" />
+        </div>
+         <div class="md:col-span-2">
+          <label class="block text-sm font-medium">Contrato de Adoção</label>
+          
+          <!-- Seção para download do contrato existente -->
+          <div id="contratoExistente" class="hidden">
+            <div class="flex items-center gap-2 mt-2">
+              <i data-lucide="file-text" class="w-5 h-5 text-green-600"></i>
+              <span class="text-sm">Contrato já cadastrado</span>
+              <button id="btnDownloadContrato" class="ml-2 text-sm text-blue-600 hover:underline flex items-center gap-1">
+                <i data-lucide="download" class="w-4 h-4"></i> Baixar
+              </button>
+            </div>
+          </div>
+          
+          <!-- Seção para upload de novo contrato -->
+    <div id="uploadContrato" class="hidden">
+            <input id="modalContrato" type="file" accept=".pdf" class="w-full mt-1 p-2 md:p-3 border rounded-lg" />
+            <p id="fileInfo" class="text-sm text-gray-500 mt-1">Apenas arquivos PDF são aceitos</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensagem de status -->
+      <p id="mensagemStatus" class="text-sm mt-2"></p>
+
+      <!-- Botões -->
+      <div class="flex justify-end mt-4">
+        <button id="btnEnviarTermo" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 hidden">
+          Enviar Termo
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     lucide.createIcons();
-  
-    function buscarAdoacoes() {
-      alert("Simulação de busca de adoções...");
-      // Aqui você poderá futuramente fazer um fetch do banco ou exibir resultados dinâmicos
+
+    // Garantir que o modal comece fechado
+    document.addEventListener('DOMContentLoaded', function() {
+      fecharModal();
+    });
+
+    async function buscarAdoacoes() {
+      const cpf = document.getElementById('cpfInput').value.trim();
+      const dataInicial = document.getElementById('dataInicial').value;
+      const dataFinal = document.getElementById('dataFinal').value;
+
+      const params = new URLSearchParams();
+      if (cpf) params.append('cpf', cpf);
+      if (dataInicial && dataFinal) {
+        params.append('datainicial', dataInicial);
+        params.append('datafinal', dataFinal);
+      }
+
+      const url = `http://localhost:8080/adocao/buscarAdocao?${params.toString()}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Erro ao buscar adoções');
+        const adoacoes = await response.json();
+        preencherTabela(adoacoes);
+      } catch (error) {
+        alert('Erro ao buscar adoções: ' + error.message);
+      }
     }
+
+    function preencherTabela(adoacoes) {
+      const tbody = document.getElementById('resultadoAdocoes');
+      tbody.innerHTML = '';
+
+      if (!adoacoes.length) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-gray-500">Nenhuma adoção encontrada.</td></tr>`;
+        return;
+      }
+
+      adoacoes.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.className = 'border-t border-gray-100 hover:bg-gray-50';
+
+        const dados = encodeURIComponent(JSON.stringify(a));
+
+        tr.innerHTML = `
+          <td class="py-2 px-2 md:px-4">${escapeHTML(a.pessoa?.nome)}</td>
+          <td class="py-2 px-2 md:px-4">${escapeHTML(a.animal?.nome)}</td>
+          <td class="py-2 px-2 md:px-4">${formatarData(a.adocao?.ado_dt)}</td>
+          <td class="py-2 px-2 md:px-4">
+            <button class="text-carmesim hover:underline flex items-center gap-1"
+              onclick="abrirModalComSeguranca('${dados}')">
+              <i data-lucide='eye'></i> <span class="hidden md:inline">Ver detalhes</span>
+            </button>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    async function abrirModalComSeguranca(jsonString) {
+      try {
+        const detalhes = JSON.parse(decodeURIComponent(jsonString));
+        
+        if (!detalhes.pe_telefone && detalhes.pessoa?.id) {
+          try {
+            const resp = await fetch(`http://localhost:8080/doador/${detalhes.pessoa.cpf}`);
+            if (resp.ok) {
+              const dadosPessoa = await resp.json();
+              detalhes.pe_telefone = dadosPessoa.contato.telefone || 'Não informado';
+            }
+          } catch (e) {
+            console.warn('Erro ao buscar telefone:', e);
+          }
+        }
+
+        abrirModal(detalhes);
+      } catch (erro) {
+        alert("Erro ao carregar dados da adoção.");
+      }
+    }
+
+   async function abrirModal(d) {
+      // Preencher campos básicos
+      document.getElementById('modalIdAdo').value = d.adocao.ado_cod || '';
+      document.getElementById('modalAdotante').value = d?.pessoa?.nome || '';
+      document.getElementById('modalCpf').value = d?.pessoa?.cpf || '';
+      document.getElementById('modalTelefone').value = d?.pe_telefone || 'Não informado';
+      document.getElementById('modalAnimal').value = d?.an_nome || d?.animal?.nome || '';
+      document.getElementById('modalData').value = formatarData(d?.ado_data || d?.adocao?.ado_dt || '');
+      
+      // Verificar se tem contrato
+      try {
+        const response = await fetch(`http://localhost:8080/adocao/${d.adocao.ado_cod}/contrato`);
+        
+        if (response.ok) {
+          // Tem contrato - mostrar opção de download
+          document.getElementById('contratoExistente').classList.remove('hidden');
+          document.getElementById('uploadContrato').classList.add('hidden');
+          document.getElementById('btnEnviarTermo').classList.add('hidden');
+          
+          // Configurar botão de download
+          document.getElementById('btnDownloadContrato').onclick = () => {
+            window.open(`http://localhost:8080/adocao/${d.adocao.ado_cod}/contrato`, '_blank');
+          };
+        } else {
+          // Não tem contrato - mostrar opção de upload
+          document.getElementById('contratoExistente').classList.add('hidden');
+          document.getElementById('uploadContrato').classList.remove('hidden');
+          document.getElementById('btnEnviarTermo').classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Erro ao verificar contrato:', error);
+        // Em caso de erro, assume que não tem contrato
+        document.getElementById('contratoExistente').classList.add('hidden');
+        document.getElementById('uploadContrato').classList.remove('hidden');
+        document.getElementById('btnEnviarTermo').classList.remove('hidden');
+      }
+      
+      document.getElementById('modalDetalhes').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    // Função para enviar o contrato (mantida similar)
+    document.getElementById('btnEnviarTermo')?.addEventListener('click', async function() {
+      const idAdocao = document.getElementById('modalIdAdo')?.value;
+      const fileInput = document.getElementById('modalContrato');
+      const mensagemStatus = document.getElementById('mensagemStatus');
+      
+      if (!idAdocao) {
+        mensagemStatus.textContent = 'Erro: ID da adoção não encontrado.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      if (!fileInput?.files || fileInput.files.length === 0) {
+        mensagemStatus.textContent = 'Por favor, selecione um arquivo PDF.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      if (file.type !== 'application/pdf') {
+        mensagemStatus.textContent = 'Por favor, selecione um arquivo no formato PDF.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      try {
+        const btnEnviar = document.getElementById('btnEnviarTermo');
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando...';
+        mensagemStatus.textContent = 'Enviando contrato...';
+        mensagemStatus.className = 'text-sm mt-2 text-blue-600';
+        
+        const formData = new FormData();
+        formData.append('contrato', file);
+        formData.append('id', idAdocao);
+        
+        const response = await fetch(`http://localhost:8080/adocao/upcontrato`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.message || 'Erro ao enviar contrato');
+        }
+        
+        mensagemStatus.textContent = result.message || 'Contrato enviado com sucesso!';
+        mensagemStatus.className = 'text-sm mt-2 text-green-600';
+        
+        setTimeout(() => {
+          fecharModal();
+          buscarAdoacoes();
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Erro ao enviar contrato:', error);
+        mensagemStatus.textContent = `Erro ao enviar contrato: ${error.message}`;
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+      } finally {
+        const btnEnviar = document.getElementById('btnEnviarTermo');
+        if (btnEnviar) {
+          btnEnviar.disabled = false;
+          btnEnviar.textContent = 'Enviar Termo';
+        }
+      }
+    });
+    function fecharModal() {
+      document.getElementById('modalDetalhes').style.display = 'none';
+    }
+
+    function formatarData(dataISO) {
+      if (!dataISO) return '';
+      const partes = dataISO.split('-');
+      if (partes.length !== 3) return dataISO;
+      return `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+
+    function escapeHTML(text) {
+      if (!text) return '';
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    document.getElementById('btnEnviarTermo')?.addEventListener('click', async function() {
+      const idAdocao = document.getElementById('modalIdAdo')?.value;
+      const fileInput = document.getElementById('modalContrato');
+      const mensagemStatus = document.getElementById('mensagemStatus');
+      
+      if (!idAdocao) {
+        mensagemStatus.textContent = 'Erro: ID da adoção não encontrado.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      if (!fileInput?.files || fileInput.files.length === 0) {
+        mensagemStatus.textContent = 'Por favor, selecione um arquivo PDF.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      if (file.type !== 'application/pdf') {
+        mensagemStatus.textContent = 'Por favor, selecione um arquivo no formato PDF.';
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+        return;
+      }
+      
+      try {
+        const btnEnviar = document.getElementById('btnEnviarTermo');
+        btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Enviando...';
+        mensagemStatus.textContent = 'Enviando contrato...';
+        mensagemStatus.className = 'text-sm mt-2 text-blue-600';
+        
+        const formData = new FormData();
+        formData.append('contrato', file);
+        formData.append('id', idAdocao);
+        
+        const response = await fetch(`http://localhost:8080/adocao/upcontrato`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(result.message || 'Erro ao enviar contrato');
+        }
+        
+        mensagemStatus.textContent = result.message || 'Contrato enviado com sucesso!';
+        mensagemStatus.className = 'text-sm mt-2 text-green-600';
+        
+        setTimeout(() => {
+          fecharModal();
+          buscarAdoacoes();
+        }, 2000);
+        
+      } catch (error) {
+        console.error('Erro ao enviar contrato:', error);
+        mensagemStatus.textContent = `Erro ao enviar contrato: ${error.message}`;
+        mensagemStatus.className = 'text-sm mt-2 text-red-600';
+      } finally {
+        const btnEnviar = document.getElementById('btnEnviarTermo');
+        if (btnEnviar) {
+          btnEnviar.disabled = false;
+          btnEnviar.textContent = 'Enviar Termo';
+        }
+      }
+    });
   </script>
-  
 </body>
 </html>

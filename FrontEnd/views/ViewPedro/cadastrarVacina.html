@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Cadastrar Vacina</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<div id="menu-lateral-placeholder"></div> 
+
+<main class="flex-1 bg-neve p-10 overflow-auto">
+  <h1 class="text-3xl font-bold mb-8 text-carmesim text-center md:text-left">Cadastrar Nova Vacina</h1>
+
+  <form id="formCadastrarVacina" class="space-y-6 max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+    <div>
+      <label for="nomeVacina" class="block font-semibold mb-1 text-noturno">Nome da Vacina</label>
+      <input type="text" id="nomeVacina" class="w-full p-3 border border-areia rounded-lg focus:ring-2 focus:ring-carmesim focus:border-transparent transition-all" placeholder="Ex: Anti-rábica" required />
+    </div>
+
+    <div>
+      <label for="descricaoVacina" class="block font-semibold mb-1 text-noturno">Descrição (Opcional)</label>
+      <textarea id="descricaoVacina" rows="3" class="w-full p-3 border border-areia rounded-lg focus:ring-2 focus:ring-carmesim focus:border-transparent transition-all" placeholder="Detalhes sobre a vacina, fabricante, etc."></textarea>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label for="dataReferenciaLote" class="block font-semibold mb-1 text-noturno">Data de Referência do Lote/Fabricação</label>
+        <input type="date" id="dataReferenciaLote" class="w-full p-3 border border-areia rounded-lg focus:ring-2 focus:ring-carmesim focus:border-transparent transition-all" required />
+      </div>
+
+      <div>
+        <label for="tipoDosePadrao" class="block font-semibold mb-1 text-noturno">Tipo/Dose Padrão</label>
+        <input type="text" id="tipoDosePadrao" class="w-full p-3 border border-areia rounded-lg focus:ring-2 focus:ring-carmesim focus:border-transparent transition-all" placeholder="Ex: 0.5ml, 1 dose" required />
+      </div>
+    </div>
+
+    <div class="text-center pt-4">
+      <button type="submit" class="bg-carmesim text-white px-8 py-3 rounded-full hover:bg-[#8a0128] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-carmesim transition-all text-lg font-semibold">
+        Cadastrar Vacina
+      </button>
+    </div>
+  </form>
+
+  <div id="mensagem" class="mt-6 text-center font-semibold"></div>
+</main>
+
+<script src="../../public/js/menu.js"></script> 
+<script>
+  lucide.createIcons();
+
+  const formCadastrar = document.getElementById("formCadastrarVacina");
+  const msgEl = document.getElementById("mensagem");
+
+  formCadastrar.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    msgEl.textContent = "";
+    msgEl.className = "mt-6 text-center font-semibold"; // Reseta classes
+
+    const nome = document.getElementById("nomeVacina").value.trim();
+    const descricao = document.getElementById("descricaoVacina").value.trim();
+    const dataReferenciaLote = document.getElementById("dataReferenciaLote").value;
+    const tipoDosePadrao = document.getElementById("tipoDosePadrao").value.trim();
+
+    if (!nome || !dataReferenciaLote || !tipoDosePadrao) {
+      msgEl.textContent = "Por favor, preencha todos os campos obrigatórios (Nome, Data de Referência, Tipo/Dose).";
+      msgEl.classList.add("text-red-600");
+      return;
+    }
+
+    // Formata a data para enviar como YYYY-MM-DDTHH:mm:ss.sssZ (UTC) se o backend esperar Date
+    // Se o backend espera apenas YYYY-MM-DD, pode ajustar.
+    // Para VacinaRequestDTO que espera java.util.Date, enviar a data no formato ISO é geralmente bem aceito.
+    const dataISO = dataReferenciaLote ? new Date(dataReferenciaLote + "T00:00:00Z").toISOString() : null;
+
+
+    const vacinaDTO = {
+      nome: nome,
+      descricao: descricao,
+      dataReferenciaLote: dataISO, // Envia a data no formato ISO
+      tipoDosePadrao: tipoDosePadrao,
+    };
+
+    console.log("Enviando DTO:", JSON.stringify(vacinaDTO, null, 2));
+
+    try {
+      const resposta = await fetch("http://localhost:8080/api/vacinas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vacinaDTO),
+      });
+
+      if (resposta.ok) {
+        const vacinaSalva = await resposta.json();
+        msgEl.textContent = `Vacina '${vacinaSalva.nome}' cadastrada com sucesso! ID: ${vacinaSalva.cod}`;
+        msgEl.classList.add("text-green-700");
+        formCadastrar.reset(); // Limpa o formulário
+        alert(`Vacina '${vacinaSalva.nome}' cadastrada com sucesso! ID: ${vacinaSalva.cod}`);
+      } else {
+        const erro = await resposta.json().catch(() => ({ message: "Erro desconhecido ao cadastrar vacina. Status: " + resposta.status }));
+        msgEl.textContent = "Erro ao cadastrar vacina: " + (erro.message || JSON.stringify(erro));
+        msgEl.classList.add("text-red-600");
+        console.error("Erro do backend:", erro);
+      }
+    } catch (e) {
+      console.error("Erro geral ao cadastrar vacina:", e);
+      msgEl.textContent = "Erro na conexão com o servidor: " + e.message;
+      msgEl.classList.add("text-red-600");
+    }
+  });
+</script>
+</body>
+</html>

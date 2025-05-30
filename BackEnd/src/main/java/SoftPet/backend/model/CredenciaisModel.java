@@ -1,15 +1,15 @@
 package SoftPet.backend.model;
 
 public class CredenciaisModel {
-    private int id;
+    private Long id;
     private String login;
     private String senha;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -29,7 +29,7 @@ public class CredenciaisModel {
         this.senha = senha;
     }
 
-    public CredenciaisModel(int id, String login, String senha) {
+    public CredenciaisModel(Long id, String login, String senha) {
         this.id = id;
         this.login = login;
         this.senha = senha;
