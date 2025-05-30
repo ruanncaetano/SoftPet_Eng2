@@ -102,7 +102,7 @@ public class AnimalControl
                                                  @RequestParam("ativo") boolean ativo,
                                                  @RequestParam(value = "foto", required = false) MultipartFile foto,
                                                  @RequestParam(value = "obs", required = false) String obs) throws IOException {
-        AnimalModel animal = new AnimalModel(cod,nome,idade, peso, baia, adocao, castrado, obs, ativo);
+        AnimalModel animal = new AnimalModel((long) cod,nome,idade, peso, baia, adocao, castrado, obs, ativo);
         if (foto != null && !foto.isEmpty()) {
             animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]   -> passando por fora do contrutor
         }

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Deletar Vacina</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<div id="menu-lateral-placeholder"></div> 
+
+<main class="flex-1 bg-neve p-10 overflow-auto">
+  <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-carmesim mb-4 sm:mb-0">Deletar Vacina</h1>
+    <a href="listar_vacinas.html" class="bg-areia text-noturno px-6 py-2 rounded-full hover:bg-pastel transition-all flex items-center space-x-2">
+      <i data-lucide="arrow-left-circle" class="w-5 h-5"></i>
+      <span>Voltar para Lista</span>
+    </a>
+  </div>
+
+  <div class="mb-6 max-w-xl mx-auto">
+    <label for="idVacinaParaBuscar" class="block font-semibold mb-1 text-noturno">Digite o ID da Vacina para buscar e deletar</label>
+    <div class="flex items-center space-x-3">
+        <input type="number" id="idVacinaParaBuscar" class="w-40 p-3 border border-areia rounded-lg focus:ring-2 focus:ring-carmesim focus:border-transparent transition-all" placeholder="Ex: 1" />
+        <button id="btnBuscarVacinaParaDeletar" class="bg-carmesim text-white px-6 py-3 rounded-full hover:bg-[#8a0128] transition-all flex items-center justify-center">
+            <i data-lucide="search" class="w-5 h-5 mr-2"></i>
+            Buscar
+        </button>
+    </div>
+  </div>
+
+  <div id="infoVacinaParaDeletar" class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg" style="display:none;">
+    <h2 class="text-xl font-bold text-noturno mb-4">Confirmar Deleção</h2>
+    <p class="mb-2 text-noturno/80">Você está prestes a deletar a seguinte vacina:</p>
+    <div class="mb-4 p-3 bg-pastel/30 rounded-md">
+        <p><strong class="text-noturno">ID:</strong> <span id="vacinaDeletarId" class="font-mono"></span></p>
+        <p><strong class="text-noturno">Nome:</strong> <span id="vacinaDeletarNome"></span></p>
+        <p class="mt-1 text-sm text-noturno/70"><strong class="text-noturno">Descrição:</strong> <span id="vacinaDeletarDescricao"></span></p>
+    </div>
+    <p class="text-sm text-red-600 font-semibold mb-6">Atenção: Esta ação não pode ser desfeita. Se a vacina estiver em uso (associada a animais), a deleção pode ser bloqueada pelo sistema.</p>
+    <div class="text-center">
+      <button id="btnConfirmarDelecao" class="bg-red-700 text-white px-8 py-3 rounded-full hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition-all text-lg font-semibold">
+        <i data-lucide="trash-2" class="inline-block w-5 h-5 mr-2"></i>
+        Deletar Vacina Permanentemente
+      </button>
+    </div>
+  </div>
+
+  <div id="mensagem" class="mt-6 text-center font-semibold max-w-xl mx-auto"></div>
+  <div id="carregandoDados" class="mt-6 text-center font-semibold text-noturno/80" style="display:none;">
+    <i data-lucide="loader-2" class="animate-spin h-8 w-8 mx-auto mb-2 text-carmesim"></i>
+    Buscando dados da vacina...
+  </div>
+</main>
+
+<script src="../../public/js/menu.js"></script> 
+<script>
+  lucide.createIcons();
+
+  const msgEl = document.getElementById("mensagem");
+  const carregandoDadosEl = document.getElementById("carregandoDados");
+  const infoVacinaParaDeletarEl = document.getElementById("infoVacinaParaDeletar");
+  
+  const idVacinaParaBuscarEl = document.getElementById("idVacinaParaBuscar");
+  const btnBuscarVacinaParaDeletarEl = document.getElementById("btnBuscarVacinaParaDeletar");
+  const btnConfirmarDelecaoEl = document.getElementById("btnConfirmarDelecao");
+
+  const vacinaDeletarIdSpan = document.getElementById("vacinaDeletarId");
+  const vacinaDeletarNomeSpan = document.getElementById("vacinaDeletarNome");
+  const vacinaDeletarDescricaoSpan = document.getElementById("vacinaDeletarDescricao");
+  
+  let idVacinaAtualParaDelecao = null;
+
+  async function buscarVacinaParaDelecao(id) {
+    msgEl.textContent = "";
+    msgEl.className = "mt-6 text-center font-semibold max-w-xl mx-auto";
+    infoVacinaParaDeletarEl.style.display = "none";
+    carregandoDadosEl.style.display = "block";
+    lucide.createIcons(); 
+
+    try {
+      const resposta = await fetch(`http://localhost:8080/api/vacinas/${id}`);
+      if (!resposta.ok) {
+        let erroMsg = `Vacina com ID ${id} não encontrada.`;
+        if (resposta.status !== 404) {
+            const erroTexto = await resposta.text().catch(() => `Erro desconhecido do servidor (Status: ${resposta.status})`);
+            erroMsg = `Falha ao buscar dados da vacina (ID: ${id}). Status: ${resposta.status}. Detalhes: ${erroTexto}`;
+        }
+        throw new Error(erroMsg);
+      }
+      const vacina = await resposta.json();
+
+      if (vacina && vacina.cod) {
+        idVacinaAtualParaDelecao = vacina.cod;
+        vacinaDeletarIdSpan.textContent = vacina.cod;
+        vacinaDeletarNomeSpan.textContent = vacina.nome || "N/A";
+        vacinaDeletarDescricaoSpan.textContent = vacina.descricao || "Nenhuma descrição fornecida.";
+        
+        infoVacinaParaDeletarEl.style.display = "block";
+        msgEl.textContent = `Vacina encontrada. Confirme a deleção abaixo.`;
+        msgEl.classList.add("text-noturno/80");
+
+      } else {
+        throw new Error(`Dados da vacina com ID ${id} não retornados corretamente ou vacina não encontrada.`);
+      }
+    } catch (e) {
+      console.error("Erro ao carregar dados da vacina para deleção:", e);
+      msgEl.textContent = e.message;
+      msgEl.classList.add("text-red-600");
+      idVacinaAtualParaDelecao = null;
+    } finally {
+        carregandoDadosEl.style.display = "none";
+    }
+  }
+
+  btnBuscarVacinaParaDeletarEl.addEventListener("click", () => {
+    const idParaBuscar = idVacinaParaBuscarEl.value.trim();
+    if (idParaBuscar) {
+      buscarVacinaParaDelecao(idParaBuscar);
+    } else {
+      msgEl.textContent = "Por favor, digite um ID para buscar.";
+      msgEl.className = "mt-6 text-center font-semibold text-red-600 max-w-xl mx-auto";
+      infoVacinaParaDeletarEl.style.display = "none";
+    }
+  });
+
+  btnConfirmarDelecaoEl.addEventListener("click", async () => {
+    if (!idVacinaAtualParaDelecao) {
+      msgEl.textContent = "Nenhuma vacina selecionada para deleção. Busque uma vacina primeiro.";
+      msgEl.className = "mt-6 text-center font-semibold text-red-600 max-w-xl mx-auto";
+      return;
+    }
+
+    const nomeVacina = vacinaDeletarNomeSpan.textContent; // Para a mensagem de confirmação
+    if (confirm(`Tem certeza que deseja deletar permanentemente a vacina "${nomeVacina}" (ID: ${idVacinaAtualParaDelecao})? Esta ação não pode ser desfeita.`)) {
+      msgEl.textContent = "Deletando vacina...";
+      msgEl.className = "mt-6 text-center font-semibold text-noturno/80 max-w-xl mx-auto";
+      
+      try {
+        const resposta = await fetch(`http://localhost:8080/api/vacinas/${idVacinaAtualParaDelecao}`, {
+          method: "DELETE",
+        });
+
+        if (resposta.ok) { // HTTP 200 OK ou 204 No Content são considerados ok
+          msgEl.textContent = `Vacina "${nomeVacina}" (ID: ${idVacinaAtualParaDelecao}) deletada com sucesso!`;
+          msgEl.classList.remove("text-noturno/80");
+          msgEl.classList.add("text-green-700");
+          alert(`Vacina "${nomeVacina}" deletada com sucesso!`);
+          infoVacinaParaDeletarEl.style.display = "none"; // Esconde o card de confirmação
+          idVacinaParaBuscarEl.value = ""; // Limpa o campo de busca
+          idVacinaAtualParaDelecao = null;
+        } else {
+          // Tenta ler a mensagem de erro do backend
+          const erro = await resposta.json().catch(() => ({ message: `Status: ${resposta.status}. Verifique se a vacina não está em uso.` }));
+          const mensagemErro = erro.message || (typeof erro === 'string' ? erro : JSON.stringify(erro));
+          msgEl.textContent = `Erro ao deletar vacina: ${mensagemErro}`;
+          msgEl.classList.remove("text-noturno/80");
+          msgEl.classList.add("text-red-600");
+          console.error("Erro do backend ao deletar:", erro);
+          // Não limpa o ID para o usuário poder tentar novamente ou verificar
+        }
+      } catch (e) {
+        console.error("Erro geral ao deletar vacina:", e);
+        msgEl.textContent = "Erro na conexão com o servidor ao tentar deletar: " + e.message;
+        msgEl.classList.remove("text-noturno/80");
+        msgEl.classList.add("text-red-600");
+      }
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
+    carregandoDadosEl.style.display = "none";
+  });
+</script>
+</body>
+</html>
