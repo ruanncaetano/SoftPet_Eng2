@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Listar Vacinas</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { display: flex; }
+    .table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+    .table-container::-webkit-scrollbar-thumb { background-color: #BCAF9E; border-radius: 4px; }
+    .table-container::-webkit-scrollbar-track { background-color: #F2F2F2; }
+    .btn-icon { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 0.375rem; transition: background-color 0.2s; }
+    .btn-icon:hover { background-color: rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<div id="menu-lateral-placeholder"></div> 
+
+<main class="flex-1 bg-neve p-6 md:p-10 overflow-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-carmesim">Vacinas Cadastradas</h1>
+    <a href="cadastrar_vacina.html" 
+       class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all flex items-center space-x-2">
+      <i data-lucide="plus-circle" class="w-5 h-5"></i>
+      <span>Nova Vacina</span>
+    </a>
+  </div>
+
+  <div id="mensagem" class="mb-4 text-center font-semibold"></div>
+
+  <div class="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-lg table-container overflow-x-auto">
+    <table class="min-w-full divide-y divide-areia/50">
+      <thead class="bg-pastel/30">
+        <tr>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">ID</th>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">Nome</th>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">Descrição</th>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">Data Lote/Fab.</th>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">Dose Padrão</th>
+          <th scope="col" class="px-4 sm:px-6 py-3 text-center text-xs sm:text-sm font-bold text-carmesim uppercase tracking-wider">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="listaVacinasCorpo" class="bg-white divide-y divide-areia/30">
+        <!-- Linhas da tabela serão inseridas aqui pelo JavaScript -->
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script src="../../public/js/menu.js"></script> 
+<script>
+  lucide.createIcons();
+
+  const corpoTabela = document.getElementById("listaVacinasCorpo");
+  const msgEl = document.getElementById("mensagem");
+
+  function exibirMensagemCarregamento() {
+    corpoTabela.innerHTML = `<tr><td colspan="6" class="px-6 py-10 text-center text-noturno/70"><div id="estadoCarregamento"><i data-lucide="loader-2" class="animate-spin h-8 w-8 mx-auto mb-2 text-carmesim"></i>Carregando vacinas...</div></td></tr>`;
+    lucide.createIcons();
+  }
+
+  async function carregarVacinas() {
+    console.log("Iniciando carregarVacinas()..."); 
+    msgEl.textContent = "";
+    msgEl.className = "mb-4 text-center font-semibold";
+    exibirMensagemCarregamento();
+
+    try {
+      console.log("Fazendo fetch para http://localhost:8080/api/vacinas");
+      const resposta = await fetch("http://localhost:8080/api/vacinas");
+      console.log("Resposta do fetch:", resposta);
+
+      if (!resposta.ok) {
+        let erroMsg = `Falha ao buscar vacinas. Status: ${resposta.status}`;
+        try {
+            const erroData = await resposta.json(); 
+            erroMsg += ` - ${erroData.message || JSON.stringify(erroData)}`;
+        } catch (e) {
+            const textoErro = await resposta.text().catch(() => "Impossível ler corpo da resposta de erro.");
+            erroMsg += ` - ${textoErro}`;
+        }
+        console.error("Erro na resposta do fetch:", erroMsg);
+        throw new Error(erroMsg);
+      }
+      
+      const vacinas = await resposta.json();
+      console.log("Vacinas recebidas:", vacinas);
+
+      corpoTabela.innerHTML = ""; 
+
+      if (vacinas && vacinas.length > 0) {
+        vacinas.forEach(vacina => {
+          if (!vacina || typeof vacina.cod === 'undefined' || typeof vacina.nome === 'undefined') {
+            console.warn("Item de vacina inválido ou faltando dados essenciais:", vacina);
+            return; 
+          }
+
+          const linha = corpoTabela.insertRow();
+          linha.className = "hover:bg-pastel/20 transition-colors";
+
+          const dataLoteFormatada = vacina.dataReferenciaLote 
+            ? new Date(vacina.dataReferenciaLote).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+            : 'N/A';
+
+          linha.insertCell().outerHTML = `<td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-noturno">${vacina.cod}</td>`;
+          linha.insertCell().outerHTML = `<td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-noturno">${vacina.nome}</td>`;
+          linha.insertCell().outerHTML = `<td class="px-4 sm:px-6 py-4 text-sm text-noturno max-w-xs truncate" title="${vacina.descricao || ''}">${vacina.descricao || 'N/A'}</td>`;
+          linha.insertCell().outerHTML = `<td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-noturno">${dataLoteFormatada}</td>`;
+          linha.insertCell().outerHTML = `<td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-noturno">${vacina.tipoDosePadrao || 'N/A'}</td>`;
+          
+          const celulaAcoes = linha.insertCell();
+          celulaAcoes.className = "px-4 sm:px-6 py-4 whitespace-nowrap text-center text-sm font-medium";
+          celulaAcoes.innerHTML = `
+            <button onclick="editarVacina(${vacina.cod})" class="text-carmesim hover:text-[#8a0128] mr-2 btn-icon" title="Editar">
+              <i data-lucide="edit-2" class="w-5 h-5"></i>
+            </button>
+            <button onclick="redirecionarParaDeletar(${vacina.cod})" class="text-noturno hover:text-carmesim btn-icon" title="Deletar">
+              <i data-lucide="trash-2" class="w-5 h-5"></i>
+            </button>
+          `;
+        });
+      } else {
+        corpoTabela.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-noturno/70">Nenhuma vacina encontrada.</td></tr>';
+        console.log("Nenhuma vacina encontrada ou array vazio."); 
+      }
+    } catch (e) {
+      console.error("Erro geral em carregarVacinas:", e); 
+      corpoTabela.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-red-600">Erro ao carregar vacinas: ${e.message}. Verifique o console para detalhes.</td></tr>`;
+      msgEl.textContent = `Erro ao carregar vacinas. Detalhes no console.`;
+      msgEl.className = "mb-4 text-center font-semibold text-red-600";
+    } finally {
+      lucide.createIcons(); 
+      console.log("carregarVacinas() finalizado."); 
+    }
+  }
+
+  function editarVacina(id) {
+    console.log("Editar vacina ID:", id);
+    if(typeof id === 'undefined' || id === null) {
+        alert("ID da vacina inválido para edição.");
+        return;
+    }
+    window.location.href = `atualizarVacina.html?id=${id}`
+  }
+
+  function redirecionarParaDeletar(id) {
+    console.log("Redirecionar para deletar vacina ID:", id);
+    if(typeof id === 'undefined' || id === null) {
+        alert("ID da vacina inválido para deleção.");
+        return;
+    }
+    window.location.href = `deletarVacina.html?id=${id}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM completamente carregado. Chamando carregarVacinas().");
+    carregarVacinas();
+  });
+</script>
+</body>
+</html>

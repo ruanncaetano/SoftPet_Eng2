@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Efetuar Vacinação</title>
+  <link rel="icon" type="image/png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23BCAF9E%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 0.5em auto;
+        padding-right: 2.5rem; 
+    }
+    select option.bg-option { 
+        background-color: #FFFFFF; 
+        color: #0B1926; 
+    }
+  </style>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+
+<script src="../../public/js/menu.js"></script>
+
+<main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6 text-carmesim">Registrar Aplicação de Vacina</h1>
+
+  <form id="formEfetuarVacinacao" class="space-y-6">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <label for="voluntarioRegistrandoCod" class="block font-semibold mb-1">Voluntário (Registrando) <span class="text-carmesim">*</span></label>
+        <select id="voluntarioRegistrandoCod" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" required>
+          <option value="" disabled selected class="bg-option">Selecione o Voluntário</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="animalIdParaBuscar" class="block font-semibold mb-1">ID do Animal a ser Vacinado <span class="text-carmesim">*</span></label>
+        <div class="flex space-x-2">
+          <input type="number" id="animalIdParaBuscar" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" placeholder="Digite o ID" required />
+          <button type="button" id="btnBuscarAnimal" class="bg-areia text-noturno px-4 py-2 rounded-lg hover:bg-pastel transition-all">Buscar</button>
+        </div>
+        <div id="infoAnimalEncontrado" class="mt-2 p-2 border border-areia/50 rounded-lg bg-pastel/30 text-sm" style="display: none;">
+          <!-- Informações do animal encontrado aqui -->
+        </div>
+        <input type="hidden" id="animalCodSelecionado" />
+      </div>
+
+      <div>
+        <label for="vacinaCod" class="block font-semibold mb-1">Vacina Aplicada <span class="text-carmesim">*</span></label>
+        <select id="vacinaCod" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" required>
+          <option value="" disabled selected class="bg-option">Selecione a Vacina</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="dataAplicacaoAnimal" class="block font-semibold mb-1">Data da Aplicação <span class="text-carmesim">*</span></label>
+        <input type="date" id="dataAplicacaoAnimal" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" required />
+      </div>
+
+      <div>
+        <label for="doseNumericaAplicada" class="block font-semibold mb-1">Dose Numérica (Opcional)</label>
+        <input type="number" id="doseNumericaAplicada" min="0" step="0.01" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" placeholder="Ex: 1 ou 0.5" />
+      </div>
+
+      <div>
+        <label for="voluntarioAplicadorCod" class="block font-semibold mb-1">Voluntário/Veterinário (Aplicador) <span class="text-carmesim">*</span></label>
+        <select id="voluntarioAplicadorCod" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" required>
+          <option value="" disabled selected class="bg-option">Selecione quem aplicou</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label for="observacaoDaAplicacao" class="block font-semibold mb-1">Observações da Aplicação</label>
+      <textarea id="observacaoDaAplicacao" rows="3" class="w-full p-2 border border-areia rounded-lg focus:ring-1 focus:ring-carmesim focus:border-carmesim" placeholder="Motivo específico, comportamento do animal, etc."></textarea>
+    </div>
+
+    <div class="text-right">
+      <button type="submit" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
+        Registrar Aplicação
+      </button>
+    </div>
+  </form>
+
+  <div id="mensagem" class="mt-4 font-semibold text-center"></div>
+</main>
+
+<script>
+  lucide.createIcons();
+
+  const formVacinacao = document.getElementById("formEfetuarVacinacao");
+  const msgEl = document.getElementById("mensagem");
+  const voluntarioRegistrandoSelect = document.getElementById("voluntarioRegistrandoCod");
+  const animalIdParaBuscarEl = document.getElementById("animalIdParaBuscar");
+  const btnBuscarAnimalEl = document.getElementById("btnBuscarAnimal");
+  const infoAnimalEncontradoEl = document.getElementById("infoAnimalEncontrado");
+  const animalCodSelecionadoEl = document.getElementById("animalCodSelecionado");
+  const vacinaSelect = document.getElementById("vacinaCod");
+  const dataAplicacaoEl = document.getElementById("dataAplicacaoAnimal");
+  const doseNumericaEl = document.getElementById("doseNumericaAplicada");
+  const voluntarioAplicadorSelect = document.getElementById("voluntarioAplicadorCod");
+  const observacaoEl = document.getElementById("observacaoDaAplicacao");
+
+  async function popularSelect(selectElement, url, valorCampo, textoCampo, nomeEntidade) {
+    try {
+      const resposta = await fetch(url);
+      if (!resposta.ok) {
+        throw new Error(`Falha ao carregar ${nomeEntidade}. Status: ${resposta.status}`);
+      }
+      const dados = await resposta.json();
+      selectElement.options.length = 1;
+      dados.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item[valorCampo];
+        option.textContent = `${item[textoCampo]} (ID: ${item[valorCampo]})`;
+        option.classList.add("bg-option");
+        selectElement.appendChild(option);
+      });
+    } catch (e) {
+      console.error(`Erro ao popular ${nomeEntidade}:`, e);
+      msgEl.innerHTML += `<p class="text-red-600">Erro ao carregar lista de ${nomeEntidade}: ${e.message}</p>`;
+    }
+  }
+
+  async function buscarAnimalPorId() {
+    const idAnimal = animalIdParaBuscarEl.value.trim();
+    infoAnimalEncontradoEl.style.display = "none";
+    infoAnimalEncontradoEl.textContent = "";
+    infoAnimalEncontradoEl.classList.remove("text-red-600", "text-green-700");
+    animalCodSelecionadoEl.value = "";
+
+    if (!idAnimal) {
+      infoAnimalEncontradoEl.textContent = "Por favor, digite o ID do animal.";
+      infoAnimalEncontradoEl.classList.add("text-red-600");
+      infoAnimalEncontradoEl.style.display = "block";
+      return;
+    }
+
+    msgEl.textContent = "Buscando animal...";
+    msgEl.className = "mt-4 font-semibold text-center text-noturno/80";
+
+    try {
+      const resposta = await fetch(`http://localhost:8080/animal/${idAnimal}`);
+      if (!resposta.ok) {
+        if (resposta.status === 404) {
+          throw new Error(`Animal com ID ${idAnimal} não encontrado.`);
+        }
+        throw new Error(`Erro ao buscar animal. Status: ${resposta.status}`);
+      }
+      const animal = await resposta.json();
+
+      if (animal && animal.cod && animal.nome) {
+        infoAnimalEncontradoEl.textContent = `Animal encontrado: ${animal.nome} (ID: ${animal.cod})`;
+        infoAnimalEncontradoEl.classList.add("text-green-700");
+        animalCodSelecionadoEl.value = animal.cod;
+      } else {
+        throw new Error("Resposta do servidor não contém dados válidos do animal.");
+      }
+      msgEl.textContent = "";
+    } catch (e) {
+      console.error("Erro ao buscar animal:", e);
+      infoAnimalEncontradoEl.textContent = e.message;
+      infoAnimalEncontradoEl.classList.add("text-red-600");
+      msgEl.textContent = "";
+    } finally {
+      infoAnimalEncontradoEl.style.display = "block";
+    }
+  }
+
+  btnBuscarAnimalEl.addEventListener("click", buscarAnimalPorId);
+
+  formVacinacao.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    msgEl.textContent = "";
+    msgEl.className = "mt-4 font-semibold text-center";
+
+    const voluntarioRegistrandoCod = voluntarioRegistrandoSelect.value;
+    const animalCod = animalCodSelecionadoEl.value;
+    const vacinaCod = vacinaSelect.value;
+    const dataAplicacaoAnimal = dataAplicacaoEl.value;
+    const doseNumericaAplicada = doseNumericaEl.value ? parseFloat(doseNumericaEl.value) : null;
+    const voluntarioAplicadorCod = voluntarioAplicadorSelect.value;
+    const observacaoDaAplicacao = observacaoEl.value.trim();
+
+    if (!voluntarioRegistrandoCod || !animalCod || !vacinaCod || !dataAplicacaoAnimal || !voluntarioAplicadorCod) {
+      msgEl.textContent = "Por favor, preencha todos os campos obrigatórios, incluindo a busca do animal.";
+      msgEl.classList.add("text-red-600");
+      alert("Por favor, preencha todos os campos obrigatórios, incluindo a busca do animal.");
+      return;
+    }
+
+    const dataCompleta = new Date(`${dataAplicacaoAnimal}T00:00:00`);
+    const dataISO = dataCompleta.toISOString();
+
+    const vacinacaoDTO = {
+      voluntarioRegistrandoCod: parseInt(voluntarioRegistrandoCod),
+      animalCod: parseInt(animalCod),
+      vacinaCod: parseInt(vacinaCod),
+      dataAplicacaoAnimal: dataISO,
+      doseNumericaAplicada: doseNumericaAplicada,
+      voluntarioAplicadorCod: parseInt(voluntarioAplicadorCod),
+      observacaoDaAplicacao: observacaoDaAplicacao,
+    };
+
+    console.log("Enviando DTO de aplicação de vacina:", JSON.stringify(vacinacaoDTO, null, 2));
+    msgEl.textContent = "Registrando aplicação...";
+    msgEl.className = "mt-4 font-semibold text-center text-noturno/80";
+
+    try {
+      const resposta = await fetch("http://localhost:8080/api/vacinas/aplicacoes/registrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(vacinacaoDTO),
+      });
+
+      if (resposta.ok) {
+        const aplicacaoSalva = await resposta.json();
+        msgEl.textContent = `Aplicação de vacina (ID Registro: ${aplicacaoSalva.axvCod || 'N/A'}) registrada com sucesso!`;
+        msgEl.classList.add("text-green-700");
+        formVacinacao.reset();
+        animalIdParaBuscarEl.value = "";
+        infoAnimalEncontradoEl.style.display = "none";
+        animalCodSelecionadoEl.value = "";
+        alert("Aplicação de vacina registrada com sucesso!");
+      } else {
+        const erroText = await resposta.text();
+        let erroMsgDetalhada = "Erro desconhecido ao registrar aplicação.";
+        try {
+          const erroJson = JSON.parse(erroText);
+          erroMsgDetalhada = erroJson.message || JSON.stringify(erroJson);
+        } catch (e) {
+          erroMsgDetalhada = erroText || `Status: ${resposta.status}`;
+        }
+        msgEl.textContent = "Erro ao registrar aplicação: " + erroMsgDetalhada;
+        msgEl.classList.add("text-red-600");
+        console.error("Erro do backend:", erroMsgDetalhada);
+        alert("Erro ao registrar aplicação: " + erroMsgDetalhada);
+      }
+    } catch (e) {
+      console.error("Erro geral ao registrar aplicação:", e);
+      msgEl.textContent = "Erro na conexão com o servidor: " + e.message;
+      msgEl.classList.add("text-red-600");
+      alert("Erro de rede ou conexão com o servidor.");
+    }
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    popularSelect(voluntarioRegistrandoSelect, "http://localhost:8080/voluntarios/listar", "id", "nome", "Voluntários (Registrando)");
+    popularSelect(voluntarioAplicadorSelect, "http://localhost:8080/voluntarios/listar", "id", "nome", "Voluntários (Aplicador)");
+    popularSelect(vacinaSelect, "http://localhost:8080/api/vacinas", "cod", "nome", "Vacinas");
+    lucide.createIcons();
+  });
+</script>
+
+</body>
+</html>

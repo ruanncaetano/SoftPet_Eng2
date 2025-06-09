@@ -11,64 +11,147 @@
       theme: {
         extend: {
           colors: {
-            carmesim: '#A6032F',
-            areia: '#BCAF9E',
-            noturno: '#0B1926',
-            pastel: '#D9CAB8',
-            neve: '#F2F2F2',
+            carmesim: "#A6032F",
+            areia: "#BCAF9E",
+            noturno: "#0B1926",
+            pastel: "#D9CAB8",
+            neve: "#F2F2F2",
           },
         },
       },
     };
   </script>
-  <script src ="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem;
+      border-radius: 0.375rem;
+      transition: background-color 0.2s;
+    }
+    .btn-icon:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+  </style>
 </head>
 <body class="flex h-screen bg-neve font-sans text-noturno">
 
-  <script src="../../public/js/menu.js"></script>
+<script src="../../public/js/menu.js"></script>
 
-  <main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-carmesim">Lista de Produtos</h1>
+<main class="flex-1 bg-neve p-10 overflow-auto max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-carmesim">Lista de Produtos</h1>
+    <button onclick="carregarProdutos()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all flex items-center space-x-2">
+      <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+      <span>Atualizar Lista</span>
+    </button>
+  </div>
 
-    <div class="text-right mb-6">
-      <button onclick="carregarProdutos()" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all">
-        Mostrar Produtos
-      </button>
-    </div>
+  <div id="mensagem" class="mb-4 text-center font-semibold"></div>
+  <div id="listaProdutos" class="space-y-4">
+    <!-- Produtos serão listados aqui -->
+  </div>
+</main>
 
-    <div id="listaProdutos" class="space-y-4"></div>
-  </main>
+<script>
+  lucide.createIcons();
 
-  <script>
+  const listaProdutosEl = document.getElementById("listaProdutos");
+  const msgEl = document.getElementById("mensagem");
+
+  function formatarData(dataString) {
+    if (!dataString) return "N/A";
+    const partes = dataString.split("-");
+    if (partes.length === 3) {
+      return partes[2] + "/" + partes[1] + "/" + partes[0];
+    }
+    return dataString;
+  }
+
+  async function carregarProdutos() {
+    msgEl.textContent = "Carregando produtos...";
+    msgEl.className = "mb-4 text-center font-semibold text-noturno/80";
+    listaProdutosEl.innerHTML = "<div class=\"text-center p-4\"><i data-lucide=\"loader-2\" class=\"animate-spin h-8 w-8 mx-auto text-carmesim\"></i></div>";
     lucide.createIcons();
-    async function carregarProdutos() {
-      const resposta = await fetch("http://localhost:8080/produtos");
+
+    try {
+      const resposta = await fetch("http://localhost:8080/api/produtos");
+      if (!resposta.ok) {
+        const erroTexto = await resposta.text().catch(() => "Status: " + resposta.status);
+        throw new Error("Falha ao buscar produtos: " + erroTexto);
+      }
       const produtos = await resposta.json();
-      const container = document.getElementById("listaProdutos");
-      container.innerHTML = "";
+
+      listaProdutosEl.innerHTML = "";
 
       if (produtos.length === 0) {
-        container.innerHTML = "<p class='text-gray-600'>Nenhum produto cadastrado.</p>";
+        listaProdutosEl.innerHTML = "<p class=\"text-gray-600 text-center p-4\">Nenhum produto cadastrado.</p>";
+        msgEl.textContent = "";
         return;
       }
 
       produtos.forEach(prod => {
         const item = document.createElement("div");
-        item.className = "p-4 border rounded-lg bg-white shadow";
+        item.className = "p-4 border border-areia/50 rounded-lg bg-white shadow-md flex justify-between items-start";
 
-        item.innerHTML = `
-          <p><strong>ID:</strong> ${prod.id}</p>
-          <p><strong>Tipo:</strong> ${prod.tipo}</p>
-          <p><strong>Descrição:</strong> ${prod.descricao}</p>
-          <p><strong>Unidade de Medida:</strong> ${prod.unidadeMedida}</p>
-          <p><strong>Data de Validade:</strong> ${prod.dataValidade || "N/A"}</p>
-          <p><strong>Quantidade em Estoque:</strong> ${prod.quantidadeEstoque}</p>
-        `;
+        const id = prod.id || prod.p_cod || "N/A";
+        const tipo = prod.tipo || prod.p_tipo || "N/A";
+        const descricao = prod.descricao || prod.p_descricao || "N/A";
+        const unidadeMedida = prod.unidadeMedida || prod.p_unidade_medida || "N/A";
+        const dataValidade = prod.dataValidade || prod.p_data_validade;
+        const quantidadeEstoque = typeof prod.quantidadeEstoque !== "undefined" ? prod.quantidadeEstoque : (typeof prod.p_qntd_estoque !== "undefined" ? prod.p_qntd_estoque : "N/A");
 
-        container.appendChild(item);
+        item.innerHTML =
+                "<div class=\"flex-grow\">" +
+                "<p class=\"font-semibold text-carmesim text-lg\">" + tipo + " (ID: " + id + ")</p>" +
+                "<p><strong class=\"text-noturno/80\">Descrição:</strong> " + descricao + "</p>" +
+                "<p><strong class=\"text-noturno/80\">Unidade:</strong> " + unidadeMedida + "</p>" +
+                "<p><strong class=\"text-noturno/80\">Validade:</strong> " + formatarData(dataValidade) + "</p>" +
+                "<p><strong class=\"text-noturno/80\">Estoque:</strong> " + quantidadeEstoque + "</p>" +
+                "</div>" +
+                "<div class=\"flex flex-col space-y-2 ml-4\">" +
+                "<button onclick=\"editarProduto(" + id + ")\" class=\"text-noturno hover:text-carmesim btn-icon\" title=\"Editar Produto\">" +
+                "<i data-lucide=\"edit-3\" class=\"w-5 h-5\"></i>" +
+                "</button>" +
+                "<button onclick=\"deletarProduto(" + id + ")\" class=\"text-red-600 hover:text-red-800 btn-icon\" title=\"Deletar Produto\">" +
+                "<i data-lucide=\"trash-2\" class=\"w-5 h-5\"></i>" +
+                "</button>" +
+                "</div>";
+
+        listaProdutosEl.appendChild(item);
       });
+
+      msgEl.textContent = "";
+    } catch (e) {
+      console.error("Erro ao carregar produtos:", e);
+      listaProdutosEl.innerHTML = "<p class=\"text-red-600 text-center p-4\">Erro ao carregar produtos: " + e.message + "</p>";
+      msgEl.textContent = "Erro ao carregar produtos.";
+      msgEl.className = "mb-4 text-center font-semibold text-red-600";
+    } finally {
+      lucide.createIcons();
     }
-  </script>
+  }
+
+  function editarProduto(id) {
+    if (typeof id === "undefined" || id === null) {
+      alert("ID do produto inválido para edição.");
+      return;
+    }
+    window.location.href = "alterarProduto.html?id=" + id;
+  }
+
+  function deletarProduto(id) {
+    if (typeof id === "undefined" || id === null) {
+      alert("ID do produto inválido para deleção.");
+      return;
+    }
+    window.location.href = "deletarProduto.html?id=" + id;
+  }
+
+  document.addEventListener("DOMContentLoaded", carregarProdutos);
+</script>
 
 </body>
 </html>

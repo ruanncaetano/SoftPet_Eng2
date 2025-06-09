@@ -32,7 +32,7 @@ public class PessoaControll
         PessoaCompletoDTO doador = pessoaService.getDoadorCpf(cpf);
         if(doador != null)
             return ResponseEntity.ok(doador);
-        return ResponseEntity.badRequest().body("Doador não encontrado!");
+        return ResponseEntity.badRequest().body("Pessoa não encontrada!");
     }
 
     @PostMapping("/cadastro")

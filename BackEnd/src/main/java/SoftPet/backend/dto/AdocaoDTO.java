@@ -7,12 +7,20 @@ import SoftPet.backend.model.PessoaModel;
 import java.time.LocalDate;
 
 public class AdocaoDTO {
+
     private AnimalModel animal;
     private PessoaModel pessoa;
     private AdocaoModel adocao;
 
     public AdocaoDTO() {}
-    public AdocaoDTO(LocalDate adoDt, byte[] adoContratoes, AnimalModel animal, PessoaModel adotanteBusca) {}
+    public AdocaoDTO(Long id,LocalDate adoDt, byte[] adoContratoes, AnimalModel animal, PessoaModel adotanteBusca) {
+        this.adocao = new AdocaoModel(); // Instancia o objeto antes de usar
+        this.adocao.setAdo_dt(adoDt);
+        this.adocao.setAdo_contrato(adoContratoes);
+        this.adocao.setAdo_cod(id);
+        this.animal = animal;
+        this.pessoa = adotanteBusca; // Usa o parâmetro correto
+    }
     public AdocaoDTO(AdocaoModel adocao, AnimalModel animal, PessoaModel pessoa) {
         this.adocao = adocao;
         this.animal = animal;

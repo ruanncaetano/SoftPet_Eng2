@@ -39,7 +39,7 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-adocao" class="ml-6 mt-2 space-y-2 hidden">
-          <li><a href="../../views/viewGeral/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
+          <li><a href="../../views/viewRuan/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
           <li><a href="../../views/viewRuan/buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
         </ul>
       </div>
@@ -51,7 +51,7 @@ document.write(`
           <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
         </button>
         <ul id="menu-pessoa" class="ml-6 mt-2 space-y-2 hidden">
-        <li><a href="../../views/viewRuan/adotante.html" class="block hover:text-carmesim">Cadastrar Adotante</a></li>
+        <li><a href="../../views/viewWilker/adotante.html" class="block hover:text-carmesim">Cadastrar Adotante</a></li>
           <li><a href="../../views/viewGuilherme/doador.html" class="block hover:text-carmesim">Cadastrar Doador</a></li>
         </ul>
       </div>
@@ -65,6 +65,17 @@ document.write(`
         <ul id="menu-doacao" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/viewGuilherme/registrarDoacao.html" class="block hover:text-carmesim">Registrar Doação</a></li>
           <li><a href="../../views/viewGuilherme/listarDoacoes.html" class="block hover:text-carmesim">Consultar Doação</a></li>
+        </ul>
+      </div>
+      <!-- Dropdown Vacinas -->
+      <div>
+        <button onclick="toggleMenu('menu-vacina', this)" class="w-full flex justify-between items-center text-left hover:text-carmesim transition">
+          <span class="flex gap-2 items-center"><svg data-lucide="dog" class="w-5 h-5"></svg>Vacinas</span>
+          <svg data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></svg>
+        </button>
+        <ul id="menu-vacina" class="ml-6 mt-2 space-y-2 hidden">
+          <li><a href="../../views/ViewPedro/cadastrarVacina.html" class="block hover:text-carmesim">Cadastrar</a></li>
+          <li><a href="../../views/viewWilker/agendarVacinacao.html" class="block hover:text-carmesim">Agendar</a></li>
         </ul>
       </div>
 
