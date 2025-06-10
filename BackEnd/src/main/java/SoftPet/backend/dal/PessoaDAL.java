@@ -126,13 +126,11 @@ public class    PessoaDAL
     }
 
 
-    public PessoaModel addDoador(PessoaModel doador)
-    {
-        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_profissao, con_cod, en_id, pe_rg) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+    public PessoaModel addDoador(PessoaModel doador) {
+        String sql = "INSERT INTO pessoa (pe_cpf, pe_nome, pe_profissao, con_cod, en_id, pe_rg, pe_status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS))
-        {
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, doador.getCpf());
             stmt.setString(2, doador.getNome());
             stmt.setString(3, doador.getProfissao());
@@ -149,20 +147,21 @@ public class    PessoaDAL
 
             stmt.setString(6, doador.getRg());
 
+            // Aqui está o novo campo: pe_status = true
+            stmt.setBoolean(7, true);
+
             int linhasMod = stmt.executeUpdate();
-            if (linhasMod > 0)
-            {
+            if (linhasMod > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next())
                     doador.setId(rs.getLong(1));
             }
-        }
-        catch(SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException("Erro ao adicionar doador: " + e.getMessage(), e);
         }
         return doador;
     }
+
 
 
     public Boolean updateDoador(String cpf, PessoaModel doador)
@@ -196,7 +195,7 @@ public class    PessoaDAL
         }
     }
 
-    public Boolean deleteByDoador(String cpf)
+    public Boolean deleteFisicoByDoador(String cpf)
     {
         String sql = "DELETE FROM pessoa WHERE pe_cpf = ?";
         try(PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql))
@@ -211,6 +210,31 @@ public class    PessoaDAL
         }
     }
 
+    public Boolean deleteLogicoByDoador(String cpf) {
+        String sql = "UPDATE pessoa SET pe_status = false WHERE pe_cpf = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setString(1, cpf);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean reativarDoador(String cpf) {
+        String sql = "UPDATE pessoa SET pe_status = true WHERE pe_cpf = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+            stmt.setString(1, cpf);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
+
     public List<PessoaCompletoDTO> getAll()
     {
         List<PessoaCompletoDTO> list = new ArrayList<>();
@@ -220,7 +244,8 @@ public class    PessoaDAL
                 "e.en_id, e.en_cep, e.en_rua, e.en_numero, e.en_bairro, e.en_cidade, e.en_uf, e.en_complemento " +
                 "FROM pessoa p " +
                 "JOIN contato c ON p.con_cod = c.con_cod " +
-                "JOIN endereco e ON p.en_id = e.en_id";
+                "JOIN endereco e ON p.en_id = e.en_id " +
+                "WHERE p.pe_status = true"; // <-- filtro aplicado aqui
 
         try(ResultSet rs = SingletonDB.getConexao().consultar(sql))
         {
@@ -237,7 +262,6 @@ public class    PessoaDAL
                         rs.getString("pe_rg")
                 );
 
-                //relacionando os objetos completo
                 ContatoModel contato = new ContatoModel(
                         rs.getLong("con_cod"),
                         rs.getString("con_telefone"),
@@ -265,4 +289,5 @@ public class    PessoaDAL
         }
         return list;
     }
+
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ADAPV - Banir adotante</title>
+  <title>ADAPV - Banir Adotante</title>
   <link rel="website icon" type="png" href="../../public/images/patinha.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -20,106 +20,146 @@
         },
       },
     };
-    function voltarParaInicio() {
-      window.location.href = "../../views/viewGeral/home.html";
-    }
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<script src="../../public/js/menu.js"></script>
 <body class="flex h-screen bg-neve font-sans text-noturno">
-  <main class="flex-1 bg-neve p-10 overflow-auto">
-    <h1 class="text-3xl font-bold mb-6 text-carmesim">Buscar adotante por ID</h1>
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
 
-    <div class="mb-6">
-      <label for="produtoId" class="block mb-2 font-semibold">Informe o ID do adotante:</label>
-      <input id="produtoId" type="number" class="border border-gray-300 rounded px-3 py-2 w-64" placeholder="Ex: 1" />
-      <button id="btnBuscar" class="bg-carmesim text-white px-6 py-2 rounded-full hover:bg-[#8a0128] transition-all ml-2">
-        Buscar por ID
-      </button>
-      <button onclick="voltarParaInicio()" class="bg-gray-400 text-white px-6 py-2 rounded-full hover:bg-gray-600 transition-all ml-2">
+  <!-- Conteúdo principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Banir Adotante</h1>
+      <a href="../../views/viewGeral/home.html"
+         class="bg-gray-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition-all">
         Voltar
-      </button>
+      </a>
     </div>
+
+    <section class="mb-8">
+      <label for="adotanteCpf" class="block font-semibold mb-2">Informe o CPF do adotante:</label>
+      <div class="flex items-center gap-2">
+        <input id="adotanteCpf" type="text" class="border border-gray-300 rounded-lg p-3 w-64" placeholder="Ex: 12345678900" />
+        <button id="btnBuscar" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+          Buscar por CPF
+        </button>
+      </div>
+    </section>
 
     <div class="overflow-x-auto shadow-lg rounded-lg">
       <table class="min-w-full bg-white border border-gray-200">
         <thead class="bg-areia text-noturno">
           <tr>
-            <th class="px-4 py-2 text-left">Descrição</th>
-            <th class="px-4 py-2 text-left">Tipo</th>
-            <th class="px-4 py-2 text-left">Qtd. Estoque</th>
-            <th class="px-4 py-2 text-left">Unidade</th>
-            <th class="px-4 py-2 text-left">Validade</th>
+            <th class="px-4 py-2 text-left">Nome</th>
+            <th class="px-4 py-2 text-left">CPF</th>
+            <th class="px-4 py-2 text-left">Email</th>
+            <th class="px-4 py-2 text-left">Telefone</th>
             <th class="px-4 py-2 text-left">Ações</th>
           </tr>
         </thead>
-        <tbody id="tabelaProduto" class="divide-y divide-gray-200"></tbody>
+        <tbody id="tabelaAdotante" class="divide-y divide-gray-200"></tbody>
       </table>
     </div>
   </main>
 
   <script>
-    async function consultarProdutoPorId(id) {
-      const url = `http://localhost:8080/produtos/${id}`;
+    async function consultarAdotantePorCpf(cpf) {
+      const url = `http://localhost:8080/doador/${cpf}`;
 
       try {
         const response = await fetch(url);
         if (!response.ok) {
-          if (response.status === 404 || response.status === 204) {
-            alert("Adotante não encontrado.");
-            limparTabela();
-            return;
-          }
-          throw new Error("Erro ao buscar produto.");
+          alert("Adotante não encontrado.");
+          limparTabela();
+          return;
         }
 
-        const produto = await response.json();
-        preencherTabela([produto]); // Envia como array para reaproveitar a função
+        const adotante = await response.json();
+        preencherTabela([adotante]);
       } catch (err) {
         console.error(err);
         alert("Erro ao conectar com o servidor.");
       }
     }
 
-    function preencherTabela(produtos) {
-      const tabela = document.getElementById("tabelaProduto");
+    function preencherTabela(adotantes) {
+      const tabela = document.getElementById("tabelaAdotante");
       tabela.innerHTML = "";
 
-      produtos.forEach(p => {
-        const idProduto = p.produto?.id ?? p.id;
+      adotantes.forEach(a => {
+        const statusAtivo = a.pessoa.status === true;
+
+        const acaoHtml = statusAtivo
+          ? `<a href="../../views/viewLuan/ExclusaoDiretaAdotante.html?id=${a.pessoa.cpf}"
+                class="text-red-600 hover:underline">Banir</a>`
+          : `<button onclick="reativarAdotante('${a.pessoa.cpf}')"
+                class="text-green-600 hover:underline">Reativar</button>`;
 
         const linha = `
           <tr>
-            <td class="px-4 py-2">${p.produto?.descricao ?? p.descricao}</td>
-            <td class="px-4 py-2">${p.produto?.tipo ?? p.tipo}</td>
-            <td class="px-4 py-2">${p.produto?.quantidadeEstoque ?? p.quantidadeEstoque}</td>
-            <td class="px-4 py-2">${p.produto?.unidadeMedida ?? p.unidadeMedida}</td>
-            <td class="px-4 py-2">${p.produto?.dataValidade ?? p.dataValidade}</td>
-            <td class="px-4 py-2 space-x-2">
-              <a href="../../views/viewLuan/ExclusaoDiretaAdotante.html?id=${idProduto}" class="text-red-600 hover:underline">Banir Adotante</a>
-            </td>
+            <td class="px-4 py-2">${a.pessoa.nome}</td>
+            <td class="px-4 py-2">${a.pessoa.cpf}</td>
+            <td class="px-4 py-2">${a.contato.email}</td>
+            <td class="px-4 py-2">${a.contato.telefone}</td>
+            <td class="px-4 py-2">${acaoHtml}</td>
           </tr>
         `;
         tabela.insertAdjacentHTML("beforeend", linha);
       });
     }
 
+    async function reativarAdotante(cpf) {
+      const confirmacao = confirm("Tem certeza que deseja reativar este adotante?");
+      if (!confirmacao) return;
+
+      try {
+        const response = await fetch(`http://localhost:8080/doador/reativar/${cpf}`, {
+          method: "PUT"
+        });
+
+        if (response.ok) {
+          alert("Adotante reativado com sucesso.");
+          consultarAdotantePorCpf(cpf); // Recarrega a tabela atualizada
+        } else {
+          const erro = await response.text();
+          alert("Erro ao reativar adotante: " + erro);
+        }
+      } catch (error) {
+        console.error("Erro ao reativar adotante:", error);
+        alert("Erro ao se conectar com o servidor.");
+      }
+    }
+
+
+
+
     function limparTabela() {
-      document.getElementById("tabelaProduto").innerHTML = "";
+      document.getElementById("tabelaAdotante").innerHTML = "";
     }
 
     document.getElementById("btnBuscar").addEventListener("click", () => {
-      const id = document.getElementById("produtoId").value;
-      if (id) {
-        consultarProdutoPorId(id);
+      const cpf = document.getElementById("adotanteCpf").value.trim();
+      if (cpf) {
+        consultarAdotantePorCpf(cpf);
       } else {
-        alert("Por favor, informe o ID do produto.");
+        alert("Por favor, informe o CPF do adotante.");
       }
     });
-  </script>
-  <script>
+
     lucide.createIcons();
+    document.getElementById("adotanteCpf").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const cpf = event.target.value.trim();
+        if (cpf) {
+          consultarAdotantePorCpf(cpf);
+        } else {
+          alert("Por favor, informe o CPF do adotante.");
+        }
+      }
+    });
+
+
   </script>
 </body>
 </html>
