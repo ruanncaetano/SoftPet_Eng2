@@ -7,9 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}"
+            "name": "Open agendarVacinacao.html",
+            "file": "/home/wilker/hd/Faculdade/5 termo/Engenharia de software/SoftPet_Eng2-wilker/SoftPet_Eng2/FrontEnd/views/viewWilker/agendarVacinacao.html"
         }
     ]
 }

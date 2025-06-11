@@ -19,7 +19,7 @@ public class VoluntarioControl {
 
     // Cadastro de voluntário
     @PostMapping("/cadastrar")
-    public VoluntarioModel cadastrarVoluntario(@RequestBody VoluntarioModel voluntario) {
+    public VoluntarioModel cadastrarVoluntario(@RequestBody VoluntarioModel voluntario) throws InstantiationException, IllegalAccessException {
         return voluntarioService.cadastrarVoluntario(voluntario);
     }
 

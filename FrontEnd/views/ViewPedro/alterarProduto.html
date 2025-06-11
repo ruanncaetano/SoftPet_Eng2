@@ -109,7 +109,7 @@
     }
 
     try {
-      const resposta = await fetch(`http://localhost:8080/produtos/${idBusca}`);
+      const resposta = await fetch(`http://localhost:8080/api/produtos/${idBusca}`);
       if (!resposta.ok) {
         msg.textContent = "Produto não encontrado.";
         msg.classList.add("text-red-600");
@@ -149,8 +149,7 @@
 
     // Validações
     const tipoValido = /^[A-Za-zÀ-ÿ\s]+$/.test(tipo);
-    const unidadesPermitidas = ["litros", "kg", "gramas", "ml", "mililitros", "unidade"];
-    const unidadeValida = unidadesPermitidas.includes(unidadeMedida);
+    const unidadesPermitidas = ["LITROS", "KG", "G", "ML", "UNIDADE"];
     const hoje = new Date();
     const validade = new Date(dataValidade);
     const validadeEhFutura = validade > new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
@@ -162,11 +161,6 @@
       return;
     }
 
-    if (!unidadeValida) {
-      msg.textContent = "Unidade de medida inválida. Use: litros, kg, gramas, ml, mililitros ou unidade.";
-      msg.classList.add("text-red-600");
-      return;
-    }
 
     if (!validadeEhFutura) {
       msg.textContent = "A data de validade deve ser pelo menos 1 dia no futuro.";
@@ -196,7 +190,8 @@
     };
 
     try {
-      const resposta = await fetch("http://localhost:8080/produtos/atualizar", {
+      const id = document.getElementById("p_cod").value;
+      const resposta = await fetch(`http://localhost:8080/api/produtos/atualizar/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(produto)

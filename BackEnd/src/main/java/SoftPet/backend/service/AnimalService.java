@@ -40,6 +40,11 @@ public class AnimalService {
         return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
     }
 
+    public List<AnimalModel> listarTodos() {
+        return animalDAL.listarTodos();
+    }
+
+
     public byte[] getFoto(Long id) {
         AnimalModel animal = animalDAL.buscarIdComFoto(id);
         if (animal != null && animal.getFoto() != null) {
@@ -51,11 +56,10 @@ public class AnimalService {
     public AnimalModel buscarPorCod(int cod) {
         AnimalModel animal = animalDAL.buscarPorCod(cod);
 
-        if (animal == null || !animal.getAtivo() || !animal.getDisp_adocao()) {
-            return null;
+        if (animal != null && animal.getAtivo() && animal.getDisp_adocao()) {
+            return animal;
         }
-
-        return animal;
+        return null;
     }
 
     public AnimalModel atualizarAnimal(AnimalModel animal) {

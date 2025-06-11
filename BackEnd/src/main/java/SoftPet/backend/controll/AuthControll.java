@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import SoftPet.backend.service.AuthService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -23,8 +24,7 @@ public class AuthControll
     AuthService authService;
 
     @GetMapping("/teste")
-    public ResponseEntity<Object> getAll()
-    {
+    public ResponseEntity<Object> getAll() throws SQLException, ClassNotFoundException {
         List <UserModel> listUSer = authService.getAllLogins();
         if(!listUSer.isEmpty())
             return ResponseEntity.ok(listUSer);

@@ -83,7 +83,13 @@ public class AnimalControl
     @GetMapping("/{id}")
     public ResponseEntity<Object> getId(@PathVariable int id) {
         AnimalModel animal = animalService.buscarPorCod(id);
-        return ResponseEntity.ok(animal);
+
+        if (animal != null) {
+            return ResponseEntity.ok(animal);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Animal não encontrado ou indisponível para adoção.");
+        }
     }
     @PutMapping("/atualizar")
     public ResponseEntity<Object> atualizarAnimal(@RequestParam("cod") int cod,
@@ -96,7 +102,7 @@ public class AnimalControl
                                                  @RequestParam("ativo") boolean ativo,
                                                  @RequestParam(value = "foto", required = false) MultipartFile foto,
                                                  @RequestParam(value = "obs", required = false) String obs) throws IOException {
-        AnimalModel animal = new AnimalModel(cod,nome,idade, peso, baia, adocao, castrado, obs, ativo);
+        AnimalModel animal = new AnimalModel((long) cod,nome,idade, peso, baia, adocao, castrado, obs, ativo);
         if (foto != null && !foto.isEmpty()) {
             animal.setFoto(foto.getBytes()); // ← CONVERSÃO PARA byte[]   -> passando por fora do contrutor
         }
@@ -107,4 +113,10 @@ public class AnimalControl
             return ResponseEntity.badRequest().body(e.getMessage()); // Retorna 400 em caso de erro
         }
     }
+    @GetMapping("/listar")
+    public ResponseEntity<List<AnimalModel>> listarAnimais() {
+        List<AnimalModel> animais = animalService.listarTodos();
+        return ResponseEntity.ok(animais);
+    }
+
 }

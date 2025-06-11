@@ -53,3 +53,22 @@ function limparFiltroDoacao()
 {
     limparFiltro("tabela-doacoes");
 }
+
+
+
+
+function aplicarFiltroAdotante() 
+{
+    aplicarFiltro("tabela-adotantes", {
+        nome: 0,
+        cpf: 1,
+        profissao: 2,
+        telefone: 3,
+        cidade: 4
+    });
+}
+
+function limparFiltroAdotante() 
+{
+    limparFiltro("tabela-adotantes");
+}

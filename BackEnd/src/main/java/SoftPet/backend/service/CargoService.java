@@ -13,8 +13,8 @@ public class CargoService {
     @Autowired
     private CargoDAL cargoDAL;
 
-    public CargoModel findById(int id) {
-        return cargoDAL.findById(id);
+    public CargoModel findById(Long id) {
+        return cargoDAL.buscarPorId(id);
     }
 
     public CargoModel findByNome(String nome) {
@@ -26,7 +26,7 @@ public class CargoService {
     }
 
     public CargoModel create(CargoModel cargo) {
-        Long id = cargoDAL.criar(cargo);
+        Long id = cargoDAL.criar(cargo).getId();
         if (id != -1) {
             cargo.setId(id);
             return cargo;
@@ -38,7 +38,7 @@ public class CargoService {
         return cargoDAL.update(cargo);
     }
 
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         return cargoDAL.delete(id);
     }
 
