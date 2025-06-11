@@ -28,7 +28,7 @@ public class ProdutoModel {
     }
 
 
-    public Long getId() { return id; }
+    public long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public String getTipo() { return tipo; }

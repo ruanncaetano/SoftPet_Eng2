@@ -51,6 +51,7 @@ public class AnimalControl
             AnimalModel animalSalvo = animalService.cadastrarAnimal(animal);
             return ResponseEntity.ok(animalSalvo); // Retorna 200 OK com o animal cadastrado
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage()); // Retorna 400 em caso de erro
         }
     }

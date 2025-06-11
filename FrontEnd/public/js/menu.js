@@ -28,7 +28,7 @@ document.write(`
         <li><a href="../../views/viewLuan/ConsultarProduto.html" class="block hover:text-carmesim">Consultar</a></li>
         <li><a href="../../views/viewLuan/AlterarProduto.html" class="block hover:text-carmesim">Alterar</a></li>
         <li><a href="../../views/viewLuan/ExcluirProduto.html" class="block hover:text-carmesim">Excluir</a></li>
-        <li><a href="../../views/viewLuan/BanirAdotante.html" class="block hover:text-carmesim">Banir adotante</a></li>
+       
       </ul>
     </div>
 
@@ -41,6 +41,7 @@ document.write(`
         <ul id="menu-adocao" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/viewRuan/adocao.html" class="block hover:text-carmesim">Nova Adoção</a></li>
           <li><a href="../../views/viewRuan/buscarAdocao.html" class="block hover:text-carmesim">Ver Adoções</a></li>
+          <li><a href="../../views/viewLuan/BanirAdotante.html" class="block hover:text-carmesim">Banir Adotante</a></li>
         </ul>
       </div>
 
@@ -76,6 +77,7 @@ document.write(`
         <ul id="menu-vacina" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/ViewPedro/cadastrarVacina.html" class="block hover:text-carmesim">Cadastrar</a></li>
           <li><a href="../../views/viewWilker/agendarVacinacao.html" class="block hover:text-carmesim">Agendar</a></li>
+          <li><a href="../../views/viewLuan/AlertaVacinacao.html" class="block hover:text-carmesim">Alerta Vacinacao</a></li>
         </ul>
       </div>
 

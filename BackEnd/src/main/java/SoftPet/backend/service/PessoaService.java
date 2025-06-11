@@ -107,11 +107,31 @@ public class PessoaService
         if(doadorDelete == null)
             throw new Exception("Não existe esse usuário!");
 
-        if(!pessoaDAL.deleteByDoador(cpf))
+        if(!pessoaDAL.deleteFisicoByDoador(cpf))
             throw new Exception("Erro ao deletar um doador!");
 
         contatoDAL.deleteByContato(doadorDelete.getContato().getId());
         enderecoDAL.deleteByEndereco(doadorDelete.getEndereco().getId());
+    }
+
+    public void excluirLogicamente(String cpf) throws Exception {
+        PessoaCompletoDTO doador = pessoaDAL.findByDoador(cpf);
+        if (doador == null)
+            throw new Exception("Doador não encontrado!");
+
+        PessoaModel pessoa = doador.getPessoa();
+        pessoa.setStatus(false);
+        pessoaDAL.updateDoador(cpf, pessoa);
+    }
+
+    public void reativarDoador(String cpf) throws Exception {
+        PessoaCompletoDTO doador = pessoaDAL.findByDoador(cpf);
+        if (doador == null)
+            throw new Exception("Doador não encontrado!");
+
+        PessoaModel pessoa = doador.getPessoa();
+        pessoa.setStatus(true);
+        pessoaDAL.updateDoador(cpf, pessoa);
     }
 
     public List<PessoaCompletoDTO> getAllDoador()
