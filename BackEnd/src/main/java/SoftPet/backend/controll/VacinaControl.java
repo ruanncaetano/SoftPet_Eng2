@@ -57,7 +57,7 @@ public class VacinaControl {
         }
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public ResponseEntity<List<VacinaModel>> listarTodasVacinas() {
         try {
             List<VacinaModel> vacinas = vacinaService.listarTodasVacinas();

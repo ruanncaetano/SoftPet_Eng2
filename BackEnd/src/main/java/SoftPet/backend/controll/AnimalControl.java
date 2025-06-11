@@ -113,4 +113,10 @@ public class AnimalControl
             return ResponseEntity.badRequest().body(e.getMessage()); // Retorna 400 em caso de erro
         }
     }
+    @GetMapping("/listar")
+    public ResponseEntity<List<AnimalModel>> listarAnimais() {
+        List<AnimalModel> animais = animalService.listarTodos();
+        return ResponseEntity.ok(animais);
+    }
+
 }

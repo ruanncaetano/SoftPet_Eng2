@@ -26,6 +26,7 @@ public class AnimalXVacinacaoModel {
     }
 
     // Getters e Setters
+
     public Long getAxvCod() {
         return axvCod;
     }

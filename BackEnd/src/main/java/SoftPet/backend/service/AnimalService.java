@@ -40,6 +40,11 @@ public class AnimalService {
         return animalDAL.consultarComFiltros(nome, tipo, porte, sexo, status);
     }
 
+    public List<AnimalModel> listarTodos() {
+        return animalDAL.listarTodos();
+    }
+
+
     public byte[] getFoto(Long id) {
         AnimalModel animal = animalDAL.buscarIdComFoto(id);
         if (animal != null && animal.getFoto() != null) {

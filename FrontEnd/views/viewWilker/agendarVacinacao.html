@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Agendar Vacinação</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .erro-input {
+      border-color: red !important;
+    }
+  </style>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <!-- Sidebar -->
+  <script src="../../public/js/menu.js"></script>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Agendar Vacinação</h1>
+      <a href="listarVacinacoes.html"
+        class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+        Ver Vacinações
+      </a>
+    </div>
+
+    <section>
+      <form id="formVacinacao">
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label class="block font-semibold mb-1">* Animal</label>
+            <select id="animal-id" class="w-full p-3 border border-gray-300 rounded-lg" required>
+              <option value="">Selecione um animal</option>
+              <!-- Popular via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">* Vacina</label>
+            <select id="vacina-id" class="w-full p-3 border border-gray-300 rounded-lg" required>
+              <option value="">Selecione uma vacina</option>
+              <!-- Popular via JS -->
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">* Data de Aplicação</label>
+            <input id="data-aplicacao" type="date" class="w-full p-3 border border-gray-300 rounded-lg" required>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">* Dose</label>
+            <input id="dose" maxlength="20" type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="1ª dose, reforço..." required>
+          </div>
+        </div>
+        <div class="text-right pt-6">
+          <button type="submit" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+            Agendar
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+  </script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Popular animais
+    fetch('http://localhost:8080/animal/listar')
+      .then(response => {
+        if (!response.ok) throw new Error('Erro ao buscar animais');
+        return response.json();
+      })
+      .then(animais => {
+        const selectAnimal = document.getElementById('animal-id');
+        animais.forEach(animal => {
+          const option = document.createElement('option');
+          option.value = animal.cod; // ajuste conforme seu backend (ex: idAnimal)
+          option.textContent = animal.nome; // ajuste conforme seu backend
+          selectAnimal.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Erro ao carregar animais:', error));
+
+    // Popular vacinas
+    fetch('http://localhost:8080/api/vacinas/listar')
+      .then(response => {
+        if (!response.ok) throw new Error('Erro ao buscar vacinas');
+        return response.json();
+      })
+      .then(vacinas => {
+        const selectVacina = document.getElementById('vacina-id');
+        vacinas.forEach(vacina => {
+          const option = document.createElement('option');
+          option.value = vacina.cod; // ajuste conforme seu backend (ex: idVacina)
+          option.textContent = vacina.nome; // ajuste conforme seu backend
+          selectVacina.appendChild(option);
+        });
+      })
+      .catch(error => console.error('Erro ao carregar vacinas:', error));
+  });
+</script>
+  <!-- no final do body, após popular os selects -->
+  <script>
+    document.getElementById('formVacinacao').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // ler valores do formulário
+      const animalCod     = parseInt(document.getElementById('animal-id').value, 10);
+
+      const vacinaCod     = parseInt(document.getElementById('vacina-id').value, 10);
+      const dataAplicacao = document.getElementById('data-aplicacao').value; // YYYY-MM-DD
+      const doseStr       = document.getElementById('dose').value.trim();
+      // se a sua API espera dose numérica, tente extrair número:
+      const doseNumerica  = parseFloat(doseStr) || null;
+      console.log('Dados do formulário:', {
+        animalCod,
+        vacinaCod,
+        dataAplicacao,
+        doseStr,
+        doseNumerica
+      });
+      // validação rápida
+      if (!animalCod || !vacinaCod || !dataAplicacao || !doseStr) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      // montar payload
+      const payload = {
+        idAnimal: animalCod,
+        idVacina: vacinaCod,
+        dataAplicacao,
+        dose: doseStr,
+        voluntarioAplicadorCod: 0,
+        observacao: ""
+      };
+
+      try {
+        const resp = await fetch('http://localhost:8080/animal-x-vacinacao', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!resp.ok) {
+          const errText = await resp.text();
+          throw new Error(errText || resp.statusText);
+        }
+
+        const criado = await resp.json();
+        alert(`Vacinação agendada com sucesso! ID: ${criado.axvCod || criado.id}`);
+        // redirecionar ou limpar form
+        window.location.href = 'agendarVacinacao.html';
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao agendar vacinação: ' + err.message);
+      }
+    });
+  </script>
+
+
+</body>
+</html>

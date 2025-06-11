@@ -11,15 +11,8 @@ import java.util.List;
 @Repository // Anotação para o Spring identificar esta classe como um componente de persistência
 public class VacinaDAL {
 
-    /**
-     * Cria um novo registro de vacina no banco de dados.
-     * vacina: O objeto VacinaModel contendo os dados a serem inseridos (sem o cod).
-     * Retorna o objeto VacinaModel com o cod preenchido após a inserção.
-     * Lança RuntimeException em caso de erro.
-     */
     public VacinaModel criar(VacinaModel vacina) {
         String sql = "INSERT INTO VACINAS (VA_NOME, VA_DESC, VA_DT_APLICACAO, VA_DOSE) VALUES (?, ?, ?, ?)";
-        // Usando try-with-resources para PreparedStatement
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, vacina.getNome());
@@ -28,10 +21,6 @@ public class VacinaDAL {
             if (vacina.getDataReferenciaLote() != null) {
                 stmt.setDate(3, new java.sql.Date(vacina.getDataReferenciaLote().getTime()));
             } else {
-                // A coluna VA_DT_APLICACAO é NOT NULL no seu esquema, então este else não deveria ser atingido
-                // se a validação no serviço for feita corretamente.
-                // Se, por algum motivo, chegar nulo, o banco rejeitará.
-                // Considerar lançar IllegalArgumentException aqui se a data for essencial e nula.
                 stmt.setNull(3, Types.DATE);
             }
 
@@ -43,39 +32,54 @@ public class VacinaDAL {
                 throw new SQLException("Falha ao criar vacina, nenhuma linha afetada.");
             }
 
-            // Obter o ID (VA_COD) gerado pelo banco
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    vacina.setCod(generatedKeys.getLong(1)); // Assume que VA_COD é INTEGER e pode ser lido como Long
+                    vacina.setCod(generatedKeys.getLong(1));
                 } else {
                     throw new SQLException("Falha ao criar vacina, nenhum ID (VA_COD) obtido.");
                 }
             }
             return vacina;
         } catch (SQLException e) {
-            // Logar a exceção pode ser útil aqui
             e.printStackTrace();
             throw new RuntimeException("Erro ao criar vacina no banco de dados: " + e.getMessage(), e);
         }
-        // ClassNotFoundException não é mais lançada pelos métodos do SingletonDB refatorado
-        // se a conexão já foi estabelecida uma vez. Se for a primeira vez e o driver não for encontrado,
-        // o construtor do SingletonDB já terá logado o erro.
     }
 
-    /**
-     * Busca uma vacina pelo seu código (ID).
-     * cod: O código (VA_COD) da vacina a ser buscada.
-     * Retorna o VacinaModel encontrado ou null se não existir.
-     * Lança RuntimeException em caso de erro.
-     */
+    public VacinaModel buscarPorNome(String nome) {
+        if (nome == null) {
+            System.err.println("Tentativa de buscar vacina com nome nulo.");
+            return null;
+        }
+        String sql = "SELECT VA_COD, VA_NOME, VA_DESC, VA_DT_APLICACAO, VA_DOSE FROM VACINAS WHERE VA_NOME = ?";
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
+
+            stmt.setString(1, nome);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new VacinaModel(
+                            rs.getLong("VA_COD"),      // Lê como Long
+                            rs.getString("VA_NOME"),
+                            rs.getString("VA_DESC"),
+                            rs.getDate("VA_DT_APLICACAO"), // java.sql.Date, compatível com java.util.Date
+                            rs.getString("VA_DOSE")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar vacina por código " + nome + ": " + e.getMessage(), e);
+        }
+        return null;
+    }
+
     public VacinaModel buscarPorCod(Long cod) {
         if (cod == null) {
-            // Considerar lançar IllegalArgumentException ou retornar null dependendo da política de erro.
             System.err.println("Tentativa de buscar vacina com código nulo.");
             return null;
         }
         String sql = "SELECT VA_COD, VA_NOME, VA_DESC, VA_DT_APLICACAO, VA_DOSE FROM VACINAS WHERE VA_COD = ?";
-        // Usando try-with-resources para PreparedStatement e ResultSet
         try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql)) {
 
             stmt.setInt(1, cod.intValue()); // Converte Long para int para a coluna VA_COD (INTEGER)
@@ -98,11 +102,6 @@ public class VacinaDAL {
         return null; // Retorna null se não encontrar
     }
 
-    /**
-     * Lista todas as vacinas cadastradas, ordenadas pelo nome.
-     * Retorna uma lista de VacinaModel.
-     * Lança RuntimeException em caso de erro.
-     */
     public List<VacinaModel> listarTodas() {
         List<VacinaModel> vacinas = new ArrayList<>();
         String sql = "SELECT VA_COD, VA_NOME, VA_DESC, VA_DT_APLICACAO, VA_DOSE FROM VACINAS ORDER BY VA_NOME";

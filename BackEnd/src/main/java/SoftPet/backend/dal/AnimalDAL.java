@@ -340,4 +340,43 @@ public class AnimalDAL {
         }
         return animal;
     }
+    public List<AnimalModel> listarTodos() {
+        List<AnimalModel> lista = new ArrayList<>();
+        String sql = "SELECT * FROM animais ORDER BY an_nome";
+
+        try (PreparedStatement stmt = SingletonDB.getConexao().getPreparedStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                AnimalModel animal = new AnimalModel();
+                animal.setCod(rs.getLong("an_cod"));
+                animal.setNome(rs.getString("an_nome"));
+                animal.setIdade(rs.getInt("an_idade"));
+                animal.setTipo(rs.getString("an_tipo"));
+                animal.setSexo(rs.getString("an_sexo"));
+                animal.setPorte(rs.getString("an_porte"));
+                animal.setRaca(rs.getString("an_raca"));
+                animal.setPelagem(rs.getString("an_pelagem"));
+                animal.setPeso(rs.getInt("an_peso"));
+                animal.setBaia(rs.getString("an_baia"));
+                if (rs.getDate("an_dt_resgate") != null) {
+                    animal.setDt_resgate(new java.util.Date(rs.getDate("an_dt_resgate").getTime()));
+                }
+                animal.setDisp_adocao(rs.getBoolean("an_disp_adocao"));
+                animal.setFoto(rs.getBytes("an_foto"));
+                animal.setCastrado(rs.getBoolean("an_castrado"));
+                animal.setObservacao(rs.getString("an_obs"));
+                animal.setAtivo(rs.getBoolean("an_ativo"));
+
+                lista.add(animal);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar todos os animais: " + e.getMessage(), e);
+        }
+
+        return lista;
+    }
+
 }

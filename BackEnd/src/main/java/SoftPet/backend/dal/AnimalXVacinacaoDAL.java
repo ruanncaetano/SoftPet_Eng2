@@ -75,13 +75,13 @@ public class AnimalXVacinacaoDAL {
             }
 
             // Obter o ID (AXV_COD) gerado pelo banco
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    aplicacao.setAxvCod(generatedKeys.getLong(1)); // Assume que AXV_COD é SERIAL/IDENTITY e pode ser lido como Long
-                } else {
-                    throw new SQLException("Falha ao registrar aplicação da vacina, nenhum ID (AXV_COD) obtido.");
-                }
-            }
+//            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+//                if (generatedKeys.next()) {
+//                    aplicacao.setAxvCod(generatedKeys.getLong(1)); // Assume que AXV_COD é SERIAL/IDENTITY e pode ser lido como Long
+//                } else {
+//                    throw new SQLException("Falha ao registrar aplicação da vacina, nenhum ID (AXV_COD) obtido.");
+//                }
+//            }
             return aplicacao;
 
         } catch (SQLException e) {
@@ -92,6 +92,8 @@ public class AnimalXVacinacaoDAL {
         // não a declararem mais (se o driver já foi carregado uma vez).
     }
 
+
+    
     // Outros métodos DAL para AnimalXVacinacaoModel podem ser adicionados aqui se necessário
     // Por exemplo: buscarAplicacoesPorAnimal(Long animalCod), buscarAplicacaoPorId(Long axvCod), etc.
     // Mas para a funcionalidade "Efetuar Vacinação", o método de criar é o principal.
