@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADAPV - Alerta de Vacinação</title>
+  <link rel="website icon" type="png" href="../../public/images/patinha.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carmesim: '#A6032F',
+            areia: '#BCAF9E',
+            noturno: '#0B1926',
+            pastel: '#D9CAB8',
+            neve: '#F2F2F2',
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="flex h-screen bg-neve font-sans text-noturno">
+  <script src="../../public/js/menu.js"></script>
+
+  <main class="flex-1 p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-carmesim">Alerta de Vacinação</h1>
+      <a href="../../views/viewGeral/home.html"
+         class="bg-gray-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-gray-700 transition-all">
+        Voltar
+      </a>
+    </div>
+
+    <section class="mb-8">
+      <label for="adotanteCpf" class="block font-semibold mb-2">Informe o CPF do adotante:</label>
+      <div class="flex items-center gap-2">
+        <input id="adotanteCpf" type="text" class="border border-gray-300 rounded-lg p-3 w-64" placeholder="Ex: 12345678900" />
+        <button id="btnBuscar" class="bg-carmesim text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8a0128] transition-all">
+          Buscar por CPF
+        </button>
+      </div>
+    </section>
+
+    <div class="overflow-x-auto shadow-lg rounded-lg">
+      <table class="min-w-full bg-white border border-gray-200">
+        <thead class="bg-areia text-noturno">
+          <tr>
+            <th class="px-4 py-2 text-left">Nome</th>
+            <th class="px-4 py-2 text-left">CPF</th>
+            <th class="px-4 py-2 text-left">Email</th>
+            <th class="px-4 py-2 text-left">Telefone</th>
+            <th class="px-4 py-2 text-left">Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaAdotante" class="divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    async function consultarAdotantePorCpf(cpf) {
+      const url = `http://localhost:8080/doador/${cpf}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          alert("Adotante não encontrado.");
+          limparTabela();
+          return;
+        }
+        const adotante = await response.json();
+        preencherTabela([adotante]);
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao conectar com o servidor.");
+      }
+    }
+
+    async function emitirAlertaVacina(nome, cpf) {
+      const mensagem = `${nome}, a data de vacinação do seu pet está próxima! Agradecimento ADAPV.`;
+
+      try {
+        const response = await fetch(`http://localhost:8080/doador/alerta`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ cpf, mensagem })
+        });
+
+        if (response.ok) {
+          alert("Alerta de vacinação enviado com sucesso.");
+
+          // Gerar e baixar arquivo JSON
+          const alerta = {
+            cpf,
+            mensagem,
+            data: new Date().toISOString()
+          };
+
+          const blob = new Blob([JSON.stringify(alerta, null, 2)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `alerta_vacinacao_${cpf}.json`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+        } else {
+          const erro = await response.text();
+          alert("Erro ao enviar alerta: " + erro);
+        }
+      } catch (error) {
+        console.error("Erro ao enviar alerta:", error);
+        alert("Erro ao se conectar com o servidor.");
+      }
+    }
+
+    function preencherTabela(adotantes) {
+      const tabela = document.getElementById("tabelaAdotante");
+      tabela.innerHTML = "";
+
+      adotantes.forEach(a => {
+        const nome = a.pessoa.nome;
+        const cpf = a.pessoa.cpf;
+
+        const acaoHtml = `<button onclick="emitirAlertaVacina('${nome}', '${cpf}')"
+                            class="text-blue-600 hover:underline">Emitir Alerta</button>`;
+
+        const linha = `
+          <tr>
+            <td class="px-4 py-2">${nome}</td>
+            <td class="px-4 py-2">${cpf}</td>
+            <td class="px-4 py-2">${a.contato.email}</td>
+            <td class="px-4 py-2">${a.contato.telefone}</td>
+            <td class="px-4 py-2">${acaoHtml}</td>
+          </tr>
+        `;
+        tabela.insertAdjacentHTML("beforeend", linha);
+      });
+    }
+
+    function limparTabela() {
+      document.getElementById("tabelaAdotante").innerHTML = "";
+    }
+
+    document.getElementById("btnBuscar").addEventListener("click", () => {
+      const cpf = document.getElementById("adotanteCpf").value.trim();
+      if (cpf) {
+        consultarAdotantePorCpf(cpf);
+      } else {
+        alert("Por favor, informe o CPF do adotante.");
+      }
+    });
+
+    document.getElementById("adotanteCpf").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        const cpf = event.target.value.trim();
+        if (cpf) {
+          consultarAdotantePorCpf(cpf);
+        } else {
+          alert("Por favor, informe o CPF do adotante.");
+        }
+      }
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

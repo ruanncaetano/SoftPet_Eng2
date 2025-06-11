@@ -77,6 +77,7 @@ document.write(`
         <ul id="menu-vacina" class="ml-6 mt-2 space-y-2 hidden">
           <li><a href="../../views/ViewPedro/cadastrarVacina.html" class="block hover:text-carmesim">Cadastrar</a></li>
           <li><a href="../../views/viewWilker/agendarVacinacao.html" class="block hover:text-carmesim">Agendar</a></li>
+          <li><a href="../../views/viewLuan/AlertaVacinacao.html" class="block hover:text-carmesim">Alerta Vacinacao</a></li>
         </ul>
       </div>
 

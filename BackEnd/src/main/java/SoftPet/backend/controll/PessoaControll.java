@@ -1,5 +1,6 @@
 package SoftPet.backend.controll;
 
+import SoftPet.backend.dto.AlertaDTO;
 import SoftPet.backend.model.PessoaModel;
 import SoftPet.backend.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,4 +88,20 @@ public class PessoaControll {
             return ResponseEntity.badRequest().body("Erro ao deletar doador!" + e.getMessage());
         }
     }
+
+    @PostMapping("/alerta")
+    public ResponseEntity<Object> enviarAlerta(@RequestBody AlertaDTO alerta) {
+        try {
+            // Aqui você poderia enviar e-mail, SMS ou notificação real
+            System.out.println("🔔 ALERTA ENVIADO:");
+            System.out.println("CPF: " + alerta.getCpf());
+            System.out.println("Mensagem: " + alerta.getMensagem());
+
+            return ResponseEntity.ok("Alerta enviado com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao enviar alerta.");
+        }
+    }
+
 }
